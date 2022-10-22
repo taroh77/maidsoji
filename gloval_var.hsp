@@ -1,0 +1,335 @@
+	; 汎用定義
+	#const CIE_X 0		; X座標
+	#const CIE_Y 1		; Y座標
+	#const COLOR_R 0	; 色R
+	#const COLOR_G 1	; 色G
+	#const COLOR_B 2	; 色B
+	#const DIREC_NONE  4	; 無
+	#const DIREC_DOWN  0	; 下
+	#const DIREC_LEFT  1	; 左
+	#const DIREC_UP    2	; 上
+	#const DIREC_RIGHT 3	; 右
+
+	;
+	; ここからはステージごとにリセットされる
+	;
+
+;	TIMES = 0		; ゲーム内時間（フレーム数）
+
+	; キー入力関連
+	#const INPUT_BLOCK_MOVE_INIT 4	; 移動入力をブロックするフレーム数
+	input_button_display = 0	; 1:ボタンを表示した、0:ボタンを消去した
+
+	; スプライト関連
+;	es_ini 512,1024,360	; スプライトは512個まで、 キャラクタ定義数は1024 個まで、周の精度は1周360度としてスプライトを初期化
+	; スプライトIDの範囲
+	;    1～ :キャラのマップ表示
+	;   21～ :キャラのステータス表示
+	;  300～ :弾丸のマップ表示
+	
+	#const SP_MAP 1
+	#const SP_STATUS  21
+	#const SP_BULLET_STATIC 300
+
+	; キャラクタ定義
+	#const DEFCHAR_SP_MAX 5
+	#const DEFCHAR_SP_STATIC      0	; 静止画
+	#const DEFCHAR_SP_ANIME_DOWN  1	; 下向き
+	#const DEFCHAR_SP_ANIME_LEFT  2	; 左向き
+	#const DEFCHAR_SP_ANIME_UP    3	; 上向き
+	#const DEFCHAR_SP_ANIME_RIGHT 4	; 右向き
+;	dim defchar_sp,DEFCHAR_MAX,DEFCHAR_SP_MAX	; スプライトキャラクタ画像の定義
+
+;	sdim defchar_desc,32,DEFCHAR_MAX,1		; キャラクタ定義情報（文字列）：名前
+
+	#const DEFCHAR_INFO_MAX 9
+	#const DEFCHAR_INFO_MOVEFREQ  0	; 移動可能な頻度（x TIMEに1度）
+	#const DEFCHAR_INFO_MAXHP     1	; 最大HP
+	#const DEFCHAR_INFO_MAXWP     2	; 最大WP
+	#const DEFCHAR_INFO_DEF       3	; 防御力
+	#const DEFCHAR_INFO_RESPAWN   4	; 何回リスポーンできるか
+	#const DEFCHAR_INFO_DOWNTIME  5	; リスポーンまでにかかる時間
+	#const DEFCHAR_INFO_WEAPON1   6	; 1つ目の武器（-1:なし、0以上:武器ID）
+	#const DEFCHAR_INFO_WEAPON2   7	; 2つ目の武器（-1:なし、0以上:武器ID）
+	#const DEFCHAR_INFO_WEAPON3   8	; 3つ目の武器（-1:なし、0以上:武器ID）
+;	dim defchar_info,DEFCHAR_MAX,DEFCHAR_INFO_MAX	; キャラクタ定義情報（数値）
+
+	; 弾丸
+	#const SPCHAR_BULLET_STATIC 200
+	#const SPCHAR_BULLET_DIREC_UP    0 ; その向きにするための回転角度（上）
+	#const SPCHAR_BULLET_DIREC_LEFT  90 ; その向きにするための回転角度（左）
+	#const SPCHAR_BULLET_DIREC_DOWN  180   ; その向きにするための回転角度（下）
+	#const SPCHAR_BULLET_DIREC_RIGHT 270  ; その向きにするための回転角度（右）
+	
+
+	
+	; キャラクタの情報（スプライト）
+;	dim char_spid,CHAR_MAX,2				; スプライトのID（マップ上[アニメ]、ステータス表示[静止画]）
+;	dim char_spcharid,CHAR_MAX,4			; スプライトキャラクタ画像のID（下向き、左向き、上向き、右向き）　※マップ上[アニメ]に代入する用
+
+	; キャラクタの情報（文字列）
+;	sdim char_desc,32,CHAR_MAX,1			; キャラクタの情報（文字列）：名前
+
+	; キャラクタの情報（数値）
+	#const CHAR_INFO_MAX 28
+	#const CHAR_INFO_ACTIVE         0	; 1:有効、0:使用していない
+	#const CHAR_INFO_TEAM           1	; 所属チーム
+	#const CHAR_INFO_CTRLMODE       2	; 操作モード
+	#const CHAR_INFO_DIREC          3	; 向き
+	#const CHAR_INFO_NEXTMOVE       4	; 次の移動
+	#const CHAR_INFO_MOVEFREQ       5	; 移動可能な頻度（x TIMEに1度）
+	#const CHAR_INFO_MOVEHEAT       6	; 移動のクールダウンタイム（1以上:移動を受け付けない、0:移動可能）
+	#const CHAR_INFO_NEXTACT        7	; 次の行動(1:1番目の武器を使う)
+	#const CHAR_INFO_MAXHP          8	; 最大HP
+	#const CHAR_INFO_HP             9	; 現在HP
+	#const CHAR_INFO_MAXWP         10	; 最大WP
+	#const CHAR_INFO_WP            11	; 現在WP
+	#const CHAR_INFO_DEF           12	; 防御力
+	#const CHAR_INFO_DAMAGE        13	; 受けたダメージ（HPへの反映していない）
+	#const CHAR_INFO_DOWN          14	; 1:戦闘不能状態、0:生存
+	#const CHAR_INFO_RESPAWN       15	; 何回リスポーンできるか
+	#const CHAR_INFO_RESTRESPAWN   16	; 残り何回リスポーンできるか
+	#const CHAR_INFO_DOWNTIME      17	; リスポーンまでにかかる時間
+	#const CHAR_INFO_RESTDOWNTIME  18	; 残りどのくらいでリスポーンできるか
+	#const CHAR_INFO_RESPAWNWEAPON 19	; リスポーン時に発射する弾丸（-1:なし、0以上:武器ID）
+	#const CHAR_INFO_WEAPON1       20	; 1つ目の武器（-1:なし、0以上:武器ID）
+	#const CHAR_INFO_WEAPON1HEAT   21	; 1つ目の武器のクールダウンタイム（1以上:武器が使えない、0:使用可能）
+	#const CHAR_INFO_WEAPON2       22	; 2つ目の武器（-1:なし、0以上:武器ID）
+	#const CHAR_INFO_WEAPON2HEAT   23	; 2つ目の武器のクールダウンタイム（1以上:武器が使えない、0:使用可能）
+	#const CHAR_INFO_WEAPON3       24	; 3つ目の武器（-1:なし、0以上:武器ID）
+	#const CHAR_INFO_WEAPON3HEAT   25	; 3つ目の武器のクールダウンタイム（1以上:武器が使えない、0:使用可能）
+	#const CHAR_INFO_DEFINECHAR    26	; キャラクタ定義ID
+	;操作モード
+	#const CHAR_CTRLMODE_NOACT    0 ; 動かない、行動しない
+	#const CHAR_CTRLMODE_MANUAL   1 ; キー入力で操作する
+	#const CHAR_CTRLMODE_RANDOM   2 ; ランダムに行動する
+	#const CHAR_CTRLMODE_NOMOVE   3 ; 動かないが弾丸は発射する
+	#const CHAR_CTRLMODE_PAINTER  4 ; 色蓄積を重視する
+	#const CHAR_CTRLMODE_ATTACKER 5 ; 攻撃を重視する
+	
+	
+;	dim char_info,CHAR_MAX,CHAR_INFO_MAX
+;	for i,0,CHAR_MAX
+;		char_info(i,CHAR_INFO_NEXTMOVE) = DIREC_NONE	; 次の移動は 無 で初期化
+;		char_info(i,CHAR_INFO_RESPAWNWEAPON) = -1		; 武器はなしで初期化
+;		char_info(i,CHAR_INFO_WEAPON1) = -1				; 武器はなしで初期化
+;		char_info(i,CHAR_INFO_WEAPON2) = -1				; 武器はなしで初期化
+;		char_info(i,CHAR_INFO_WEAPON3) = -1				; 武器はなしで初期化
+;	next
+
+	; キャラクタの情報（座標）
+;	dim char_mappos,CHAR_MAX,2				; キャラクタのマップ上の位置（データ座標系）
+;	dim char_basepos,CHAR_MAX,2				; キャラクタのリスポーン地点の位置（データ座標系）
+;	dim char_sppos,CHAR_MAX,2				; キャラクタスプライトの画面上の位置
+
+	; チームの定義
+;	sdim team_desc,32,TEAM_MAX,1			; チームの情報（文字列）：名前
+;	dim team_info,TEAM_MAX,3				; チームの情報（数値）　：色R、G、B
+
+	; マップの定義
+	#const MAP_INFO_MAX 2
+	#const MAP_INFO_TYPE 0					; 種類
+	#const MAP_TYPE_NORMAL 0					; 通常マス
+	#const MAP_TYPE_IMPOSSIBLE -1				; 侵入不可マス
+	#const MAP_INFO_TEAMBASE 1				; チームの拠点
+
+;	dim map_info,MAP_X,MAP_Y,MAP_INFO_MAX	; マップ各マスの情報（データ座標系）
+;	dim map_bucket,MAP_X,MAP_Y,TEAM_MAX		; マップ各マスの色蓄積情報（各チーム）（データ座標系）
+;	dim map_bucket_lead,MAP_X,MAP_Y			; そのマスで最も色蓄積が多いチーム（データ座標系）
+;	dim map_bucket_sum,TEAM_MAX				; 各チームの色蓄積の累積
+;	map_bucket_globalsum = 0				; 全体の色蓄積の累積
+;	for y,0,MAP_Y
+;		for x,0,MAP_X
+;			map_info(x,y,MAP_INFO_TEAMBASE) = -1	; チーム拠点はなしで初期化
+;			map_bucket_lead(x,y) = -1		; 最も色蓄積が多いチームはなしで初期化
+;		next
+;	next
+;	dim map_bucket_lead,MAP_X,MAP_Y			; そのマスで最も色蓄積が多いチーム（データ座標系）
+	
+	; 弾丸の情報（スプライト）
+;	dim bullet_spid,BULLET_MAX				; スプライトのID
+
+	; 弾丸の情報（座標）
+;	dim bullet_mappos,BULLET_MAX,2			; 弾丸のマップ上の位置（データ座標系）
+;	dim bullet_sppos,BULLET_MAX,2			; 弾丸スプライトの画面上の位置
+	
+	; 弾丸の情報（数値）
+	#const BULLET_INFO_MAX 18
+	#const BULLET_INFO_ACTIVE     0		; 1:有効、0:使用していない
+	#const BULLET_INFO_DIREC      1		; 向き
+	#const BULLET_INFO_TEAM       2		; 所属チーム
+	#const BULLET_INFO_HIT        3		; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	#const BULLET_INFO_RESTHIT    4		; 残り命中数（あと何回当たり判定が残っているか）
+	#const BULLET_INFO_RANGE      5		; 射程（全部で何回移動できるか）
+	#const BULLET_INFO_RESTRANGE  6		; 残り射程（あと何回移動できるか）
+	#const BULLET_INFO_AUTOSPREAD 7		; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	#const BULLET_INFO_SPPED      8		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	#const BULLET_INFO_ATC        9		; 攻撃力（対キャラ）
+	#const BULLET_INFO_COLORPOWER 10	; 色蓄積力（対バケツ）
+	#const BULLET_INFO_COLORFLY   11	; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	#const BULLET_INFO_SPREAD     12	; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	#const BULLET_INFO_NOWSPREAD  13	; 現在拡散状態か（0:拡散状態ではない、1:拡散状態）
+	#const BULLET_INFO_WEAKEN     14	; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	#const BULLET_INFO_PERSIST    15    ; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	#const BULLET_INFO_RESTSPREAD 16    ; あと何TIME拡散が持続するか
+	#const BULLET_INFO_SOUND_HIT  17	; 命中時のサウンドID
+	;
+	; 通常弾の例
+	; HIT=1, RANGE=1, AUTOSPREAD=1, SPPED=32, COLORPOWER=100, COLORFLY=50
+	;   発射したターン：キャラクタのマスを色蓄積50、弾は1マス前方に移動、RESTRANGEが0に
+	;         +1ターン：RESTRANGEが0、AUTOSPREADが1のため拡散。拡散したマスを色蓄積100
+	;
+	; 貫通弾の例
+	; HIT=2, RANGE=3, AUTOSPREAD=0, SPPED=32, COLORPOWER=100, COLORFLY=20
+	;   発射したターン：キャラクタのマスを色蓄積20、弾は1マス前方に移動、RESTRANGEが2に
+	;         +1ターン：弾丸のマスに色蓄積20、弾は1マス前方に移動、RESTRANGEが1に
+	;         +2ターン：弾丸のマスに色蓄積20、弾は1マス前方に移動、RESTRANGEが0に
+	;         +3ターン：RESTRANGEが0、AUTOSPREADが0のため消滅、弾丸のマスに色蓄積20　※消滅時もCOLORFLYの色蓄積あり
+	;
+	; 近接攻撃扱いの例
+	; HIT=1, RANGE=1, AUTOSPREAD=0, SPPED=32, COLORPOWER=100, COLORFLY=0
+	;   発射したターン：キャラクタのマスを色蓄積なし、弾は1マス前方に移動、RESTRANGEが0に
+	;         +1ターン（非命中時）：RESTRANGEが0、AUTOSPREADが0のため消滅、弾丸のマスに色蓄積なし
+	;         +1ターン（　命中時）：命中し炸裂、弾丸のマスに色蓄積100
+	;
+	; 自分中心の爆発の例
+	; HIT=0, RANGE=1, AUTOSPREAD=1, SPPED=0, COLORPOWER=100, COLORFLY=0
+	;   発射したターン：キャラクタのマスを色蓄積なし、弾は移動せず、RESTRANGEが0に
+	;         +1ターン：RESTRANGEが0、AUTOSPREADが1のため拡散。拡散したマスを色蓄積100
+	;   ※自分を含む自チームには当たらないのでHITを1以上にしてもあまり変わらないかも
+	;
+	; 設置型トラップの例
+	; HIT=1, RANGE=20, AUTOSPREAD=0, SPPED=0, COLORPOWER=100, COLORFLY=0
+	;   発射したターン：キャラクタのマスを色蓄積なし、弾は移動せず、RESTRANGEが19に
+	;         +1ターン（非命中時）：弾丸のマスに色蓄積なし、弾は移動せず、RESTRANGEが18に
+	;         +1ターン（　命中時）：命中し炸裂、弾丸のマスに色蓄積100
+	;        +20ターン（非命中時）：RESTRANGEが0、AUTOSPREADが0のため消滅、弾丸のマスに色蓄積なし
+	;
+	; 即発動型爆弾の例
+	; HIT=1, RANGE=0, AUTOSPREAD=1, SPPED=0, COLORPOWER=100, COLORFLY=0
+	;   発射したターン：RESTRANGEが0、AUTOSPREADが1のため拡散。拡散したマスを色蓄積100
+	;   ※自分を含む自チームには当たらないのでHITを1以上にしてもあまり変わらないかも
+	;
+	;
+	; SPREAD=1, WEAKEN=20 の場合
+	;
+	;     1                   [ 20%]
+	;    101            [ 20%][100%][ 20%]
+	;     1                   [ 20%]
+	;
+	;
+	; SPREAD=2, WEAKEN=50 の場合
+	;
+	;     2                   [ 25%]
+	;    212            [ 25%][ 50%][ 25%]
+	;   21012  → [ 25%][ 50%][100%][ 50%][ 25%]
+	;    212            [ 25%][ 50%][ 25%]
+	;     2                   [ 25%]
+	;
+	; 注意：拡散処理は侵入不可マスを貫通しない。xが侵入不可マス
+	;
+	;     2                   [ 25%]
+	;    212            [ 25%][ 50%][ 25%]
+	;   210x   → [ 25%][ 50%][100%][----][----]
+	;    212            [ 25%][ 50%][ 25%]
+	;     2                   [ 25%]
+	
+;	dim bullet_info,BULLET_MAX,BULLET_INFO_MAX	; 弾丸の情報
+
+	;
+	; ここまではステージごとにリセットされる
+	;
+
+	; 武器の情報（文字列）
+	sdim weapon_desc,32,WEAPON_MAX,2			; 武器の情報（文字列）：名前、武器の説明文
+
+	; 武器の情報（数値）
+	#const WEAPON_INFO_MAX 17
+	#const WEAPON_INFO_ACTIVE       0		; 1:有効、0:使用していない
+	#const WEAPON_INFO_COSTWP       1		; 消費WP
+	#const WEAPON_INFO_COOLDOWN     2		; 次を発射できるようになるTIME数
+	#const WEAPON_INFO_INITCOOLDOWN 3		; 最初に発射できるようになるTIME数
+	#const WEAPON_INFO_ATC          4		; 攻撃力（対キャラ）
+	#const WEAPON_INFO_COLORPOWER   5		; 色蓄積力（対バケツ）
+	#const WEAPON_INFO_COLORFLY     6		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	#const WEAPON_INFO_RANGE        7		; 射程（全部で何回移動できるか）
+	#const WEAPON_INFO_HIT          8		; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	#const WEAPON_INFO_AUTOSPREAD   9		; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	#const WEAPON_INFO_SPREAD      10		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	#const WEAPON_INFO_WEAKEN      11	; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	#const WEAPON_INFO_PERSIST     12    ; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	#const WEAPON_INFO_SPPED       13	; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	#const WEAPON_INFO_BULLETSPID  14	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	#const WEAPON_INFO_SOUND_FIRE  15	; 発射時のサウンドID
+	#const WEAPON_INFO_SOUND_HIT   16	; 命中時のサウンドID
+	
+	
+	dim weapon_info,WEAPON_MAX,WEAPON_INFO_MAX	; 武器の情報
+
+	; ゲーム全体の情報
+	#const GAME_INFO_MAX 4
+	#const GAME_INFO_NEXTSTAGE 0		; 次のステージ番号
+	#const GAME_INFO_STAGE     1		; 今のステージ番号
+	#const GAME_INFO_LIMITTIME 2		; 今のステージの制限時間
+	#const GAME_INFO_RESTTIME  3		; 今のステージの残り時間
+	
+	dim game_info,GAME_INFO_MAX			; ゲーム全体の情報
+
+	; 効果音
+	#const SOUND_MAX 13
+	#const SOUND_DEF_DECISION  0		; 決定したときの音
+	#const SOUND_DEF_DOWN      1		; ダウンしたときの音
+	#const SOUND_DEF_RESPAWN   2		; リスポーンしたときの音
+	#const SOUND_DEF_SHOT1     3		; 発射音1の音
+	#const SOUND_DEF_SHOT2     4		; 発射音2の音
+	#const SOUND_DEF_SHOT3     5		; 発射音3の音
+	#const SOUND_DEF_SHOT4     6		; 発射音4の音
+	#const SOUND_DEF_HIT1      7		; 命中1の音
+	#const SOUND_DEF_HIT2      8		; 命中2の音
+	#const SOUND_DEF_HIT3      9		; 命中3の音
+	#const SOUND_DEF_HIT4     10		; 命中4の音
+	#const SOUND_DEF_WIN      11		; 勝利したの音
+	#const SOUND_DEF_LOSE     12		; 敗北したの音
+	sdim sound_def_file,64,SOUND_MAX	; ファイルパス
+	dim sound_def_mediabuffid,SOUND_MAX	; メディアバッファID（サウンドIDがそのまま入る）
+
+	; 音楽
+	#const MUSIC_MAX 5
+	#const MUSIC_DEF_OPENING  0		; オープニングの音楽
+	#const MUSIC_DEF_NORMAL   1		; 通常ステージの音楽
+	#const MUSIC_DEF_NORMAL2  2		; 通常ステージ2の音楽
+	#const MUSIC_DEF_BOSS     3		; ボスステージの音楽
+	#const MUSIC_DEF_RESULT   4		; リザルト画面の音楽
+
+	sdim music_def_file,64,MUSIC_MAX	; ファイルパス
+	dim music_def_mediabuffid,MUSIC_MAX	; メディアバッファID（SOUND_MAXを加算したBGMIDが入る）
+
+	; 処理用の中間変数
+
+	; 各マスに何マス移動すればたどり着けるかを入力しておいてくれる
+	; *sub_calc_map_steps参照
+	dim map_steps,MAP_X,MAP_Y
+
+	; map_stepsに対応し、追加情報を付与する
+	; *sub_calc_map_steps参照
+	#const MAP_STEPS_INFO_NOCOLOR    1	; 色蓄積がない、ほぼない（50以下）
+	#const MAP_STEPS_INFO_ALLYCOLOR  2	; 自チームの色（十分塗られている、50より多い）
+	#const MAP_STEPS_INFO_ENEMYCOLOR 4	; 敵チームの色（十分塗られている、50より多い）
+	#const MAP_STEPS_INFO_ALLYUNIT   8	; 自チームのユニット
+	#const MAP_STEPS_INFO_ENEMYUNIT 16	; 敵チームのユニット
+	dim map_steps_info,MAP_X,MAP_Y
+
+	; 直後にどちらに移動できるか、移動できる方向が格納される
+	; *sub_calc_map_steps参照
+	map_steps_canmove_cnt = 0
+	dim map_steps_canmove,4
+
+	; 最寄りで自分の色に塗られていない最短の向きが格納される
+	; *sub_calc_map_steps参照
+	map_steps_nocolormove_cnt = 0
+	dim map_steps_nocolormove,4
+
+	; 最寄りの敵への最短の向きが格納される
+	; *sub_calc_map_steps参照
+	map_steps_enemymove_cnt = 0
+	dim map_steps_enemymove,4
