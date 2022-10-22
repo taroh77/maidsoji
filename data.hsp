@@ -1,0 +1,1160 @@
+	; pack設定
+	
+	#packopt name "MaidSoji"
+	#packopt xsize 320
+	#packopt ysize 480
+	
+	; 武器データ
+	
+	weapon_desc(0,0) = "メイド用水ハンドモップ"
+	weapon_desc(0,1) = "メイド専用の掃除道具。"
+	weapon_info(0,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(0,WEAPON_INFO_COSTWP) = 6		; 消費WP
+	weapon_info(0,WEAPON_INFO_COOLDOWN) = 4		; 次を発射できるようになるTIME数
+	weapon_info(0,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(0,WEAPON_INFO_ATC) = 60			; 攻撃力（対キャラ）
+	weapon_info(0,WEAPON_INFO_COLORPOWER) = 60	; 色蓄積力（対バケツ）
+	weapon_info(0,WEAPON_INFO_COLORFLY) = 20	; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(0,WEAPON_INFO_RANGE) = 1		; 射程（全部で何回移動できるか）
+	weapon_info(0,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(0,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(0,WEAPON_INFO_SPREAD) = 1		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(0,WEAPON_INFO_WEAKEN) = 50		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(0,WEAPON_INFO_PERSIST) = 0		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(0,WEAPON_INFO_SPPED) = 32		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(0,WEAPON_INFO_BULLETSPID) = 23	; 弾丸の画像ID（弾丸画像の何番目か。最初は0。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(0,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
+	weapon_info(0,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
+
+	
+	weapon_desc(1,0) = "メイド用水ランチャー"
+	weapon_desc(1,1) = "届かないところも綺麗に"
+	weapon_info(1,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(1,WEAPON_INFO_COSTWP) = 10		; 消費WP
+	weapon_info(1,WEAPON_INFO_COOLDOWN) = 50	; 次を発射できるようになるTIME数
+	weapon_info(1,WEAPON_INFO_INITCOOLDOWN) = 50	; 最初に発射できるようになるTIME数
+	weapon_info(1,WEAPON_INFO_ATC) = 90			; 攻撃力（対キャラ）
+	weapon_info(1,WEAPON_INFO_COLORPOWER) = 90	; 色蓄積力（対バケツ）
+	weapon_info(1,WEAPON_INFO_COLORFLY) = 10	; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(1,WEAPON_INFO_RANGE) = 4		; 射程（全部で何回移動できるか）
+	weapon_info(1,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(1,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(1,WEAPON_INFO_SPREAD) = 3		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(1,WEAPON_INFO_WEAKEN) = 70		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(1,WEAPON_INFO_PERSIST) = 0   	; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(1,WEAPON_INFO_SPPED) = 32		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(1,WEAPON_INFO_BULLETSPID) = 40	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）	
+	weapon_info(1,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_SHOT2	; 発射時のサウンドID
+	weapon_info(1,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT4	; 命中時のサウンドID
+
+	weapon_desc(2,0) = "ゴミ袋"
+	weapon_desc(2,1) = "その場に汚いものをまき散らす"
+	weapon_info(2,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(2,WEAPON_INFO_COSTWP) = 2		; 消費WP
+	weapon_info(2,WEAPON_INFO_COOLDOWN) = 20	; 次を発射できるようになるTIME数
+	weapon_info(2,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(2,WEAPON_INFO_ATC) = 50			; 攻撃力（対キャラ）
+	weapon_info(2,WEAPON_INFO_COLORPOWER) = 50 ; 色蓄積力（対バケツ）
+	weapon_info(2,WEAPON_INFO_COLORFLY) = 20	; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(2,WEAPON_INFO_RANGE) = 0		; 射程（全部で何回移動できるか）
+	weapon_info(2,WEAPON_INFO_HIT) = 0			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(2,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(2,WEAPON_INFO_SPREAD) = 1		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(2,WEAPON_INFO_WEAKEN) = 80		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(2,WEAPON_INFO_PERSIST) = 0   	; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(2,WEAPON_INFO_SPPED) = 0		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(2,WEAPON_INFO_BULLETSPID) = 17	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(2,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
+	weapon_info(2,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
+
+	weapon_desc(3,0) = "拠点防衛砲"
+	weapon_desc(3,1) = "拠点を守る防衛兵器"
+	weapon_info(3,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(3,WEAPON_INFO_COSTWP) = 0		; 消費WP
+	weapon_info(3,WEAPON_INFO_COOLDOWN) = 10	; 次を発射できるようになるTIME数
+	weapon_info(3,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(3,WEAPON_INFO_ATC) = 999		; 攻撃力（対キャラ）
+	weapon_info(3,WEAPON_INFO_COLORPOWER) = 100	; 色蓄積力（対バケツ）
+	weapon_info(3,WEAPON_INFO_COLORFLY) = 0		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(3,WEAPON_INFO_RANGE) = 0		; 射程（全部で何回移動できるか）
+	weapon_info(3,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(3,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(3,WEAPON_INFO_SPREAD) = 1		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(3,WEAPON_INFO_WEAKEN) = 10		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(3,WEAPON_INFO_PERSIST) = 10  	; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(3,WEAPON_INFO_SPPED) = 0		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(3,WEAPON_INFO_BULLETSPID) = 9	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(3,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
+	weapon_info(3,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT4	; 命中時のサウンドID
+
+	weapon_desc(4,0) = "メイドさんのお土産"
+	weapon_desc(4,1) = "よくもやってくれたわね"
+	weapon_info(4,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(4,WEAPON_INFO_COSTWP) = 25		; 消費WP
+	weapon_info(4,WEAPON_INFO_COOLDOWN) = 200	; 次を発射できるようになるTIME数
+	weapon_info(4,WEAPON_INFO_INITCOOLDOWN) = 200	; 最初に発射できるようになるTIME数
+	weapon_info(4,WEAPON_INFO_ATC) = 200		; 攻撃力（対キャラ）
+	weapon_info(4,WEAPON_INFO_COLORPOWER) = 400	; 色蓄積力（対バケツ）
+	weapon_info(4,WEAPON_INFO_COLORFLY) = 0		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(4,WEAPON_INFO_RANGE) = 40		; 射程（全部で何回移動できるか）
+	weapon_info(4,WEAPON_INFO_HIT) = 0			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(4,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(4,WEAPON_INFO_SPREAD) = 4		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(4,WEAPON_INFO_WEAKEN) = 70		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(4,WEAPON_INFO_PERSIST) = 0 		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(4,WEAPON_INFO_SPPED) = 0		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(4,WEAPON_INFO_BULLETSPID) = 40	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(4,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_SHOT3	; 発射時のサウンドID
+	weapon_info(4,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT4	; 命中時のサウンドID
+
+	weapon_desc(5,0) = "飲みかけの缶"
+	weapon_desc(5,1) = "まだ中身が入っているよ！"
+	weapon_info(5,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(5,WEAPON_INFO_COSTWP) = 20		; 消費WP
+	weapon_info(5,WEAPON_INFO_COOLDOWN) = 50	; 次を発射できるようになるTIME数
+	weapon_info(5,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(5,WEAPON_INFO_ATC) = 80			; 攻撃力（対キャラ）
+	weapon_info(5,WEAPON_INFO_COLORPOWER) = 80	; 色蓄積力（対バケツ）
+	weapon_info(5,WEAPON_INFO_COLORFLY) = 60	; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(5,WEAPON_INFO_RANGE) = 3		; 射程（全部で何回移動できるか）
+	weapon_info(5,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(5,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(5,WEAPON_INFO_SPREAD) = 2		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(5,WEAPON_INFO_WEAKEN) = 60		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(5,WEAPON_INFO_PERSIST) = 0  	; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(5,WEAPON_INFO_SPPED) = 32		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(5,WEAPON_INFO_BULLETSPID) = 18	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(5,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
+	weapon_info(5,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT2	; 命中時のサウンドID
+
+	weapon_desc(6,0) = "泥水ローラー"
+	weapon_desc(6,1) = "ばっちいお水を塗りたくる"
+	weapon_info(6,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(6,WEAPON_INFO_COSTWP) = 10		; 消費WP
+	weapon_info(6,WEAPON_INFO_COOLDOWN) = 8		; 次を発射できるようになるTIME数
+	weapon_info(6,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(6,WEAPON_INFO_ATC) = 120		; 攻撃力（対キャラ）
+	weapon_info(6,WEAPON_INFO_COLORPOWER) = 120	; 色蓄積力（対バケツ）
+	weapon_info(6,WEAPON_INFO_COLORFLY) = 120	; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(6,WEAPON_INFO_RANGE) = 1		; 射程（全部で何回移動できるか）
+	weapon_info(6,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(6,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(6,WEAPON_INFO_SPREAD) = 0		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(6,WEAPON_INFO_WEAKEN) = 0		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(6,WEAPON_INFO_PERSIST) = 0 		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(6,WEAPON_INFO_SPPED) = 32		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(6,WEAPON_INFO_BULLETSPID) = 47	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(6,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
+	weapon_info(6,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT2	; 命中時のサウンドID
+	
+	weapon_desc(7,0) = "泥水ライフル"
+	weapon_desc(7,1) = "遠くの敵を狙い撃ち！"
+	weapon_info(7,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(7,WEAPON_INFO_COSTWP) = 15		; 消費WP
+	weapon_info(7,WEAPON_INFO_COOLDOWN) = 25	; 次を発射できるようになるTIME数
+	weapon_info(7,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(7,WEAPON_INFO_ATC) = 120		; 攻撃力（対キャラ）
+	weapon_info(7,WEAPON_INFO_COLORPOWER) = 30	; 色蓄積力（対バケツ）
+	weapon_info(7,WEAPON_INFO_COLORFLY) = 20	; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(7,WEAPON_INFO_RANGE) = 6		; 射程（全部で何回移動できるか）
+	weapon_info(7,WEAPON_INFO_HIT) = 3			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(7,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(7,WEAPON_INFO_SPREAD) = 1		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(7,WEAPON_INFO_WEAKEN) = 20		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(7,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(7,WEAPON_INFO_SPPED) = 32		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(7,WEAPON_INFO_BULLETSPID) = 32	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(7,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
+	weapon_info(7,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT2	; 命中時のサウンドID
+	
+	weapon_desc(8,0) = "腐敗ごみ袋"
+	weapon_desc(8,1) = "パンパンに膨れてる？爆発するかも？"
+	weapon_info(8,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(8,WEAPON_INFO_COSTWP) = 30		; 消費WP
+	weapon_info(8,WEAPON_INFO_COOLDOWN) = 60	; 次を発射できるようになるTIME数
+	weapon_info(8,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(8,WEAPON_INFO_ATC) = 80			; 攻撃力（対キャラ）
+	weapon_info(8,WEAPON_INFO_COLORPOWER) = 80	; 色蓄積力（対バケツ）
+	weapon_info(8,WEAPON_INFO_COLORFLY) = 0		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(8,WEAPON_INFO_RANGE) = 25		; 射程（全部で何回移動できるか）
+	weapon_info(8,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(8,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(8,WEAPON_INFO_SPREAD) = 4		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(8,WEAPON_INFO_WEAKEN) = 70		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(8,WEAPON_INFO_PERSIST) = 0 		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(8,WEAPON_INFO_SPPED) = 0		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(8,WEAPON_INFO_BULLETSPID) = 56	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(8,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
+	weapon_info(8,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT4	; 命中時のサウンドID
+	
+	;weapon_desc(0,0) = "武器の名前"
+	;weapon_desc(0,1) = "武器の説明"
+	;weapon_info(0,WEAPON_INFO_ACTIVE) = 		; 1:有効、0:使用していない
+	;weapon_info(0,WEAPON_INFO_COSTWP) = 		; 消費WP
+	;weapon_info(0,WEAPON_INFO_COOLDOWN) = 		; 次を発射できるようになるTIME数
+	;weapon_info(0,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	;weapon_info(0,WEAPON_INFO_ATC) = 			; 攻撃力（対キャラ）
+	;weapon_info(0,WEAPON_INFO_COLORPOWER) = 	; 色蓄積力（対バケツ）
+	;weapon_info(0,WEAPON_INFO_COLORFLY) = 		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	;weapon_info(0,WEAPON_INFO_RANGE) = 		; 射程（全部で何回移動できるか）
+	;weapon_info(0,WEAPON_INFO_HIT) = 			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	;weapon_info(0,WEAPON_INFO_AUTOSPREAD) = 	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	;weapon_info(0,WEAPON_INFO_SPREAD) = 		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	;weapon_info(0,WEAPON_INFO_WEAKEN) = 		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	;weapon_info(0,WEAPON_INFO_PERSIST) =   		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	;weapon_info(0,WEAPON_INFO_SPPED) = 			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	;weapon_info(0,WEAPON_INFO_BULLETSPID) = 	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	;weapon_info(0,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_SHOT1	; 発射時のサウンドID
+	;weapon_info(0,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
+	
+	; 効果音
+	sound_def_file(SOUND_DEF_DECISION) = "sound/8bit選択8.wav"		; 決定したときの音
+	sound_def_file(SOUND_DEF_DOWN) = "sound/8bit失敗3.wav"			; ダウンしたときの音
+	sound_def_file(SOUND_DEF_RESPAWN) = "sound/8bit上昇1.wav"		; リスポーンしたときの音
+	sound_def_file(SOUND_DEF_SHOT1) = "sound/8bitショット1.wav"		; 発射音1の音
+	sound_def_file(SOUND_DEF_SHOT2) = "sound/8bitショット3.wav"		; 発射音2の音
+	sound_def_file(SOUND_DEF_SHOT3) = "sound/8bit詠唱1.wav"			; 発射音3の音
+	sound_def_file(SOUND_DEF_SHOT4) = "sound/8bit詠唱2.wav"			; 発射音4の音
+	sound_def_file(SOUND_DEF_HIT1) = "sound/8bitダメージ1.wav"		; 命中1の音
+	sound_def_file(SOUND_DEF_HIT2) = "sound/8bitダメージ4.wav"		; 命中2の音
+	sound_def_file(SOUND_DEF_HIT3) = "sound/8bitダメージ6.wav"		; 命中3の音
+	sound_def_file(SOUND_DEF_HIT4) = "sound/8bit爆発2.wav"			; 命中4の音
+	sound_def_file(SOUND_DEF_WIN) = "sound/8bit勝利1.wav"			; 勝利したの音
+	sound_def_file(SOUND_DEF_LOSE) = "sound/8bit失敗1.wav"			; 敗北したの音
+	for i,0,SOUND_MAX
+		if strlen(sound_def_file(i)) > 0 {
+			sound_def_mediabuffid(i) = i
+			mmload sound_def_file(i),sound_def_mediabuffid(i),0
+		}
+	next
+
+	; BGM
+	music_def_file(MUSIC_DEF_OPENING) = "music/Short60_ゆったりDIY_01.mp3"	; オープニングの音楽
+	music_def_file(MUSIC_DEF_NORMAL)  = "music/Breakbeats_01.mp3"			; 通常ステージの音楽
+	music_def_file(MUSIC_DEF_NORMAL2) = "music/Shooting_04.mp3"				; 通常ステージ2の音楽
+	music_def_file(MUSIC_DEF_BOSS)    = "music/Drumnbass_03.mp3"			; ボスステージの音楽
+	music_def_file(MUSIC_DEF_RESULT)  = "music/LoFi_01.mp3"					; リザルト画面の音楽
+	for i,0,MUSIC_MAX
+		if strlen(music_def_file(i)) > 0 {
+			music_def_mediabuffid(i) = SOUND_MAX + i
+			mmload music_def_file(i),music_def_mediabuffid(i),1
+		}
+	next
+	
+	goto *end_data ; これ以降は最初の初期化では読み込まない
+
+
+; ステージデータを読み込む前にデータの初期化
+*reset_data
+
+	TIMES = 0		; ゲーム内時間（フレーム数）
+
+	es_ini 512,1024,360	; スプライトは512個まで、 キャラクタ定義数は1024 個まで、周の精度は1周360度としてスプライトを初期化
+
+	dim defchar_sp,DEFCHAR_MAX,DEFCHAR_SP_MAX	; スプライトキャラクタ画像の定義
+	sdim defchar_desc,32,DEFCHAR_MAX,1		; キャラクタ定義情報（文字列）：名前
+	dim defchar_info,DEFCHAR_MAX,DEFCHAR_INFO_MAX	; キャラクタ定義情報（数値）
+
+	dim char_spid,CHAR_MAX,2				; スプライトのID（マップ上[アニメ]、ステータス表示[静止画]）
+	dim char_spcharid,CHAR_MAX,4			; スプライトキャラクタ画像のID（下向き、左向き、上向き、右向き）　※マップ上[アニメ]に代入する用
+
+	sdim char_desc,32,CHAR_MAX,1			; キャラクタの情報（文字列）：名前
+
+	dim char_info,CHAR_MAX,CHAR_INFO_MAX
+	for i,0,CHAR_MAX
+		char_info(i,CHAR_INFO_NEXTMOVE) = DIREC_NONE	; 次の移動は 無 で初期化
+		char_info(i,CHAR_INFO_RESPAWNWEAPON) = -1		; 武器はなしで初期化
+		char_info(i,CHAR_INFO_WEAPON1) = -1				; 武器はなしで初期化
+		char_info(i,CHAR_INFO_WEAPON2) = -1				; 武器はなしで初期化
+		char_info(i,CHAR_INFO_WEAPON3) = -1				; 武器はなしで初期化
+	next
+
+	dim char_mappos,CHAR_MAX,2				; キャラクタのマップ上の位置（データ座標系）
+	dim char_basepos,CHAR_MAX,2				; キャラクタのリスポーン地点の位置（データ座標系）
+	dim char_sppos,CHAR_MAX,2				; キャラクタスプライトの画面上の位置
+
+	sdim team_desc,32,TEAM_MAX,1			; チームの情報（文字列）：名前
+	dim team_info,TEAM_MAX,3				; チームの情報（数値）　：色R、G、B
+
+	dim map_info,MAP_X,MAP_Y,MAP_INFO_MAX	; マップ各マスの情報（データ座標系）
+	dim map_bucket,MAP_X,MAP_Y,TEAM_MAX		; マップ各マスの色蓄積情報（各チーム）（データ座標系）
+	dim map_bucket_lead,MAP_X,MAP_Y			; そのマスで最も色蓄積が多いチーム（データ座標系）
+	dim map_bucket_sum,TEAM_MAX				; 各チームの色蓄積の累積
+	map_bucket_globalsum = 0				; 全体の色蓄積の累積
+	for y,0,MAP_Y
+		for x,0,MAP_X
+			map_info(x,y,MAP_INFO_TEAMBASE) = -1	; チーム拠点はなしで初期化
+			map_bucket_lead(x,y) = -1		; 最も色蓄積が多いチームはなしで初期化
+			; MARGIN部分は侵入不可に
+			if x < MAP_MERGIN            : map_info( x, y,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+			if y < MAP_MERGIN            : map_info( x, y,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+			if x > MAP_X - MAP_MERGIN -1 : map_info( x, y,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+			if y > MAP_Y - MAP_MERGIN -1 : map_info( x, y,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		next
+	next
+	
+	dim map_bucket_lead,MAP_X,MAP_Y			; そのマスで最も色蓄積が多いチーム（データ座標系）
+
+	dim bullet_spid,BULLET_MAX				; スプライトのID
+
+	dim bullet_mappos,BULLET_MAX,2			; 弾丸のマップ上の位置（データ座標系）
+	dim bullet_sppos,BULLET_MAX,2			; 弾丸スプライトの画面上の位置
+
+	dim bullet_info,BULLET_MAX,BULLET_INFO_MAX	; 弾丸の情報
+
+	return
+
+	
+; ステージ1の情報読み込み
+*load_data_stage1
+	gosub *load_data_defchar		; キャラクタ定義の設定
+
+	game_info(GAME_INFO_LIMITTIME) = 700	; 今のステージの制限時間
+	game_info(GAME_INFO_RESTTIME) = 700	; 今のステージの残り時間
+
+	gosub *load_data_team_stage1	; ステージ1のマップ情報読み込み
+	gosub *load_data_char_stage1	; ステージ1のチーム情報読み込み
+	gosub *load_data_map_stage1		; ステージ1のキャラ情報読み込み
+
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_NORMAL)	; 通常ステージの音楽
+
+	return
+
+
+; ステージ2の情報読み込み
+*load_data_stage2
+	gosub *load_data_defchar		; キャラクタ定義の設定
+
+	game_info(GAME_INFO_LIMITTIME) = 750	; 今のステージの制限時間
+	game_info(GAME_INFO_RESTTIME) = 750	; 今のステージの残り時間
+
+	gosub *load_data_team_stage2	; ステージ2のマップ情報読み込み
+	gosub *load_data_char_stage2	; ステージ2のチーム情報読み込み
+	gosub *load_data_map_stage2		; ステージ2のキャラ情報読み込み
+
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_NORMAL)	; 通常ステージの音楽
+
+	return
+
+
+; ステージ3の情報読み込み
+*load_data_stage3
+	gosub *load_data_defchar		; キャラクタ定義の設定
+
+	game_info(GAME_INFO_LIMITTIME) = 800	; 今のステージの制限時間
+	game_info(GAME_INFO_RESTTIME) = 800	; 今のステージの残り時間
+
+	gosub *load_data_team_stage3	; ステージ2のマップ情報読み込み
+	gosub *load_data_char_stage3	; ステージ2のチーム情報読み込み
+	gosub *load_data_map_stage3		; ステージ2のキャラ情報読み込み
+
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_NORMAL2)	; 通常ステージ2の音楽
+
+	return
+
+
+; ステージ4の情報読み込み
+*load_data_stage4
+	gosub *load_data_defchar		; キャラクタ定義の設定
+
+	game_info(GAME_INFO_LIMITTIME) = 850	; 今のステージの制限時間
+	game_info(GAME_INFO_RESTTIME) = 850	; 今のステージの残り時間
+
+	gosub *load_data_team_stage4	; ステージ2のマップ情報読み込み
+	gosub *load_data_char_stage4	; ステージ2のチーム情報読み込み
+	gosub *load_data_map_stage4		; ステージ2のキャラ情報読み込み
+
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_NORMAL2)	; 通常ステージ2の音楽
+
+	return
+	
+
+; ステージ5の情報読み込み
+*load_data_stage5
+	gosub *load_data_defchar		; キャラクタ定義の設定
+
+	game_info(GAME_INFO_LIMITTIME) = 1200	; 今のステージの制限時間
+	game_info(GAME_INFO_RESTTIME) = 1200	; 今のステージの残り時間
+
+	gosub *load_data_team_stage5	; ステージ2のマップ情報読み込み
+	gosub *load_data_char_stage5	; ステージ2のチーム情報読み込み
+	gosub *load_data_map_stage5		; ステージ2のキャラ情報読み込み
+
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_BOSS)	; ボスステージの音楽
+
+	return
+	
+
+; ゲームを始める前に全ての可変データを初期化
+*reset_vars		
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+
+		char_info(i,CHAR_INFO_HP) = char_info(i,CHAR_INFO_MAXHP)
+		char_info(i,CHAR_INFO_WP) = char_info(i,CHAR_INFO_MAXWP)
+		char_info(i,CHAR_INFO_RESTRESPAWN) = char_info(i,CHAR_INFO_RESPAWN)	
+		char_info(i,CHAR_INFO_WEAPON1HEAT) = 0
+		char_info(i,CHAR_INFO_WEAPON2HEAT) = 0
+		char_info(i,CHAR_INFO_WEAPON3HEAT) = 0
+		if char_info(i,CHAR_INFO_WEAPON1) >= 0{
+			if weapon_info(char_info(i,CHAR_INFO_WEAPON1),WEAPON_INFO_INITCOOLDOWN) > 0 {
+				char_info(i,CHAR_INFO_WEAPON1HEAT) = weapon_info(char_info(i,CHAR_INFO_WEAPON1),WEAPON_INFO_INITCOOLDOWN)
+			}
+		}
+		if char_info(i,CHAR_INFO_WEAPON2) >= 0{
+			if weapon_info(char_info(i,CHAR_INFO_WEAPON2),WEAPON_INFO_INITCOOLDOWN) > 0 {
+				char_info(i,CHAR_INFO_WEAPON2HEAT) = weapon_info(char_info(i,CHAR_INFO_WEAPON2),WEAPON_INFO_INITCOOLDOWN)
+			}
+		}
+		if char_info(i,CHAR_INFO_WEAPON3) >= 0{
+			if weapon_info(char_info(i,CHAR_INFO_WEAPON3),WEAPON_INFO_INITCOOLDOWN) > 0 {
+				char_info(i,CHAR_INFO_WEAPON3HEAT) = weapon_info(char_info(i,CHAR_INFO_WEAPON3),WEAPON_INFO_INITCOOLDOWN)
+			}
+		}
+			
+	next
+	
+	return
+	
+; キャラクタ定義の設定
+*load_data_defchar
+	
+	; 主人公の画像のロード、スプライト設定（キャラクタ定義ID:0）
+	defchar_sp(0,DEFCHAR_SP_STATIC) = 1
+	defchar_sp(0,DEFCHAR_SP_ANIME_DOWN) = 2
+	defchar_sp(0,DEFCHAR_SP_ANIME_LEFT) = 6
+	defchar_sp(0,DEFCHAR_SP_ANIME_UP) = 10
+	defchar_sp(0,DEFCHAR_SP_ANIME_RIGHT) = 14
+	defchar_desc(0,0) = "メイド　メイ"
+	defchar_info(0,DEFCHAR_INFO_MOVEFREQ) = 8	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(0,DEFCHAR_INFO_MAXHP) = 100	; 最大HP
+	defchar_info(0,DEFCHAR_INFO_MAXWP) = 100	; 最大WP
+	defchar_info(0,DEFCHAR_INFO_DEF) = 10		; 防御力
+	defchar_info(0,DEFCHAR_INFO_RESPAWN) = 999	; 何回リスポーンできるか
+	defchar_info(0,DEFCHAR_INFO_DOWNTIME) = 50	; リスポーンまでにかかる時間
+	defchar_info(0,DEFCHAR_INFO_WEAPON1) = 0	; 1つ目の武器（メイド用水ハンドモップ）
+	defchar_info(0,DEFCHAR_INFO_WEAPON2) = 1	; 2つ目の武器（メイド用水ランチャー）
+	defchar_info(0,DEFCHAR_INFO_WEAPON3) = 4	; 3つ目の武器（メイドさんのお土産）
+	
+	; 主人公画像ロード
+	buffer 3	; ウインドウバッファID3を作成する
+	picload "image/女_メイド1.png" ; 画像ファイルを読み込む
+	es_size 32,32,100	; キャラクタのサイズ、ヒットチェック領域が全体の100%
+
+	es_pat defchar_sp(0,DEFCHAR_SP_STATIC),0,0,0,3 ; 主人公(停止用)
+
+	; 1→2→3→2 の順番で表示させる必要あり
+	es_patanim defchar_sp(0,DEFCHAR_SP_ANIME_DOWN),3,0, 0,ANIME_FRAME,3 ; 主人公下向き
+	es_pat defchar_sp(0,DEFCHAR_SP_ANIME_DOWN)+3,32,0,ANIME_FRAME,3
+	es_link defchar_sp(0,DEFCHAR_SP_ANIME_DOWN)+2,defchar_sp(0,DEFCHAR_SP_ANIME_DOWN)+3
+	es_link defchar_sp(0,DEFCHAR_SP_ANIME_DOWN)+3,defchar_sp(0,DEFCHAR_SP_ANIME_DOWN)
+	es_patanim defchar_sp(0,DEFCHAR_SP_ANIME_LEFT),3,0,32,ANIME_FRAME,3 ; 主人公左向き
+	es_pat defchar_sp(0,DEFCHAR_SP_ANIME_LEFT)+3,32,32,ANIME_FRAME,3
+	es_link defchar_sp(0,DEFCHAR_SP_ANIME_LEFT)+2,defchar_sp(0,DEFCHAR_SP_ANIME_LEFT)+3
+	es_link defchar_sp(0,DEFCHAR_SP_ANIME_LEFT)+3,defchar_sp(0,DEFCHAR_SP_ANIME_LEFT)
+	es_patanim defchar_sp(0,DEFCHAR_SP_ANIME_RIGHT),3,0,64,ANIME_FRAME,3 ; 主人公右向き
+	es_pat defchar_sp(0,DEFCHAR_SP_ANIME_RIGHT)+3,32,64,ANIME_FRAME,3
+	es_link defchar_sp(0,DEFCHAR_SP_ANIME_RIGHT)+2,defchar_sp(0,DEFCHAR_SP_ANIME_RIGHT)+3
+	es_link defchar_sp(0,DEFCHAR_SP_ANIME_RIGHT)+3,defchar_sp(0,DEFCHAR_SP_ANIME_RIGHT)
+	es_patanim defchar_sp(0,DEFCHAR_SP_ANIME_UP),3,0 ,96,ANIME_FRAME,3 ; 主人公上向き
+	es_pat defchar_sp(0,DEFCHAR_SP_ANIME_UP)+3,32,96,ANIME_FRAME,3
+	es_link defchar_sp(0,DEFCHAR_SP_ANIME_UP)+2,defchar_sp(0,DEFCHAR_SP_ANIME_UP)+3
+	es_link defchar_sp(0,DEFCHAR_SP_ANIME_UP)+3,defchar_sp(0,DEFCHAR_SP_ANIME_UP)
+
+	
+	; 弾丸の画像のロード、スプライト設定
+
+	; 弾丸データのロード
+	buffer 4	; ウインドウバッファID3を作成する
+	picload "image/shootdot.png" ; 画像ファイルを読み込む
+	es_size 32,32,25	; キャラクタのサイズ、ヒットチェック領域が全体の25%
+
+	i = 0
+	for y,0,256,32
+		for x,0,256,32
+			es_pat SPCHAR_BULLET_STATIC+i,x,y,0,4
+			i += 1
+		next
+	next
+	
+
+	; サボリーマの画像のロード、スプライト設定（キャラクタ定義ID:1）
+	defchar_sp(1,DEFCHAR_SP_STATIC) = 21
+	defchar_sp(1,DEFCHAR_SP_ANIME_DOWN) = 22
+	defchar_sp(1,DEFCHAR_SP_ANIME_LEFT) = 26
+	defchar_sp(1,DEFCHAR_SP_ANIME_UP) = 30
+	defchar_sp(1,DEFCHAR_SP_ANIME_RIGHT) = 34
+	defchar_desc(1,0) = "サボリーマ"
+	defchar_info(1,DEFCHAR_INFO_MOVEFREQ) = 32	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(1,DEFCHAR_INFO_MAXHP) = 200	; 最大HP
+	defchar_info(1,DEFCHAR_INFO_MAXWP) = 80		; 最大WP
+	defchar_info(1,DEFCHAR_INFO_DEF) = 0		; 防御力
+	defchar_info(1,DEFCHAR_INFO_RESPAWN) = 999	; 何回リスポーンできるか
+	defchar_info(1,DEFCHAR_INFO_DOWNTIME) = 50	; リスポーンまでにかかる時間
+	defchar_info(1,DEFCHAR_INFO_WEAPON1) = 2	; 1つ目の武器（ゴミ袋）
+	defchar_info(1,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
+	defchar_info(1,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+
+	; 敵キャラ画像ロード
+	buffer 5	; ウインドウバッファID3を作成する
+	picload "image/おばけ1.png" ; 画像ファイルを読み込む
+	es_size 32,32,100	; キャラクタのサイズ、ヒットチェック領域が全体の100%
+
+	es_pat defchar_sp(1,DEFCHAR_SP_STATIC),0,0,0,5 ; 停止用
+
+	; 1→2→3→2 の順番で表示させる必要あり
+	es_patanim defchar_sp(1,DEFCHAR_SP_ANIME_DOWN),3,0, 0,ANIME_FRAME,5 ; 下向き
+	es_pat defchar_sp(1,DEFCHAR_SP_ANIME_DOWN)+3,32,0,ANIME_FRAME,5
+	es_link defchar_sp(1,DEFCHAR_SP_ANIME_DOWN)+2,defchar_sp(1,DEFCHAR_SP_ANIME_DOWN)+3
+	es_link defchar_sp(1,DEFCHAR_SP_ANIME_DOWN)+3,defchar_sp(1,DEFCHAR_SP_ANIME_DOWN)
+	es_patanim defchar_sp(1,DEFCHAR_SP_ANIME_LEFT),3,0,32,ANIME_FRAME,5 ; 左向き
+	es_pat defchar_sp(1,DEFCHAR_SP_ANIME_LEFT)+3,32,32,ANIME_FRAME,5
+	es_link defchar_sp(1,DEFCHAR_SP_ANIME_LEFT)+2,defchar_sp(1,DEFCHAR_SP_ANIME_LEFT)+3
+	es_link defchar_sp(1,DEFCHAR_SP_ANIME_LEFT)+3,defchar_sp(1,DEFCHAR_SP_ANIME_LEFT)
+	es_patanim defchar_sp(1,DEFCHAR_SP_ANIME_RIGHT),3,0,64,ANIME_FRAME,5 ; 右向き
+	es_pat defchar_sp(1,DEFCHAR_SP_ANIME_RIGHT)+3,32,64,ANIME_FRAME,5
+	es_link defchar_sp(1,DEFCHAR_SP_ANIME_RIGHT)+2,defchar_sp(1,DEFCHAR_SP_ANIME_RIGHT)+3
+	es_link defchar_sp(1,DEFCHAR_SP_ANIME_RIGHT)+3,defchar_sp(1,DEFCHAR_SP_ANIME_RIGHT)
+	es_patanim defchar_sp(1,DEFCHAR_SP_ANIME_UP),3,0 ,96,ANIME_FRAME,5 ; 上向き
+	es_pat defchar_sp(1,DEFCHAR_SP_ANIME_UP)+3,32,96,ANIME_FRAME,5
+	es_link defchar_sp(1,DEFCHAR_SP_ANIME_UP)+2,defchar_sp(1,DEFCHAR_SP_ANIME_UP)+3
+	es_link defchar_sp(1,DEFCHAR_SP_ANIME_UP)+3,defchar_sp(1,DEFCHAR_SP_ANIME_UP)
+
+
+	; ポイステーの画像のロード、スプライト設定（キャラクタ定義ID:2）
+	id = 2
+	bufid = 6
+	defchar_sp(id,DEFCHAR_SP_STATIC) = 41
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN) = 42
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT) = 46
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP) = 50
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = 54
+	defchar_desc(id,0) = "ポイステー"
+	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 16	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 300	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 100	; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 30		; 防御力
+	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 4	; 何回リスポーンできるか
+	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 120	; リスポーンまでにかかる時間
+	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 5	; 1つ目の武器（飲みかけの缶）
+	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+
+	; 敵キャラ画像ロード
+	buffer bufid	; ウインドウバッファID3を作成する
+	picload "image/魔物汎用04.png" ; 画像ファイルを読み込む
+	es_size 32,32,100	; キャラクタのサイズ、ヒットチェック領域が全体の100%
+
+	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,bufid ; 停止用
+
+	; 1→2→3→2 の順番で表示させる必要あり
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_DOWN),3,0, 0,ANIME_FRAME,bufid ; 下向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3,32,0,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+2,defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3,defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_LEFT),3,0,32,ANIME_FRAME,bufid ; 左向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3,32,32,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+2,defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3,defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT),3,0,64,ANIME_FRAME,bufid ; 右向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3,32,64,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+2,defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3,defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_UP),3,0 ,96,ANIME_FRAME,bufid ; 上向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_UP)+3,32,96,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_UP)+2,defchar_sp(1,DEFCHAR_SP_ANIME_UP)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_UP)+3,defchar_sp(1,DEFCHAR_SP_ANIME_UP)
+
+
+	; マメニ　ヌールの画像のロード、スプライト設定（キャラクタ定義ID:3）
+	id = 3
+	bufid = 7
+	defchar_sp(id,DEFCHAR_SP_STATIC) = 61
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN) = 62
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT) = 66
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP) = 70
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = 74
+	defchar_desc(id,0) = "マメニ　ヌール"
+	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 10	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 150	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 200	; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 10		; 防御力
+	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 999	; 何回リスポーンできるか
+	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 100	; リスポーンまでにかかる時間
+	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 6	; 1つ目の武器（泥水ローラー）
+	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+
+	; 敵キャラ画像ロード
+	buffer bufid	; ウインドウバッファID3を作成する
+	picload "image/骸骨メイド.png" ; 画像ファイルを読み込む
+	es_size 32,32,100	; キャラクタのサイズ、ヒットチェック領域が全体の100%
+
+	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,bufid ; 停止用
+
+	; 1→2→3→2 の順番で表示させる必要あり
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_DOWN),3,0, 0,ANIME_FRAME,bufid ; 下向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3,32,0,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+2,defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3,defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_LEFT),3,0,32,ANIME_FRAME,bufid ; 左向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3,32,32,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+2,defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3,defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT),3,0,64,ANIME_FRAME,bufid ; 右向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3,32,64,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+2,defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3,defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_UP),3,0 ,96,ANIME_FRAME,bufid ; 上向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_UP)+3,32,96,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_UP)+2,defchar_sp(1,DEFCHAR_SP_ANIME_UP)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_UP)+3,defchar_sp(1,DEFCHAR_SP_ANIME_UP)
+
+	
+	; ワルガキーの画像のロード、スプライト設定（キャラクタ定義ID:4）
+	id = 4
+	bufid = 8
+	defchar_sp(id,DEFCHAR_SP_STATIC) = 81
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN) = 82
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT) = 86
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP) = 90
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = 94
+	defchar_desc(id,0) = "ワルガキー"
+	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 20	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 400	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 200	; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 10		; 防御力
+	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 999	; 何回リスポーンできるか
+	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 100	; リスポーンまでにかかる時間
+	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 7	; 1つ目の武器（泥水ライフル）
+	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+
+	; 敵キャラ画像ロード
+	buffer bufid	; ウインドウバッファID3を作成する
+	picload "image/骸骨王.png" ; 画像ファイルを読み込む
+	es_size 32,32,100	; キャラクタのサイズ、ヒットチェック領域が全体の100%
+
+	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,bufid ; 停止用
+
+	; 1→2→3→2 の順番で表示させる必要あり
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_DOWN),3,0, 0,ANIME_FRAME,bufid ; 下向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3,32,0,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+2,defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3,defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_LEFT),3,0,32,ANIME_FRAME,bufid ; 左向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3,32,32,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+2,defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3,defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT),3,0,64,ANIME_FRAME,bufid ; 右向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3,32,64,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+2,defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3,defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_UP),3,0 ,96,ANIME_FRAME,bufid ; 上向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_UP)+3,32,96,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_UP)+2,defchar_sp(1,DEFCHAR_SP_ANIME_UP)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_UP)+3,defchar_sp(1,DEFCHAR_SP_ANIME_UP)
+
+	
+	; ゴミ魔王の画像のロード、スプライト設定（キャラクタ定義ID:5）
+	id = 5
+	bufid = 9
+	defchar_sp(id,DEFCHAR_SP_STATIC) = 101
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN) = 102
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT) = 106
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP) = 110
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = 114
+	defchar_desc(id,0) = "ゴミ魔王"
+	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 12	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 2000	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 2000	; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 20		; 防御力
+	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 0	; 何回リスポーンできるか
+	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 100	; リスポーンまでにかかる時間
+	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 8	; 1つ目の武器（腐敗ごみ袋）
+	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+
+	; 敵キャラ画像ロード
+	buffer bufid	; ウインドウバッファID3を作成する
+	picload "image/魔王.png" ; 画像ファイルを読み込む
+	es_size 32,32,100	; キャラクタのサイズ、ヒットチェック領域が全体の100%
+
+	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,bufid ; 停止用
+
+	; 1→2→3→2 の順番で表示させる必要あり
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_DOWN),3,0, 0,ANIME_FRAME,bufid ; 下向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3,32,0,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+2,defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)+3,defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_LEFT),3,0,32,ANIME_FRAME,bufid ; 左向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3,32,32,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+2,defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)+3,defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT),3,0,64,ANIME_FRAME,bufid ; 右向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3,32,64,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+2,defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)+3,defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT)
+	es_patanim defchar_sp(id,DEFCHAR_SP_ANIME_UP),3,0 ,96,ANIME_FRAME,bufid ; 上向き
+	es_pat defchar_sp(id,DEFCHAR_SP_ANIME_UP)+3,32,96,ANIME_FRAME,bufid
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_UP)+2,defchar_sp(1,DEFCHAR_SP_ANIME_UP)+3
+	es_link defchar_sp(id,DEFCHAR_SP_ANIME_UP)+3,defchar_sp(1,DEFCHAR_SP_ANIME_UP)
+
+	gsel 0			; 操作先IDを0に戻す
+	return
+
+; ステージをランダムに生成(味方1体,敵2体前提)
+*load_data_map_stage_random
+	
+	; ランダムに侵入不可マスを生成
+	for i,0,2
+		x = MAP_MERGIN + 1 + rnd(MAP_X-MAP_MERGIN*2-3)
+		y = MAP_MERGIN + 1 + rnd(MAP_Y-MAP_MERGIN*2-3)
+		map_info(x  ,y  ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x+1,y  ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x  ,y+1,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x+1,y+1,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	next
+	for i,0,1
+		x = MAP_MERGIN + 1 + rnd(MAP_X-MAP_MERGIN*2-4)
+		y = MAP_MERGIN + 1 + rnd(MAP_Y-MAP_MERGIN*2-4)
+		map_info(x  ,y  ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x+1,y  ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x+2,y  ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x  ,y+1,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x+1,y+1,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x+2,y+1,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x  ,y+2,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x+1,y+2,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(x+2,y+2,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	next
+
+	; 主人公の場所をランダムに生成
+	for i,0,3
+		repeat
+			flag_skip = 0
+			x = MAP_MERGIN + rnd(MAP_X-MAP_MERGIN*2)
+			y = MAP_MERGIN + rnd(MAP_Y-MAP_MERGIN*2)
+			; 既にキャラがいたらやり直し
+			for j,0,i
+				if ( char_mappos(i,CIE_X) = char_mappos(j,CIE_X) )  and ( char_mappos(i,CIE_Y) = char_mappos(j,CIE_Y) ) {
+					flag_skip = 1
+				}
+			next
+			; 侵入不可マスだったらやり直し
+			if map_info(x,y,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE {
+				flag_skip = 1
+			}
+			if flag_skip = 0{
+				char_mappos(i,CIE_X) = x
+				char_mappos(i,CIE_Y) = y
+				char_basepos(i,CIE_X) = x ; リスポーン地点も同じ場所
+				char_basepos(i,CIE_Y) = y
+				map_info(x,y,MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+				break
+			}
+		loop
+	next
+
+	return
+
+; ステージ1のマップ情報読み込み
+*load_data_map_stage1
+	
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+5 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+5 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+5 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	; キャラの場所
+	char_mappos(0,CIE_X) = MAP_MERGIN+4 : char_mappos(0,CIE_Y) = MAP_MERGIN+8
+	char_mappos(1,CIE_X) = MAP_MERGIN+1 : char_mappos(1,CIE_Y) = MAP_MERGIN+1
+	char_mappos(2,CIE_X) = MAP_MERGIN+8 : char_mappos(2,CIE_Y) = MAP_MERGIN+1
+	
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+		; リスポーン地点の設定
+		char_basepos(i,CIE_X) = char_mappos(i,CIE_X)
+		char_basepos(i,CIE_Y) = char_mappos(i,CIE_Y)
+		; 拠点として設定
+		map_info(char_basepos(i,CIE_X),char_basepos(i,CIE_Y),MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+	next
+
+	return
+
+; ステージ2のマップ情報読み込み
+*load_data_map_stage2
+	
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	; キャラの場所
+	char_mappos(0,CIE_X) = MAP_MERGIN+5 : char_mappos(0,CIE_Y) = MAP_MERGIN+9
+	char_mappos(1,CIE_X) = MAP_MERGIN+4 : char_mappos(1,CIE_Y) = MAP_MERGIN+4
+	char_mappos(2,CIE_X) = MAP_MERGIN+1 : char_mappos(2,CIE_Y) = MAP_MERGIN+4
+	char_mappos(3,CIE_X) = MAP_MERGIN+8 : char_mappos(3,CIE_Y) = MAP_MERGIN+4
+	
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+		; リスポーン地点の設定
+		char_basepos(i,CIE_X) = char_mappos(i,CIE_X)
+		char_basepos(i,CIE_Y) = char_mappos(i,CIE_Y)
+		; 拠点として設定
+		map_info(char_basepos(i,CIE_X),char_basepos(i,CIE_Y),MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+	next
+
+	return
+
+; ステージ3のマップ情報読み込み
+*load_data_map_stage3
+	
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	; キャラの場所
+	char_mappos(0,CIE_X) = MAP_MERGIN+1 : char_mappos(0,CIE_Y) = MAP_MERGIN+8
+	char_mappos(1,CIE_X) = MAP_MERGIN+8 : char_mappos(1,CIE_Y) = MAP_MERGIN+1
+	char_mappos(2,CIE_X) = MAP_MERGIN+4 : char_mappos(2,CIE_Y) = MAP_MERGIN+4
+	
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+		; リスポーン地点の設定
+		char_basepos(i,CIE_X) = char_mappos(i,CIE_X)
+		char_basepos(i,CIE_Y) = char_mappos(i,CIE_Y)
+		; 拠点として設定
+		map_info(char_basepos(i,CIE_X),char_basepos(i,CIE_Y),MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+	next
+
+	return
+
+
+; ステージ4のマップ情報読み込み
+*load_data_map_stage4
+	
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	; キャラの場所
+	char_mappos(0,CIE_X) = MAP_MERGIN+4 : char_mappos(0,CIE_Y) = MAP_MERGIN+5
+	char_mappos(1,CIE_X) = MAP_MERGIN+8 : char_mappos(1,CIE_Y) = MAP_MERGIN+1
+	char_mappos(2,CIE_X) = MAP_MERGIN+8 : char_mappos(2,CIE_Y) = MAP_MERGIN+8
+	;char_mappos(3,CIE_X) = MAP_MERGIN+1 : char_mappos(3,CIE_Y) = MAP_MERGIN+8
+	
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+		; リスポーン地点の設定
+		char_basepos(i,CIE_X) = char_mappos(i,CIE_X)
+		char_basepos(i,CIE_Y) = char_mappos(i,CIE_Y)
+		; 拠点として設定
+		map_info(char_basepos(i,CIE_X),char_basepos(i,CIE_Y),MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+	next
+
+	return
+
+
+; ステージ5のマップ情報読み込み
+*load_data_map_stage5
+	
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+5 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+5 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	; キャラの場所
+	char_mappos(0,CIE_X) = MAP_MERGIN+4 : char_mappos(0,CIE_Y) = MAP_MERGIN+8
+	char_mappos(1,CIE_X) = MAP_MERGIN+5 : char_mappos(1,CIE_Y) = MAP_MERGIN+1
+	char_mappos(2,CIE_X) = MAP_MERGIN+2 : char_mappos(2,CIE_Y) = MAP_MERGIN+3
+	char_mappos(3,CIE_X) = MAP_MERGIN+7 : char_mappos(3,CIE_Y) = MAP_MERGIN+6
+	
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+		; リスポーン地点の設定
+		char_basepos(i,CIE_X) = char_mappos(i,CIE_X)
+		char_basepos(i,CIE_Y) = char_mappos(i,CIE_Y)
+		; 拠点として設定
+		map_info(char_basepos(i,CIE_X),char_basepos(i,CIE_Y),MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+	next
+
+	return
+
+; ステージ1,2,3,4,5のチーム情報読み込み
+*load_data_team_stage1
+*load_data_team_stage2
+*load_data_team_stage3
+*load_data_team_stage4
+*load_data_team_stage5
+	
+	team_desc(0,0) = "お掃除隊"
+	team_info(0,COLOR_R) = 255 : team_info(0,COLOR_G) = 255 : team_info(0,COLOR_B) = 255 ; 白
+	team_desc(1,0) = "散らかし隊"
+	team_info(1,COLOR_R) = 139 : team_info(1,COLOR_G) =  69 : team_info(1,COLOR_B) =  19 ; 茶色SaddleBrown
+	
+	return
+
+; ステージ1のキャラ情報読み込み
+*load_data_char_stage1
+	; 主人公（キャラID:0）
+
+	char_info(0,CHAR_INFO_DEFINECHAR) = 0	; キャラクタ定義ID:0（メイド　メイ）
+
+	sub_load_defchar_defcharid = char_info(0,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 0
+	gosub *sub_load_defchar
+	
+	char_info(0,CHAR_INFO_TEAM) = 0		; お掃除隊所属
+	char_info(0,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_MANUAL	; キー入力の操作
+
+
+	; 敵キャラ（キャラID:1）
+
+	char_info(1,CHAR_INFO_DEFINECHAR) = 1	; キャラクタ定義ID:1（サボリーマ）
+
+	sub_load_defchar_defcharid = char_info(1,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 1
+	gosub *sub_load_defchar
+	
+	char_info(1,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(1,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_RANDOM	; ランダムに行動する
+
+	; 敵キャラ（キャラID:2）
+	
+	char_info(2,CHAR_INFO_DEFINECHAR) = 1	; キャラクタ定義ID:1（サボリーマ）
+	
+	sub_load_defchar_defcharid = char_info(2,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 2
+	gosub *sub_load_defchar
+	
+	char_info(2,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_RANDOM	; ランダムに行動する
+
+	return
+
+
+; ステージ2のキャラ情報読み込み
+*load_data_char_stage2
+	; 主人公（キャラID:0）
+
+	char_info(0,CHAR_INFO_DEFINECHAR) = 0	; キャラクタ定義ID:0（メイド　メイ）
+
+	sub_load_defchar_defcharid = char_info(0,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 0
+	gosub *sub_load_defchar
+	
+	char_info(0,CHAR_INFO_TEAM) = 0		; お掃除隊所属
+	char_info(0,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_MANUAL	; キー入力の操作
+
+
+	; 敵キャラ（キャラID:1）
+
+	char_info(1,CHAR_INFO_DEFINECHAR) = 2	; キャラクタ定義ID:2（ポイステー）
+
+	sub_load_defchar_defcharid = char_info(1,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 1
+	gosub *sub_load_defchar
+	
+	char_info(1,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(1,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_NOMOVE	; 動かないが弾丸は発射する
+
+	; 敵キャラ（キャラID:2）
+
+	char_info(2,CHAR_INFO_DEFINECHAR) = 1	; キャラクタ定義ID:1（サボリーマ）
+
+	sub_load_defchar_defcharid = char_info(2,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 2
+	gosub *sub_load_defchar
+	
+	char_info(2,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_RANDOM	; ランダムに行動する
+
+	; 敵キャラ（キャラID:3）
+	
+	char_info(3,CHAR_INFO_DEFINECHAR) = 1	; キャラクタ定義ID:1（サボリーマ）
+	
+	sub_load_defchar_defcharid = char_info(3,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 3
+	gosub *sub_load_defchar
+	
+	char_info(3,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(3,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_RANDOM	; ランダムに行動する
+
+	return
+
+; ステージ3のキャラ情報読み込み
+*load_data_char_stage3
+	; 主人公（キャラID:0）
+
+	char_info(0,CHAR_INFO_DEFINECHAR) = 0	; キャラクタ定義ID:0（メイド　メイ）
+
+	sub_load_defchar_defcharid = char_info(0,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 0
+	gosub *sub_load_defchar
+	
+	char_info(0,CHAR_INFO_TEAM) = 0		; お掃除隊所属
+	char_info(0,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_MANUAL	; キー入力の操作
+
+
+	; 敵キャラ（キャラID:1）
+
+	char_info(1,CHAR_INFO_DEFINECHAR) = 3	; キャラクタ定義ID:3（マメニ　ヌール）
+
+	sub_load_defchar_defcharid = char_info(1,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 1
+	gosub *sub_load_defchar
+	
+	char_info(1,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(1,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_PAINTER	; 色蓄積を重視する
+
+	; 敵キャラ（キャラID:2）
+
+	char_info(2,CHAR_INFO_DEFINECHAR) = 2	; キャラクタ定義ID:2（ポイステー）
+
+	sub_load_defchar_defcharid = char_info(2,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 2
+	gosub *sub_load_defchar
+	
+	char_info(2,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_NOMOVE	; 動かないが弾丸は発射する
+
+	return
+
+; ステージ4のキャラ情報読み込み
+*load_data_char_stage4
+	; 主人公（キャラID:0）
+
+	char_info(0,CHAR_INFO_DEFINECHAR) = 0	; キャラクタ定義ID:0（メイド　メイ）
+
+	sub_load_defchar_defcharid = char_info(0,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 0
+	gosub *sub_load_defchar
+	
+	char_info(0,CHAR_INFO_TEAM) = 0		; お掃除隊所属
+	char_info(0,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_MANUAL	; キー入力の操作
+
+
+	; 敵キャラ（キャラID:1）
+
+	char_info(1,CHAR_INFO_DEFINECHAR) = 4	; キャラクタ定義ID:4（ワルガキー）
+
+	sub_load_defchar_defcharid = char_info(1,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 1
+	gosub *sub_load_defchar
+	
+	char_info(1,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(1,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_ATTACKER ; 攻撃を重視する
+
+	; 敵キャラ（キャラID:2）
+	
+	char_info(2,CHAR_INFO_DEFINECHAR) = 3	; キャラクタ定義ID:3（マメニ　ヌール）
+	
+	sub_load_defchar_defcharid = char_info(2,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 2
+	gosub *sub_load_defchar
+	
+	char_info(2,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_PAINTER	; 色蓄積を重視する
+
+
+	return
+
+; ステージ5のキャラ情報読み込み
+*load_data_char_stage5
+	; 主人公（キャラID:0）
+
+	char_info(0,CHAR_INFO_DEFINECHAR) = 0	; キャラクタ定義ID:0（メイド　メイ）
+
+	sub_load_defchar_defcharid = char_info(0,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 0
+	gosub *sub_load_defchar
+	
+	char_info(0,CHAR_INFO_TEAM) = 0		; お掃除隊所属
+	char_info(0,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_MANUAL	; キー入力の操作
+
+
+	; 敵キャラ（キャラID:1）
+
+	char_info(1,CHAR_INFO_DEFINECHAR) = 5	; キャラクタ定義ID:5（ゴミ魔王）
+
+	sub_load_defchar_defcharid = char_info(1,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 1
+	gosub *sub_load_defchar
+	
+	char_info(1,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(1,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_PAINTER	; 色蓄積を重視する
+	
+	; 敵キャラ（キャラID:2）
+
+	char_info(2,CHAR_INFO_DEFINECHAR) = 2	; キャラクタ定義ID:2（ポイステー）
+
+	sub_load_defchar_defcharid = char_info(2,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 2
+	gosub *sub_load_defchar
+	
+	char_info(2,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_NOMOVE	; 動かないが弾丸は発射する
+
+	; 敵キャラ（キャラID:3）
+	
+	char_info(3,CHAR_INFO_DEFINECHAR) = 2	; キャラクタ定義ID:2（ポイステー）
+	
+	sub_load_defchar_defcharid = char_info(3,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 3
+	gosub *sub_load_defchar
+	
+	char_info(3,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(3,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_NOMOVE	; 動かないが弾丸は発射する
+
+	return
+	
+*end_data

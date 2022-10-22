@@ -1,0 +1,21 @@
+	#const GAME_VERSION_MAJOR 1	; ゲームのバージョン
+	#const GAME_VERSION_MINOR 0
+	#const GAME_VERSION_PATCH 0
+	#const DEBUG_MODE 0		; 1:デバッグ情報の表示
+	
+	#const CHAR_MAX 4		; 管理するキャラクタの最大数
+	#const TEAM_MAX 2		; 最大チーム数
+	#const BULLET_MAX 16	; 管理する弾丸の最大数
+	#const WEAPON_MAX 16	; 武器の最大数
+	#const DEFCHAR_MAX 8	; 登場するキャラクタ定義の最大数
+	#const SEARCH_RANGE 9	; キャラが認識できる距離（大きくすると遠くの敵も認識できるがゲームが重くなる）
+	WINDOW_X = ginfo_winx
+	WINDOW_Y = ginfo_winy
+	#const MAP_REAL_X 10					; 実効値としてのマップのX軸の大きさ（表示座標系）
+	#const MAP_REAL_Y 10					; 実効値としてのマップのY軸の大きさ（表示座標系）
+	#const MAP_MERGIN 5						; マップデータ周囲のこのマスはダミーデータ　※特定のマスの上下左右を参照したくなったときに配列の範囲外を出ないようにするため
+	#const MAP_X MAP_MERGIN*2 + MAP_REAL_X 	; ダミーデータ込みのマップのX軸の大きさ（データ座標系）
+	#const MAP_Y MAP_MERGIN*2 + MAP_REAL_Y	; ダミーデータ込みのマップのY軸の大きさ（データ座標系）
+
+	#const ANIME_FRAME 8  ; スプライトのアニメーション切り替えフレーム
+
