@@ -71,34 +71,104 @@
 ;	sdim char_desc,32,CHAR_MAX,1			; キャラクタの情報（文字列）：名前
 
 	; キャラクタの情報（数値）
-	#const CHAR_INFO_MAX 28
-	#const CHAR_INFO_ACTIVE         0	; 1:有効、0:使用していない
-	#const CHAR_INFO_TEAM           1	; 所属チーム
-	#const CHAR_INFO_CTRLMODE       2	; 操作モード
-	#const CHAR_INFO_DIREC          3	; 向き
-	#const CHAR_INFO_NEXTMOVE       4	; 次の移動
-	#const CHAR_INFO_MOVEFREQ       5	; 移動可能な頻度（x TIMEに1度）
-	#const CHAR_INFO_MOVEHEAT       6	; 移動のクールダウンタイム（1以上:移動を受け付けない、0:移動可能）
-	#const CHAR_INFO_NEXTACT        7	; 次の行動(1:1番目の武器を使う)
-	#const CHAR_INFO_MAXHP          8	; 最大HP
-	#const CHAR_INFO_HP             9	; 現在HP
-	#const CHAR_INFO_MAXWP         10	; 最大WP
-	#const CHAR_INFO_WP            11	; 現在WP
-	#const CHAR_INFO_DEF           12	; 防御力
-	#const CHAR_INFO_DAMAGE        13	; 受けたダメージ（HPへの反映していない）
-	#const CHAR_INFO_DOWN          14	; 1:戦闘不能状態、0:生存
-	#const CHAR_INFO_RESPAWN       15	; 何回リスポーンできるか
-	#const CHAR_INFO_RESTRESPAWN   16	; 残り何回リスポーンできるか
-	#const CHAR_INFO_DOWNTIME      17	; リスポーンまでにかかる時間
-	#const CHAR_INFO_RESTDOWNTIME  18	; 残りどのくらいでリスポーンできるか
-	#const CHAR_INFO_RESPAWNWEAPON 19	; リスポーン時に発射する弾丸（-1:なし、0以上:武器ID）
-	#const CHAR_INFO_WEAPON1       20	; 1つ目の武器（-1:なし、0以上:武器ID）
-	#const CHAR_INFO_WEAPON1HEAT   21	; 1つ目の武器のクールダウンタイム（1以上:武器が使えない、0:使用可能）
-	#const CHAR_INFO_WEAPON2       22	; 2つ目の武器（-1:なし、0以上:武器ID）
-	#const CHAR_INFO_WEAPON2HEAT   23	; 2つ目の武器のクールダウンタイム（1以上:武器が使えない、0:使用可能）
-	#const CHAR_INFO_WEAPON3       24	; 3つ目の武器（-1:なし、0以上:武器ID）
-	#const CHAR_INFO_WEAPON3HEAT   25	; 3つ目の武器のクールダウンタイム（1以上:武器が使えない、0:使用可能）
-	#const CHAR_INFO_DEFINECHAR    26	; キャラクタ定義ID
+	#const CHAR_INFO_MAX 95
+	#const CHAR_INFO_ACTIVE                0	; 1:有効、0:使用していない
+	#const CHAR_INFO_TEAM                  1	; 所属チーム
+	#const CHAR_INFO_CTRLMODE              2	; 操作モード
+	#const CHAR_INFO_DIREC                 3	; 向き
+	#const CHAR_INFO_NEXTMOVE              4	; 次の移動
+	#const CHAR_INFO_MOVEFREQ              5	; 移動可能な頻度（x TIMEに1度）
+	#const CHAR_INFO_MOVEFREQ_B            6	; 移動可能な頻度（x TIMEに1度）【バフ計算後】
+	#const CHAR_INFO_MOVEHEAT              7	; 移動のクールダウンタイム（1以上:移動を受け付けない、0:移動可能）
+	#const CHAR_INFO_NEXTACT               8	; 次の行動(1:1番目の武器を使う)
+	#const CHAR_INFO_MAXHP                 9	; 最大HP
+	#const CHAR_INFO_MAXHP_B              10	; 最大HP【バフ計算後】
+	#const CHAR_INFO_HP                   11	; 現在HP
+	#const CHAR_INFO_MAXWP                12	; 最大WP
+	#const CHAR_INFO_MAXWP_B              13	; 最大WP【バフ計算後】
+	#const CHAR_INFO_WP                   14	; 現在WP
+	#const CHAR_INFO_DEF                  15	; 防御力
+	#const CHAR_INFO_DEF_B                16	; 防御力【バフ計算後】
+	#const CHAR_INFO_DAMAGEHP             17	; 受けたHPダメージ（HPへの反映していない）
+	#const CHAR_INFO_DAMAGEWP             18	; 受けたWPダメージ（WPへの反映していない）
+	#const CHAR_INFO_DOWN                 19	; 1:戦闘不能状態、0:生存
+	#const CHAR_INFO_RESPAWN              20	; 何回リスポーンできるか
+	#const CHAR_INFO_RESPAWN_B            21	; 何回リスポーンできるか【バフ計算後】
+	#const CHAR_INFO_RESTRESPAWN          22	; 残り何回リスポーンできるか
+	#const CHAR_INFO_DOWNTIME             23	; リスポーンまでにかかる時間
+	#const CHAR_INFO_DOWNTIME_B           24	; リスポーンまでにかかる時間【バフ計算後】
+	#const CHAR_INFO_RESTDOWNTIME         25	; 残りどのくらいでリスポーンできるか
+	#const CHAR_INFO_RESPAWNWEAPON        26	; リスポーン時に発射する弾丸（-1:なし、0以上:武器ID）
+	#const CHAR_INFO_WEAPON1              27	; 1つ目の武器（-1:なし、0以上:武器ID）
+	#const CHAR_INFO_WEAPON1HEAT          28	; 1つ目の武器のクールダウンタイム（1以上:武器が使えない、0:使用可能）
+	#const CHAR_INFO_WEAPON2              29	; 2つ目の武器（-1:なし、0以上:武器ID）
+	#const CHAR_INFO_WEAPON2HEAT          30	; 2つ目の武器のクールダウンタイム（1以上:武器が使えない、0:使用可能）
+	#const CHAR_INFO_WEAPON3              31	; 3つ目の武器（-1:なし、0以上:武器ID）
+	#const CHAR_INFO_WEAPON3HEAT          32	; 3つ目の武器のクールダウンタイム（1以上:武器が使えない、0:使用可能）
+	#const CHAR_INFO_DEFINECHAR           33	; キャラクタ定義ID
+	#const CHAR_INFO_BUFF_BEGIN        34  		; バフ情報の先頭（BUFF_STACK_MAX × BUFF_STACK_INFO_MAX 個消費）
+	#const CHAR_INFO_BUFF1_ACTIVE         34	; 1つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF1_RESTTIME       35	; 1つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF1_TYPE           36	; 1つ目のバフの種類
+	#const CHAR_INFO_BUFF1_VALUE          37	; 1つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF2_ACTIVE         38	; 2つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF2_RESTTIME       39	; 2つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF2_TYPE           40	; 2つ目のバフの種類
+	#const CHAR_INFO_BUFF2_VALUE          41	; 2つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF3_ACTIVE         42	; 3つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF3_RESTTIME       43	; 3つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF3_TYPE           44	; 3つ目のバフの種類
+	#const CHAR_INFO_BUFF3_VALUE          45	; 3つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF4_ACTIVE         46	; 4つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF4_RESTTIME       47	; 4つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF4_TYPE           48	; 4つ目のバフの種類
+	#const CHAR_INFO_BUFF4_VALUE          49	; 4つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF5_ACTIVE         50	; 5つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF5_RESTTIME       51	; 5つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF5_TYPE           52	; 5つ目のバフの種類
+	#const CHAR_INFO_BUFF5_VALUE          53	; 5つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF6_ACTIVE         54	; 6つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF6_RESTTIME       55	; 6つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF6_TYPE           56	; 6つ目のバフの種類
+	#const CHAR_INFO_BUFF6_VALUE          57	; 6つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF7_ACTIVE         58	; 7つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF7_RESTTIME       59	; 7つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF7_TYPE           60	; 7つ目のバフの種類
+	#const CHAR_INFO_BUFF7_VALUE          61	; 7つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF8_ACTIVE         62	; 8つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF8_RESTTIME       63	; 8つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF8_TYPE           64	; 8つ目のバフの種類
+	#const CHAR_INFO_BUFF8_VALUE          65	; 8つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF9_ACTIVE         66	; 9つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF9_RESTTIME       67	; 9つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF9_TYPE           68	; 9つ目のバフの種類
+	#const CHAR_INFO_BUFF9_VALUE          69	; 9つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF10_ACTIVE        70	; 10つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF10_RESTTIME      71	; 10つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF10_TYPE          72	; 10つ目のバフの種類
+	#const CHAR_INFO_BUFF10_VALUE         73	; 10つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF11_ACTIVE        74	; 11つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF11_RESTTIME      75	; 11つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF11_TYPE          76	; 11つ目のバフの種類
+	#const CHAR_INFO_BUFF11_VALUE         77	; 11つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFF12_ACTIVE        78	; 12つ目のバフが 1:発動 0:未発動
+	#const CHAR_INFO_BUFF12_RESTTIME      79	; 12つ目のバフの残り有効時間(0:無効 1以上:有効)
+	#const CHAR_INFO_BUFF12_TYPE          80	; 12つ目のバフの種類
+	#const CHAR_INFO_BUFF12_VALUE         81	; 12つ目のバフの効果量(-100:減少 ⇔ 0:なし ⇔ 100:増加)
+	#const CHAR_INFO_BUFFVALUE_BEGIN   82		; バフの効果量の先頭(BUFF_TYPE_MAX個消費)
+	#const CHAR_INFO_BUFFVALUE_NONE       82	; バフの効果量(ダミー)
+	#const CHAR_INFO_BUFFVALUE_MOVE       83	; バフの効果量 移動速度
+	#const CHAR_INFO_BUFFVALUE_MAXHP      84	; バフの効果量 最大HP
+	#const CHAR_INFO_BUFFVALUE_MAXWP      85	; バフの効果量 最大WP
+	#const CHAR_INFO_BUFFVALUE_DEF        86	; バフの効果量 防御力
+	#const CHAR_INFO_BUFFVALUE_RESPAWN    87	; バフの効果量 リスポーン回数
+	#const CHAR_INFO_BUFFVALUE_DOWNTIME   88	; バフの効果量 リスポーンまでにかかる時間
+	#const CHAR_INFO_BUFFVALUE_ATC        89	; バフの効果量 攻撃力（対キャラ）
+	#const CHAR_INFO_BUFFVALUE_COLORPOWER 90	; バフの効果量 色蓄積力の加算率
+	#const CHAR_INFO_BUFFVALUE_COSTWP     91	; バフの効果量 消費WP
+	#const CHAR_INFO_BUFFVALUE_RANGE      92	; バフの効果量 射程
+	#const CHAR_INFO_BUFFVALUE_SPREAD     93	; バフの効果量 拡散範囲
+	#const CHAR_INFO_BUFFVALUE_WEAKEN     94	; バフの効果量 減衰率
 	;操作モード
 	#const CHAR_CTRLMODE_NOACT    0 ; 動かない、行動しない
 	#const CHAR_CTRLMODE_MANUAL   1 ; キー入力で操作する
@@ -106,6 +176,27 @@
 	#const CHAR_CTRLMODE_NOMOVE   3 ; 動かないが弾丸は発射する
 	#const CHAR_CTRLMODE_PAINTER  4 ; 色蓄積を重視する
 	#const CHAR_CTRLMODE_ATTACKER 5 ; 攻撃を重視する
+	;バフの種類
+	#const BUFF_STACK_MAX        12	; 1キャラが保有できるバフの最大数
+	#const BUFF_STACK_INFO_MAX   4	; バフ1つの管理情報数（発動フラグ、効果時間、種類、効果量）
+	#const BUFF_STACK_INFO_ACTIVE   0	; 発動フラグ
+	#const BUFF_STACK_INFO_RESTTIME 1	; 効果時間
+	#const BUFF_STACK_INFO_TYPE     2	;  種類
+	#const BUFF_STACK_INFO_VALUE    3	; 効果量
+	#const BUFF_TYPE_MAX        13	; バフの種類の最大値
+	#const BUFF_TYPE_NONE        0	; バフなし(ダミー)
+	#const BUFF_TYPE_MOVE        1	; 移動速度
+	#const BUFF_TYPE_MAXHP       2	; 最大HP
+	#const BUFF_TYPE_MAXWP       3	; 最大WP
+	#const BUFF_TYPE_DEF         4	; 防御力
+	#const BUFF_TYPE_RESPAWN     5	; リスポーン回数　※効果は必ず永続扱い。持続する分だけ変動を続けるのでRESTTIMEは1が望ましい
+	#const BUFF_TYPE_DOWNTIME    6	; リスポーンまでにかかる時間
+	#const BUFF_TYPE_ATC         7	; 攻撃力（対キャラ）
+	#const BUFF_TYPE_COLORPOWER  8	; 色蓄積力の加算率
+	#const BUFF_TYPE_COSTWP      9	; 消費WP
+	#const BUFF_TYPE_RANGE      10	; 射程
+	#const BUFF_TYPE_SPREAD     11	; 拡散範囲
+	#const BUFF_TYPE_WEAKEN     12	; 減衰率
 	
 	
 ;	dim char_info,CHAR_MAX,CHAR_INFO_MAX
@@ -267,29 +358,66 @@
 	dim weapon_info,WEAPON_MAX,WEAPON_INFO_MAX	; 武器の情報
 
 	; ゲーム全体の情報
-	#const GAME_INFO_MAX 4
-	#const GAME_INFO_NEXTSTAGE 0		; 次のステージ番号
-	#const GAME_INFO_STAGE     1		; 今のステージ番号
-	#const GAME_INFO_LIMITTIME 2		; 今のステージの制限時間
-	#const GAME_INFO_RESTTIME  3		; 今のステージの残り時間
+	#const GAME_INFO_MAX 31
+	#const GAME_INFO_NEXTSTAGE              0	; 次のステージ番号
+	#const GAME_INFO_STAGE                  1	; 今のステージ番号
+	#const GAME_INFO_LIMITTIME              2	; 今のステージの制限時間
+	#const GAME_INFO_RESTTIME               3	; 今のステージの残り時間
+	#const GAME_INFO_SCORE                  4	; 今の得点
+	#const GAME_INFO_CURRSCORE              5	; 今のステージの得点
+	#const GAME_INFO_RETRY                  6	; 今のステージを何度リトライしているか
+	#const GAME_INFO_TOTALLEVEL             7	; 総合的な難しさ 0:標準
+	#const GAME_INFO_DIFFICULTY             8	; マップの難易度 0:ノーマル 1:ハード	        ハード +5 LEVEL
+	#const GAME_INFO_BUFF_ALLY_HP           9	; 味方のHPのバフ				+100: -5 LEVEL |  -20: +1 LEVEL |  -45: +2 LEVEL |  -75: +3 LEVEL
+	#const GAME_INFO_BUFF_ALLY_WP          10	; 味方のWPのバフ				+100: -5 LEVEL |  -20: +1 LEVEL |  -40: +2 LEVEL |  -60: +3 LEVEL
+	#const GAME_INFO_BUFF_ALLY_ATC         11	; 味方の攻撃力のバフ			+100: -5 LEVEL |  -30: +1 LEVEL |  -80: +2 LEVEL |  -99: +3 LEVEL
+	#const GAME_INFO_BUFF_ALLY_COLORPOWER  12	; 味方の色蓄積のバフ			+100: -5 LEVEL |  -10: +1 LEVEL |  -20: +2 LEVEL |  -30: +3 LEVEL
+	#const GAME_INFO_BUFF_ALLY_MOVE        13	; 味方の移動速度のバフ			+200: -5 LEVEL | -100: +2 LEVEL
+	#const GAME_INFO_BUFF_ALLY_RESPAWN     14	; 味方のリスポーン回数のバフ	  +1: -5 LEVEL   -997: +1 LEVEL | -998: +2 LEVEL | -999: +3 LEVEL
+	#const GAME_INFO_BUFF_ALLY_DOWNTIME    15	; 味方のリスポーン時間のバフ	+400:    LEVEL | -200:    LEVEL | -300:    LEVEL
+	#const GAME_INFO_BUFF_ALLY_COSTWP      16	; 味方の消費WPのバフ			 +50: -5 LEVEL |  -20: +1 LEVEL |  -50: +2 LEVEL | -100: +3 LEVEL
+	#const GAME_INFO_BUFF_ALLY_RANGE       17	; 味方の射程のバフ			      +1:    LEVEL |                |   -1:    LEVEL |   -1:    LEVEL
+	#const GAME_INFO_BUFF_ALLY_SPREAD      18	; 味方の拡散範囲のバフ			  +1:    LEVEL |                |                |   -1:    LEVEL
+	#const GAME_INFO_BUFF_ALLY_WEAKEN      19	; 味方の減衰率のバフ			 +20: -9 LEVEL |  -20: +1 LEVEL |  -25: +3 LEVEL |  -30: +5 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_HP         20	; 敵のHPのバフ				     -50: -5 LEVEL |  +30: +1 LEVEL |  +60: +2 LEVEL | +120: +3 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_WP         21	; 敵のWPのバフ				     -50: -5 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_ATC        22	; 敵の攻撃力のバフ				 -50: -5 LEVEL |  +20: +1 LEVEL |  +50: +2 LEVEL | +100: +3 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_COLORPOWER 23	; 敵の色蓄積のバフ				 -50: -5 LEVEL |  +20: +1 LEVEL |  +50: +2 LEVEL | +100: +3 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_MOVE       24	; 敵の移動速度のバフ			-100: -5 LEVEL | +200: +1 LEVEL | +400: +2 LEVEL | +800: +3 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_RESPAWN    25	; 敵のリスポーン回数のバフ	    -999: -5 LEVEL |   +2: +1 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_DOWNTIME   26	; 敵のリスポーン時間のバフ	    -300: -5 LEVEL | +200: +1 LEVEL | +400: +2 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_COSTWP     27	; 敵の消費WPのバフ			                     +100: +1 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_RANGE      28	; 敵の射程のバフ			      -1: -5 LEVEL |   +1: +1 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_SPREAD     29	; 敵の拡散範囲のバフ			  -1: -5 LEVEL |   +1: +1 LEVEL |   +2: +2 LEVEL |   +3: +3 LEVEL
+	#const GAME_INFO_BUFF_ENEMY_WEAKEN     30	; 敵の減衰率のバフ  			 -20: -5 LEVEL |  +10: +1 LEVEL |  +20: +2 LEVEL |  +40: +3 LEVEL
 	
 	dim game_info,GAME_INFO_MAX			; ゲーム全体の情報
 
+	; スコアの記録
+	#const RECORD_INFO_MAX 6
+	#const RECORD_INFO_SCORE     1			; スコア
+	#const RECORD_INFO_LEVEL     2			; レベル
+	#const RECORD_INFO_VER_MAJOR 3			; ゲームのメジャーバージョン
+	#const RECORD_INFO_VER_MINOR 4			; ゲームのマイナーバージョン
+	#const RECORD_INFO_VER_PATCH 5			; ゲームのパッチバージョン
+	dim record_info,RECORD_MAX,RECORD_INFO_MAX			; スコアの情報
+	
 	; 効果音
-	#const SOUND_MAX 13
-	#const SOUND_DEF_DECISION  0		; 決定したときの音
-	#const SOUND_DEF_DOWN      1		; ダウンしたときの音
-	#const SOUND_DEF_RESPAWN   2		; リスポーンしたときの音
-	#const SOUND_DEF_SHOT1     3		; 発射音1の音
-	#const SOUND_DEF_SHOT2     4		; 発射音2の音
-	#const SOUND_DEF_SHOT3     5		; 発射音3の音
-	#const SOUND_DEF_SHOT4     6		; 発射音4の音
-	#const SOUND_DEF_HIT1      7		; 命中1の音
-	#const SOUND_DEF_HIT2      8		; 命中2の音
-	#const SOUND_DEF_HIT3      9		; 命中3の音
-	#const SOUND_DEF_HIT4     10		; 命中4の音
-	#const SOUND_DEF_WIN      11		; 勝利したの音
-	#const SOUND_DEF_LOSE     12		; 敗北したの音
+	#const SOUND_MAX 14
+	#const SOUND_DEF_DECISION   0	; 決定したときの音
+	#const SOUND_DEF_DOWN_ALLY  1	; 味方がダウンしたときの音
+	#const SOUND_DEF_DOWN_ENEMY 2	; 敵がダウンしたときの音
+	#const SOUND_DEF_RESPAWN    3	; リスポーンしたときの音
+	#const SOUND_DEF_SHOT1      4	; 発射音1の音
+	#const SOUND_DEF_SHOT2      5	; 発射音2の音
+	#const SOUND_DEF_SHOT3      6	; 発射音3の音
+	#const SOUND_DEF_SHOT4      7	; 発射音4の音
+	#const SOUND_DEF_HIT1       8	; 命中1の音
+	#const SOUND_DEF_HIT2       9	; 命中2の音
+	#const SOUND_DEF_HIT3      10	; 命中3の音
+	#const SOUND_DEF_HIT4      11	; 命中4の音
+	#const SOUND_DEF_WIN       12	; 勝利したの音
+	#const SOUND_DEF_LOSE      13	; 敗北したの音
 	sdim sound_def_file,64,SOUND_MAX	; ファイルパス
 	dim sound_def_mediabuffid,SOUND_MAX	; メディアバッファID（サウンドIDがそのまま入る）
 
@@ -333,3 +461,9 @@
 	; *sub_calc_map_steps参照
 	map_steps_enemymove_cnt = 0
 	dim map_steps_enemymove,4
+	
+	; 最寄りで自分の色に塗られている最短の向きが格納される
+	; *sub_calc_map_steps参照
+	map_steps_allycolormove_cnt = 0
+	dim map_steps_allycolormove,4
+

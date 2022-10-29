@@ -1,5 +1,5 @@
 	#const GAME_VERSION_MAJOR 1	; ゲームのバージョン
-	#const GAME_VERSION_MINOR 0
+	#const GAME_VERSION_MINOR 1
 	#const GAME_VERSION_PATCH 0
 	#const DEBUG_MODE 0		; 1:デバッグ情報の表示
 	
@@ -9,6 +9,7 @@
 	#const WEAPON_MAX 16	; 武器の最大数
 	#const DEFCHAR_MAX 8	; 登場するキャラクタ定義の最大数
 	#const SEARCH_RANGE 9	; キャラが認識できる距離（大きくすると遠くの敵も認識できるがゲームが重くなる）
+	#const RECORD_MAX 16	; スコアの最大保持数
 	WINDOW_X = ginfo_winx
 	WINDOW_Y = ginfo_winy
 	#const MAP_REAL_X 10					; 実効値としてのマップのX軸の大きさ（表示座標系）

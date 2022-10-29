@@ -19,7 +19,7 @@
 	sub_create_bullet_bulletid = -1
 
 	; WPが足りなければ弾丸生成失敗
-	if char_info(sub_create_bullet_charid,CHAR_INFO_WP) < weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COSTWP){
+	if char_info(sub_create_bullet_charid,CHAR_INFO_WP) < weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COSTWP) * ( 100 - char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_COSTWP) ) / 100 {
 		if DEBUG_MODE : logmes "D exec *sub_create_bullet: WPが足りません"
 		; 次に備えて引数は初期化
 		sub_create_bullet_charid = -1
@@ -48,15 +48,27 @@
 	; 弾丸情報を武器情報から取得する
 	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_HIT) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_HIT)					; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
 	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RESTHIT) = bullet_info(sub_create_bullet_bulletid,BULLET_INFO_HIT)				; 残り命中数（あと何回当たり判定が残っているか）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RANGE) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_RANGE)				; 射程（全部で何回移動できるか）
+	sub_create_bullet_tmprange = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_RANGE) + char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_RANGE)
+	if sub_create_bullet_tmprange < 0 : sub_create_bullet_tmprange = 0		; 射程は0未満になっても大丈夫かもしれないが念のため
+	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RANGE) = sub_create_bullet_tmprange										; 射程（全部で何回移動できるか）
 	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RESTRANGE) = bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RANGE)			; 残り射程（あと何回移動できるか）
 	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_AUTOSPREAD) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_AUTOSPREAD)	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
 	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_SPPED) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SPPED)				; 1 TIMEで何マス移動できるか　※通常は1を想定。0にすると移動しないが残り射程は減る（設置型爆弾のような存在）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_ATC) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_ATC)					; 攻撃力（対キャラ）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_COLORPOWER) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COLORPOWER)	; 色蓄積力（対バケツ）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_COLORFLY) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COLORFLY)		; 飛翔時（非命中時）の色蓄積力（対バケツ）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_SPREAD) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SPREAD)			; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_WEAKEN) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_WEAKEN)			; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	sub_create_bullet_buffatc = char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_ATC)
+	if sub_create_bullet_buffatc < -100 : sub_create_bullet_buffatc = -100 ; 攻撃のバフ-100未満は-100に（そうしないとたぶん回復してしまう）
+	if DEBUG_MODE : logmes strf("charid=%d buffatc=%d",sub_create_bullet_charid,char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_ATC))
+	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_ATC) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_ATC) * ( 100 + sub_create_bullet_buffatc ) / 100							; 攻撃力（対キャラ）
+	sub_create_bullet_buffcolorpower = char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_COLORPOWER)
+	if sub_create_bullet_buffcolorpower < -100 : sub_create_bullet_buffcolorpower = -100 ; 色蓄積のバフ-100未満は-100に（そうしないとたぶん色が消える）
+	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_COLORPOWER) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COLORPOWER) * ( 100 + sub_create_bullet_buffcolorpower ) / 100	; 色蓄積力（対バケツ）
+	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_COLORFLY) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COLORFLY) * ( 100 + sub_create_bullet_buffcolorpower ) / 100		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	sub_create_bullet_tmpspread = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SPREAD) + char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_SPREAD)
+	if sub_create_bullet_tmpspread < 0 : sub_create_bullet_tmpspread = 0		; 拡散範囲は0未満になっても大丈夫かもしれないが念のため
+	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_SPREAD) = sub_create_bullet_tmpspread			; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	sub_create_bullet_tmpweaken = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_WEAKEN) + char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_WEAKEN)
+	if sub_create_bullet_tmpweaken <   0 : sub_create_bullet_tmpweaken = 0		; 減衰率は0未満にはしない
+	if sub_create_bullet_tmpweaken > 100 : sub_create_bullet_tmpweaken = 100	; 減衰率は100より大きくしない
+	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_WEAKEN) = sub_create_bullet_tmpweaken			; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
 	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_PERSIST) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_PERSIST)			; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
 	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RESTSPREAD) = bullet_info(sub_create_bullet_bulletid,BULLET_INFO_PERSIST)		; あと何TIME拡散が持続するか
 	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_SOUND_HIT) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_HIT)		; 命中時のサウンドID
@@ -78,7 +90,9 @@
 	bullet_spid(sub_create_bullet_bulletid) = SP_BULLET_STATIC+sub_create_bullet_bulletid
 
 	; 弾丸を生成したのでWPを消費
-	char_info(sub_create_bullet_charid,CHAR_INFO_WP) -= weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COSTWP)
+	sub_create_bullet_costwp = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COSTWP) * ( 100 - char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_COSTWP) ) / 100
+	if sub_create_bullet_costwp <= 0 : sub_create_bullet_costwp = 1 ; 最低でも1消費 
+	char_info(sub_create_bullet_charid,CHAR_INFO_WP) -= sub_create_bullet_costwp
 
 	getreq sub_create_bullet_endtime,SYSREQ_TIMER
 	sub_create_bullet_rangetime = sub_create_bullet_endtime - sub_create_bullet_starttime
@@ -134,13 +148,13 @@
 	; map_steps_canmoveには直後に移動可能な方向を格納する
 	;   引数: sub_calc_map_steps_posx X座標（データ座標系）
 	;   引数: sub_calc_map_steps_posy Y座標（データ座標系）
-	;   引数: sub_calc_map_steps_flag 拡張情報を取得する 0:取得しない 1:最寄りの塗れる場所 2:最寄りの敵 3:両方 4:敵のいる部分は侵入不可扱い
+	;   引数: sub_calc_map_steps_flag 拡張情報を取得する 0:取得しない 1:最寄りの塗れる場所 2:最寄りの敵 3:両方 4:敵のいる部分は侵入不可扱い 8:最寄りの自チームの床
 	;---------------------------------------------------------------------------------
 *sub_calc_map_steps
-	sdim sub_calc_map_steps_rangetitle,32,7
-	sub_calc_map_steps_rangetitle(0) = "指定ユニット特定","歩数マップ初期化","ユニットは侵入不可扱い","歩数マップの作成","追加info取得","flag1処理","flag2処理"
-	dim sub_calc_map_steps_record,8
-	dim sub_calc_map_steps_rangetime,7
+	sdim sub_calc_map_steps_rangetitle,32,8
+	sub_calc_map_steps_rangetitle(0) = "指定ユニット特定","歩数マップ初期化","ユニットは侵入不可扱い","歩数マップの作成","追加info取得","flag1処理","flag2処理","flag8処理"
+	dim sub_calc_map_steps_record,9
+	dim sub_calc_map_steps_rangetime,8
 	
 	getreq sub_calc_map_steps_record(0),SYSREQ_TIMER
 	if DEBUG_MODE : logmes "I call *sub_calc_map_steps: x="+sub_calc_map_steps_posx+", y="+sub_calc_map_steps_posy+", flag="+sub_calc_map_steps_flag
@@ -467,14 +481,98 @@
 
 	getreq sub_calc_map_steps_record(7),SYSREQ_TIMER
 
+	if sub_calc_map_steps_flag & 8 {
+		; 最寄りで自分の色に塗られている最短の向きが格納する
+		map_steps_allycolormove_cnt = 0
+		dim map_steps_allycolormove,4
+
+		; 最寄りの MAP_STEPS_INFO_ALLYCOLOR を探す（これをtargetとする）
+		dim sub_calc_map_steps_targetx,32
+		dim sub_calc_map_steps_targety,32
+		sub_calc_map_steps_targetc = 0
+		sub_calc_map_steps_targetr = -1
+		for sub_calc_map_steps_r,1,SEARCH_RANGE
+			for sub_calc_map_steps_y,MAP_MERGIN,MAP_Y-MAP_MERGIN
+				for sub_calc_map_steps_x,MAP_MERGIN,MAP_X-MAP_MERGIN
+					if map_steps(sub_calc_map_steps_x,sub_calc_map_steps_y) ! sub_calc_map_steps_r : _continue
+					if ( map_steps_info(sub_calc_map_steps_x,sub_calc_map_steps_y) & MAP_STEPS_INFO_ALLYCOLOR ) {
+						if DEBUG_MODE : logmes "D exec *sub_calc_map_steps: allycolormoveでターゲット特定 x="+sub_calc_map_steps_x+", y="+sub_calc_map_steps_y+", r="+sub_calc_map_steps_r
+						sub_calc_map_steps_targetx(sub_calc_map_steps_targetc) = sub_calc_map_steps_x
+						sub_calc_map_steps_targety(sub_calc_map_steps_targetc) = sub_calc_map_steps_y
+						sub_calc_map_steps_targetc += 1
+						sub_calc_map_steps_targetr = sub_calc_map_steps_r
+					}
+				next
+			next
+			; 候補があれば探索は終了
+			if sub_calc_map_steps_targetc > 0 : _break
+		next
+	
+		if ( sub_calc_map_steps_targetc > 0 ) {
+			sub_calc_map_steps_scani = rnd(sub_calc_map_steps_targetc)
+			; targetから最寄りの隣接しているstepsが1つ低いところを探し、そこに移動する。その際scanaには逆向きを入れておく
+			; 最寄りの隣接が1以上なら同じ作業を繰り返す
+			; 最寄りの隣接が0だった場合は、scanaの向きが steps=0 から steps=1 に移動できる向きになる
+	
+			sub_calc_map_steps_scanx = sub_calc_map_steps_targetx(sub_calc_map_steps_scani)
+			sub_calc_map_steps_scany = sub_calc_map_steps_targety(sub_calc_map_steps_scani)
+			sub_calc_map_steps_scanr = sub_calc_map_steps_targetr - 1
+			sub_calc_map_steps_scana = DIREC_NONE
+			if DEBUG_MODE : logmes "D exec *sub_calc_map_steps: allycolormoveで検索開始 sub_calc_map_steps_scanx="+sub_calc_map_steps_scanx+", sub_calc_map_steps_scany="+sub_calc_map_steps_scany+", sub_calc_map_steps_scanr="+sub_calc_map_steps_scanr
+		
+*sub_calc_map_steps_allycolormove
+			
+			if map_steps(sub_calc_map_steps_scanx+1,sub_calc_map_steps_scany  ) = sub_calc_map_steps_scanr {
+				sub_calc_map_steps_scanx += 1
+				sub_calc_map_steps_scanr -= 1
+				sub_calc_map_steps_scana = DIREC_LEFT
+			} else {
+				if map_steps(sub_calc_map_steps_scanx-1,sub_calc_map_steps_scany  ) = sub_calc_map_steps_scanr {
+					sub_calc_map_steps_scanx -= 1
+					sub_calc_map_steps_scanr -= 1
+					sub_calc_map_steps_scana = DIREC_RIGHT
+				} else {
+					if map_steps(sub_calc_map_steps_scanx  ,sub_calc_map_steps_scany+1) = sub_calc_map_steps_scanr {
+						sub_calc_map_steps_scany += 1
+						sub_calc_map_steps_scanr -= 1
+						sub_calc_map_steps_scana = DIREC_UP
+					} else {
+						if map_steps(sub_calc_map_steps_scanx  ,sub_calc_map_steps_scany-1) = sub_calc_map_steps_scanr {
+							sub_calc_map_steps_scany -= 1
+							sub_calc_map_steps_scanr -= 1
+							sub_calc_map_steps_scana = DIREC_DOWN
+						} else {
+							; もしrが1つも減らない場合、不具合で無限ループになるのでログを出して終了する
+							if DEBUG_MODE : logmes "W exec *sub_calc_map_steps: allycolormoveで無限ループ sub_calc_map_steps_scanx="+sub_calc_map_steps_scanx+", sub_calc_map_steps_scany="+sub_calc_map_steps_scany+", sub_calc_map_steps_scanr="+sub_calc_map_steps_scanr
+							; 次に備えて引数は初期化
+							sub_calc_map_steps_posx = -1
+							sub_calc_map_steps_posy = -1
+							return
+						}
+					}
+				}
+			}
+			
+			if DEBUG_MODE : logmes "D exec *sub_calc_map_steps: allycolormoveの途中経過 sub_calc_map_steps_scanx="+sub_calc_map_steps_scanx+", sub_calc_map_steps_scany="+sub_calc_map_steps_scany+", sub_calc_map_steps_scanr="+sub_calc_map_steps_scanr+", sub_calc_map_steps_scana="+sub_calc_map_steps_scana
+			if sub_calc_map_steps_scanr >= 0 : goto *sub_calc_map_steps_allycolormove
+		
+			if DEBUG_MODE : logmes "D exec *sub_calc_map_steps: allycolormoveは探索終了 sub_calc_map_steps_scanx="+sub_calc_map_steps_scanx+", sub_calc_map_steps_scany="+sub_calc_map_steps_scany+", sub_calc_map_steps_scanr="+sub_calc_map_steps_scanr+", sub_calc_map_steps_scana="+sub_calc_map_steps_scana
+			map_steps_allycolormove(0) = sub_calc_map_steps_scana
+			map_steps_allycolormove_cnt = 1
+		}
+	}
+
+	getreq sub_calc_map_steps_record(8),SYSREQ_TIMER
+
+
 	; 処理時間の計算
-	for sub_calc_map_steps_i,0,8-1
+	for sub_calc_map_steps_i,0,9-1
 		sub_calc_map_steps_rangetime(sub_calc_map_steps_i) = sub_calc_map_steps_record(sub_calc_map_steps_i+1) - sub_calc_map_steps_record(sub_calc_map_steps_i)
 	next
 	sub_calc_map_steps_globalrangetime = sub_calc_map_steps_record(7) - sub_calc_map_steps_record(0)
 	
 	; 処理時間のロギング
-	for sub_calc_map_steps_i,0,8-1
+	for sub_calc_map_steps_i,0,9-1
 		if DEBUG_MODE : logmes strf("D exec *sub_calc_map_steps: %s: %3d",sub_calc_map_steps_rangetitle(sub_calc_map_steps_i),sub_calc_map_steps_rangetime(sub_calc_map_steps_i) )
 	next
 
@@ -520,11 +618,17 @@
 	char_desc(sub_load_defchar_charid,0) = defchar_desc(sub_load_defchar_defcharid,0)
 	char_info(sub_load_defchar_charid,CHAR_INFO_ACTIVE) = 1	; 有効
 	char_info(sub_load_defchar_charid,CHAR_INFO_MOVEFREQ) = defchar_info(sub_load_defchar_defcharid,DEFCHAR_INFO_MOVEFREQ)
+	char_info(sub_load_defchar_charid,CHAR_INFO_MOVEFREQ_B) = char_info(sub_load_defchar_charid,CHAR_INFO_MOVEFREQ)
 	char_info(sub_load_defchar_charid,CHAR_INFO_MAXHP) = defchar_info(sub_load_defchar_defcharid,DEFCHAR_INFO_MAXHP)
+	char_info(sub_load_defchar_charid,CHAR_INFO_MAXHP_B) = char_info(sub_load_defchar_charid,CHAR_INFO_MAXHP)
 	char_info(sub_load_defchar_charid,CHAR_INFO_MAXWP) = defchar_info(sub_load_defchar_defcharid,DEFCHAR_INFO_MAXWP)
+	char_info(sub_load_defchar_charid,CHAR_INFO_MAXWP_B) = char_info(sub_load_defchar_charid,CHAR_INFO_MAXWP)
 	char_info(sub_load_defchar_charid,CHAR_INFO_DEF) = defchar_info(sub_load_defchar_defcharid,DEFCHAR_INFO_DEF)
+	char_info(sub_load_defchar_charid,CHAR_INFO_DEF_B) = char_info(sub_load_defchar_charid,CHAR_INFO_DEF)
 	char_info(sub_load_defchar_charid,CHAR_INFO_RESPAWN) = defchar_info(sub_load_defchar_defcharid,DEFCHAR_INFO_RESPAWN)
+	char_info(sub_load_defchar_charid,CHAR_INFO_RESPAWN_B) = char_info(sub_load_defchar_charid,CHAR_INFO_RESPAWN)
 	char_info(sub_load_defchar_charid,CHAR_INFO_DOWNTIME) = defchar_info(sub_load_defchar_defcharid,DEFCHAR_INFO_DOWNTIME)
+	char_info(sub_load_defchar_charid,CHAR_INFO_DOWNTIME_B) = char_info(sub_load_defchar_charid,CHAR_INFO_DOWNTIME)
 	char_info(sub_load_defchar_charid,CHAR_INFO_RESPAWNWEAPON) = 3	; 拠点防衛砲
 	char_info(sub_load_defchar_charid,CHAR_INFO_WEAPON1) = defchar_info(sub_load_defchar_defcharid,DEFCHAR_INFO_WEAPON1)
 	char_info(sub_load_defchar_charid,CHAR_INFO_WEAPON2) = defchar_info(sub_load_defchar_defcharid,DEFCHAR_INFO_WEAPON2)
@@ -533,6 +637,78 @@
 	; 次に備えて引数は初期化
 	sub_load_defchar_defcharid = -1
 	sub_load_defchar_charid = -1
+	return
+
+
+	;---------------------------------------------------------------------------------
+	; 記録をファイルに出力する
+	;---------------------------------------------------------------------------------
+*sub_save_record
+	bsave "record.txt",record_info
+	return
+
+	;---------------------------------------------------------------------------------
+	; 記録をファイルに読み込む
+	;---------------------------------------------------------------------------------
+*sub_load_record
+	exist "record.txt"
+	if strsize >= 0 {
+		bload "record.txt",record_info
+	} else {
+		; 作者の記録をとりあえず書き込んでおく
+		record_info(0,RECORD_INFO_SCORE) = 245316
+		record_info(0,RECORD_INFO_LEVEL) = 10
+		record_info(0,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
+		record_info(0,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
+		record_info(0,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
+		record_info(1,RECORD_INFO_SCORE) = 65124
+		record_info(1,RECORD_INFO_LEVEL) = 0
+		record_info(1,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
+		record_info(1,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
+		record_info(1,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
+		record_info(2,RECORD_INFO_SCORE) = 2849
+		record_info(2,RECORD_INFO_LEVEL) = -19
+		record_info(2,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
+		record_info(2,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
+		record_info(2,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
+	}
+	return
+
+	;---------------------------------------------------------------------------------
+	; 記録を追加する
+	;---------------------------------------------------------------------------------
+*sub_add_record
+	sub_add_record_target = -1
+	for sub_add_record_i,0,RECORD_MAX
+		; 点数が低ければそこに挿入、高ければ次へ進む
+		if DEBUG_MODE : logmes strf("D exec *sub_add_record %d vs %d",record_info(sub_add_record_i,RECORD_INFO_SCORE),game_info(GAME_INFO_SCORE))
+		if record_info(sub_add_record_i,RECORD_INFO_SCORE) > game_info(GAME_INFO_SCORE) : _continue
+
+		sub_add_record_target = sub_add_record_i
+		if DEBUG_MODE : logmes strf("D exec *sub_add_record set target %d",sub_add_record_target)
+		_break
+	next
+
+	logmes "D exec *sub_add_record target="+sub_add_record_target
+	if sub_add_record_target = -1 : return ; ランキング外のため何もしない
+	
+	; targetより後ろのデータを繰り下げる
+	for sub_add_record_i,RECORD_MAX-1,sub_add_record_target,-1
+		record_info(sub_add_record_i,RECORD_INFO_SCORE) = record_info(sub_add_record_i-1,RECORD_INFO_SCORE)
+		record_info(sub_add_record_i,RECORD_INFO_LEVEL) = record_info(sub_add_record_i-1,RECORD_INFO_LEVEL)
+		record_info(sub_add_record_i,RECORD_INFO_VER_MAJOR) = record_info(sub_add_record_i-1,RECORD_INFO_VER_MAJOR)
+		record_info(sub_add_record_i,RECORD_INFO_VER_MINOR) = record_info(sub_add_record_i-1,RECORD_INFO_VER_MINOR)
+		record_info(sub_add_record_i,RECORD_INFO_VER_PATCH) = record_info(sub_add_record_i-1,RECORD_INFO_VER_PATCH)
+		logmes "D exec *sub_add_record copy from="+(sub_add_record_i-1)+" to="+sub_add_record_i
+	next
+
+	record_info(sub_add_record_target,RECORD_INFO_SCORE) = game_info(GAME_INFO_SCORE)
+	record_info(sub_add_record_target,RECORD_INFO_LEVEL) = game_info(GAME_INFO_TOTALLEVEL)
+	record_info(sub_add_record_target,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
+	record_info(sub_add_record_target,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
+	record_info(sub_add_record_target,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
+
+	gosub *sub_save_record
 	return
 
 *end_sub_hsp
