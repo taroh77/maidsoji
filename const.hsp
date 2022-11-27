@@ -1,6 +1,6 @@
 	#const GAME_VERSION_MAJOR 1	; ゲームのバージョン
 	#const GAME_VERSION_MINOR 1
-	#const GAME_VERSION_PATCH 0
+	#const GAME_VERSION_PATCH 1
 	#const DEBUG_MODE 0		; 1:デバッグ情報の表示
 	
 	#const CHAR_MAX 4		; 管理するキャラクタの最大数

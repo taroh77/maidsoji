@@ -12,6 +12,8 @@
 	;;; 描画系の初期化
 	;screen 0,WINDOW_X,WINDOW_Y ; サイズ：WINDOW_X x WINDOW_Y（実行する際にひと手間必要になるので今はやらない）
 
+	title "メイドさんのお掃除し隊"
+
 	gsel 0			; 操作先IDを0に戻す
 	font "",12
 
@@ -200,6 +202,10 @@
 	goto *main_stageend
 
 ; エンディングのメインループ
+*game_retire_ending
+	mmplay sound_def_mediabuffid(SOUND_DEF_DECISION)	; 決定の効果音
+	clrobj
+	input_button_display = 0
 *game_ending
 	gosub *sub_add_record	; スコアの記録
 *main_ending
@@ -973,7 +979,7 @@
 		pos 10,400
 		if input_button_display = 0 : button goto "リトライ",*retry_stage
 		pos 160,400
-		if input_button_display = 0 : button goto "ゲームオーバー",*restart_game
+		if input_button_display = 0 : button goto "ゲームオーバー",*game_retire_ending
 	}
 	font "",12
 	input_button_display = 1
