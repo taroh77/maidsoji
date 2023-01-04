@@ -26,78 +26,130 @@
 		sub_create_bullet_weaponid = -1
 		return
 	}
-	
-	for sub_create_bullet_i,0,BULLET_MAX
-		if bullet_info(sub_create_bullet_i,BULLET_INFO_ACTIVE) = 0{ ; 空きを見つける
-			sub_create_bullet_bulletid = sub_create_bullet_i
-			_break
+
+	; 弾丸発射の場合
+	if weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_BULLET {
+		for sub_create_bullet_i,0,BULLET_MAX
+			if bullet_info(sub_create_bullet_i,BULLET_INFO_ACTIVE) = 0{ ; 空きを見つける
+				sub_create_bullet_bulletid = sub_create_bullet_i
+				_break
+			}
+		next
+		if sub_create_bullet_bulletid = -1{
+			if DEBUG_MODE : logmes "W exec *sub_create_bullet: 弾丸情報に空きがありません。上限を引き上げてください。"
+			; 弾丸情報に空きがなく生成失敗
+			; 次に備えて引数は初期化
+			sub_create_bullet_charid = -1
+			sub_create_bullet_weaponid = -1
+			return 
 		}
-	next
-	if sub_create_bullet_bulletid = -1{
-		if DEBUG_MODE : logmes "W exec *sub_create_bullet: 弾丸情報に空きがありません。上限を引き上げてください。"
-		; 弾丸情報に空きがなく生成失敗
-		; 次に備えて引数は初期化
-		sub_create_bullet_charid = -1
-		sub_create_bullet_weaponid = -1
-		return 
+	
+		; 弾丸を有効にする
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_ACTIVE) = 1
+	
+		; 弾丸情報を武器情報から取得する
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_HIT) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_HIT)					; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RESTHIT) = bullet_info(sub_create_bullet_bulletid,BULLET_INFO_HIT)				; 残り命中数（あと何回当たり判定が残っているか）
+		sub_create_bullet_tmprange = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_RANGE) + char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_RANGE)
+		if sub_create_bullet_tmprange < 0 : sub_create_bullet_tmprange = 0		; 射程は0未満になっても大丈夫かもしれないが念のため
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RANGE) = sub_create_bullet_tmprange										; 射程（全部で何回移動できるか）
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RESTRANGE) = bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RANGE)			; 残り射程（あと何回移動できるか）
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_AUTOSPREAD) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_AUTOSPREAD)	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_SPPED) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SPPED)				; 1 TIMEで何マス移動できるか　※通常は1を想定。0にすると移動しないが残り射程は減る（設置型爆弾のような存在）
+		sub_create_bullet_buffatc = char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_ATC)
+		if sub_create_bullet_buffatc < -100 : sub_create_bullet_buffatc = -100 ; 攻撃のバフ-100未満は-100に（そうしないとたぶん回復してしまう）
+		if DEBUG_MODE : logmes strf("charid=%d buffatc=%d",sub_create_bullet_charid,char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_ATC))
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_ATC) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_ATC) * ( 100 + sub_create_bullet_buffatc ) / 100							; 攻撃力（対キャラ）
+		sub_create_bullet_buffcolorpower = char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_COLORPOWER)
+		if sub_create_bullet_buffcolorpower < -100 : sub_create_bullet_buffcolorpower = -100 ; 色蓄積のバフ-100未満は-100に（そうしないとたぶん色が消える）
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_COLORPOWER) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COLORPOWER) * ( 100 + sub_create_bullet_buffcolorpower ) / 100	; 色蓄積力（対バケツ）
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_COLORFLY) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COLORFLY) * ( 100 + sub_create_bullet_buffcolorpower ) / 100		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+		sub_create_bullet_tmpspread = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SPREAD) + char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_SPREAD)
+		if sub_create_bullet_tmpspread < 0 : sub_create_bullet_tmpspread = 0		; 拡散範囲は0未満になっても大丈夫かもしれないが念のため
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_SPREAD) = sub_create_bullet_tmpspread			; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+		sub_create_bullet_tmpweaken = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_WEAKEN) + char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_WEAKEN)
+		if sub_create_bullet_tmpweaken <   0 : sub_create_bullet_tmpweaken = 0		; 減衰率は0未満にはしない
+		if sub_create_bullet_tmpweaken > 100 : sub_create_bullet_tmpweaken = 100	; 減衰率は100より大きくしない
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_WEAKEN) = sub_create_bullet_tmpweaken			; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_PERSIST) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_PERSIST)			; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RESTSPREAD) = bullet_info(sub_create_bullet_bulletid,BULLET_INFO_PERSIST)		; あと何TIME拡散が持続するか
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_SOUND_HIT) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_HIT)		; 命中時のサウンドID
+	
+		; 弾丸の所属、位置、向きはキャラクタと一致させる
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_TEAM) = char_info(sub_create_bullet_charid,CHAR_INFO_TEAM)
+		bullet_mappos(sub_create_bullet_bulletid,CIE_X) = char_mappos(sub_create_bullet_charid,CIE_X)
+		bullet_mappos(sub_create_bullet_bulletid,CIE_Y) = char_mappos(sub_create_bullet_charid,CIE_Y)
+		if DEBUG_MODE : logmes "D exec *sub_create_bullet: 弾丸の情報 データ座標="+bullet_mappos(sub_create_bullet_bulletid,CIE_X)+","+bullet_mappos(sub_create_bullet_bulletid,CIE_Y)
+		bullet_info(sub_create_bullet_bulletid,BULLET_INFO_DIREC) = char_info(sub_create_bullet_charid,CHAR_INFO_DIREC)
+	
+		; 発射音を鳴らす
+		if weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_FIRE) > 0 {
+			mmplay weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_FIRE)	; 発射の効果音
+		}
+	
+		; 弾丸のスプライト生成（スプライトの座標は0,0で生成するので後で修正が必要）
+		es_set SP_BULLET_STATIC+sub_create_bullet_bulletid,0,0,SPCHAR_BULLET_STATIC+weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_BULLETSPID),0,3
+		bullet_spid(sub_create_bullet_bulletid) = SP_BULLET_STATIC+sub_create_bullet_bulletid
+	
+		; 弾丸を生成したのでWPを消費
+		sub_create_bullet_costwp = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COSTWP) * ( 100 - char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_COSTWP) ) / 100
+		if sub_create_bullet_costwp <= 0 : sub_create_bullet_costwp = 1 ; 最低でも1消費 
+		char_info(sub_create_bullet_charid,CHAR_INFO_WP) -= sub_create_bullet_costwp
+	
+		getreq sub_create_bullet_endtime,SYSREQ_TIMER
+		sub_create_bullet_rangetime = sub_create_bullet_endtime - sub_create_bullet_starttime
+		if DEBUG_MODE : logmes "I exec *sub_create_bullet: 弾丸を正常に生成しました sub_create_bullet_bulletid="+sub_create_bullet_bulletid+", time="+sub_create_bullet_rangetime
 	}
-
-	; 弾丸を有効にする
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_ACTIVE) = 1
-
-	; 弾丸情報を武器情報から取得する
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_HIT) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_HIT)					; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RESTHIT) = bullet_info(sub_create_bullet_bulletid,BULLET_INFO_HIT)				; 残り命中数（あと何回当たり判定が残っているか）
-	sub_create_bullet_tmprange = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_RANGE) + char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_RANGE)
-	if sub_create_bullet_tmprange < 0 : sub_create_bullet_tmprange = 0		; 射程は0未満になっても大丈夫かもしれないが念のため
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RANGE) = sub_create_bullet_tmprange										; 射程（全部で何回移動できるか）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RESTRANGE) = bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RANGE)			; 残り射程（あと何回移動できるか）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_AUTOSPREAD) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_AUTOSPREAD)	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_SPPED) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SPPED)				; 1 TIMEで何マス移動できるか　※通常は1を想定。0にすると移動しないが残り射程は減る（設置型爆弾のような存在）
-	sub_create_bullet_buffatc = char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_ATC)
-	if sub_create_bullet_buffatc < -100 : sub_create_bullet_buffatc = -100 ; 攻撃のバフ-100未満は-100に（そうしないとたぶん回復してしまう）
-	if DEBUG_MODE : logmes strf("charid=%d buffatc=%d",sub_create_bullet_charid,char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_ATC))
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_ATC) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_ATC) * ( 100 + sub_create_bullet_buffatc ) / 100							; 攻撃力（対キャラ）
-	sub_create_bullet_buffcolorpower = char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_COLORPOWER)
-	if sub_create_bullet_buffcolorpower < -100 : sub_create_bullet_buffcolorpower = -100 ; 色蓄積のバフ-100未満は-100に（そうしないとたぶん色が消える）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_COLORPOWER) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COLORPOWER) * ( 100 + sub_create_bullet_buffcolorpower ) / 100	; 色蓄積力（対バケツ）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_COLORFLY) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COLORFLY) * ( 100 + sub_create_bullet_buffcolorpower ) / 100		; 飛翔時（非命中時）の色蓄積力（対バケツ）
-	sub_create_bullet_tmpspread = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SPREAD) + char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_SPREAD)
-	if sub_create_bullet_tmpspread < 0 : sub_create_bullet_tmpspread = 0		; 拡散範囲は0未満になっても大丈夫かもしれないが念のため
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_SPREAD) = sub_create_bullet_tmpspread			; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
-	sub_create_bullet_tmpweaken = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_WEAKEN) + char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_WEAKEN)
-	if sub_create_bullet_tmpweaken <   0 : sub_create_bullet_tmpweaken = 0		; 減衰率は0未満にはしない
-	if sub_create_bullet_tmpweaken > 100 : sub_create_bullet_tmpweaken = 100	; 減衰率は100より大きくしない
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_WEAKEN) = sub_create_bullet_tmpweaken			; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_PERSIST) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_PERSIST)			; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_RESTSPREAD) = bullet_info(sub_create_bullet_bulletid,BULLET_INFO_PERSIST)		; あと何TIME拡散が持続するか
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_SOUND_HIT) = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_HIT)		; 命中時のサウンドID
-
-	; 弾丸の所属、位置、向きはキャラクタと一致させる
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_TEAM) = char_info(sub_create_bullet_charid,CHAR_INFO_TEAM)
-	bullet_mappos(sub_create_bullet_bulletid,CIE_X) = char_mappos(sub_create_bullet_charid,CIE_X)
-	bullet_mappos(sub_create_bullet_bulletid,CIE_Y) = char_mappos(sub_create_bullet_charid,CIE_Y)
-	if DEBUG_MODE : logmes "D exec *sub_create_bullet: 弾丸の情報 データ座標="+bullet_mappos(sub_create_bullet_bulletid,CIE_X)+","+bullet_mappos(sub_create_bullet_bulletid,CIE_Y)
-	bullet_info(sub_create_bullet_bulletid,BULLET_INFO_DIREC) = char_info(sub_create_bullet_charid,CHAR_INFO_DIREC)
-
-	; 発射音を鳴らす
-	if weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_FIRE) > 0 {
-		mmplay weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_FIRE)	; 発射の効果音
+	; 自分に直接効果ありの場合
+	if weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_SELF {
+		; 確率でステートを付与
+		if rnd(100) < weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_ADDSTATERATE){
+			sub_set_state_charid=sub_create_bullet_charid
+			sub_set_state_resttime=weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_ADDSTATETIME)
+			sub_set_state_type=weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_ADDSTATE)
+			gosub *sub_set_state
+			; 発射音を鳴らす
+			if weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_FIRE) > 0 {
+				mmplay weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_FIRE)	; 発射の効果音
+			}
+			; 弾丸を生成したのでWPを消費
+			sub_create_bullet_costwp = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COSTWP) * ( 100 - char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_COSTWP) ) / 100
+			if sub_create_bullet_costwp <= 0 : sub_create_bullet_costwp = 1 ; 最低でも1消費 
+			char_info(sub_create_bullet_charid,CHAR_INFO_WP) -= sub_create_bullet_costwp
+		}
+		getreq sub_create_bullet_endtime,SYSREQ_TIMER
+		sub_create_bullet_rangetime = sub_create_bullet_endtime - sub_create_bullet_starttime
+		if DEBUG_MODE : logmes "I exec *sub_create_bullet: 弾丸(自分に直接効果あり)を正常に生成しました time="+sub_create_bullet_rangetime
 	}
-
-	; 弾丸のスプライト生成（スプライトの座標は0,0で生成するので後で修正が必要）
-	es_set SP_BULLET_STATIC+sub_create_bullet_bulletid,0,0,SPCHAR_BULLET_STATIC+weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_BULLETSPID),0,1
-	bullet_spid(sub_create_bullet_bulletid) = SP_BULLET_STATIC+sub_create_bullet_bulletid
-
-	; 弾丸を生成したのでWPを消費
-	sub_create_bullet_costwp = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COSTWP) * ( 100 - char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_COSTWP) ) / 100
-	if sub_create_bullet_costwp <= 0 : sub_create_bullet_costwp = 1 ; 最低でも1消費 
-	char_info(sub_create_bullet_charid,CHAR_INFO_WP) -= sub_create_bullet_costwp
-
-	getreq sub_create_bullet_endtime,SYSREQ_TIMER
-	sub_create_bullet_rangetime = sub_create_bullet_endtime - sub_create_bullet_starttime
-	if DEBUG_MODE : logmes "I exec *sub_create_bullet: 弾丸を正常に生成しました sub_create_bullet_bulletid="+sub_create_bullet_bulletid+", time="+sub_create_bullet_rangetime
-
+	; 味方全員に直接効果ありの場合
+	if weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_ALLYALL {
+		
+	}
+	; 敵全員に直接効果ありの場合
+	if weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_ENEMYALL {
+		for sub_create_bullet_i,0,CHAR_MAX
+			if char_info(sub_create_bullet_i,CHAR_INFO_TEAM) = 0 : _continue
+			; 確率でステートを付与
+			if rnd(100) < weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_ADDSTATERATE){
+				sub_set_state_charid=sub_create_bullet_i
+				sub_set_state_resttime=weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_ADDSTATETIME)
+				sub_set_state_type=weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_ADDSTATE)
+				gosub *sub_set_state
+			}
+		next
+		; 発射音を鳴らす
+		if weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_FIRE) > 0 {
+			mmplay weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_SOUND_FIRE)	; 発射の効果音
+		}
+		; 弾丸を生成したのでWPを消費
+		sub_create_bullet_costwp = weapon_info(sub_create_bullet_weaponid,WEAPON_INFO_COSTWP) * ( 100 - char_info(sub_create_bullet_charid,CHAR_INFO_BUFFVALUE_COSTWP) ) / 100
+		if sub_create_bullet_costwp <= 0 : sub_create_bullet_costwp = 1 ; 最低でも1消費 
+		char_info(sub_create_bullet_charid,CHAR_INFO_WP) -= sub_create_bullet_costwp
+		getreq sub_create_bullet_endtime,SYSREQ_TIMER
+		sub_create_bullet_rangetime = sub_create_bullet_endtime - sub_create_bullet_starttime
+		if DEBUG_MODE : logmes "I exec *sub_create_bullet: 弾丸(自分に直接効果あり)を正常に生成しました time="+sub_create_bullet_rangetime
+	}
+	
 	; 次に備えて引数は初期化
 	sub_create_bullet_charid = -1
 	sub_create_bullet_weaponid = -1
@@ -604,10 +656,10 @@
 	}
 
 	; スプライトの生成
-	es_set SP_MAP+sub_load_defchar_charid,0,0,defchar_sp(sub_load_defchar_defcharid,DEFCHAR_SP_ANIME_DOWN),0
-	es_set SP_STATUS+sub_load_defchar_charid,0,0,defchar_sp(sub_load_defchar_defcharid,DEFCHAR_SP_STATIC),0
-	char_spid(sub_load_defchar_charid,0) = SP_MAP+sub_load_defchar_charid
-	char_spid(sub_load_defchar_charid,1) = SP_STATUS+sub_load_defchar_charid
+	es_set SP_MAP+sub_load_defchar_charid,0,0,defchar_sp(sub_load_defchar_defcharid,DEFCHAR_SP_ANIME_DOWN),0,5
+	es_set SP_STATUS+sub_load_defchar_charid,0,0,defchar_sp(sub_load_defchar_defcharid,DEFCHAR_SP_STATIC),0,5
+	char_spid(sub_load_defchar_charid,CHAR_SPID_MAP) = SP_MAP+sub_load_defchar_charid
+	char_spid(sub_load_defchar_charid,CHAR_SPID_STATUS) = SP_STATUS+sub_load_defchar_charid
 	if DEBUG_MODE : logmes "D exec *sub_load_defchar: char_spid=["+char_spid(sub_load_defchar_charid,0)+","+char_spid(sub_load_defchar_charid,1)+"]"
 
 	char_spcharid(sub_load_defchar_charid,DIREC_DOWN)  = defchar_sp(sub_load_defchar_defcharid,DEFCHAR_SP_ANIME_DOWN)
@@ -644,33 +696,48 @@
 	; 記録をファイルに出力する
 	;---------------------------------------------------------------------------------
 *sub_save_record
-	bsave "record.txt",record_info
+	bsave "record_v2.txt",record_info
 	return
 
 	;---------------------------------------------------------------------------------
 	; 記録をファイルに読み込む
 	;---------------------------------------------------------------------------------
 *sub_load_record
-	exist "record.txt"
+	exist "record_v2.txt"
 	if strsize >= 0 {
-		bload "record.txt",record_info
-	} else {
-		; 作者の記録をとりあえず書き込んでおく
-		record_info(0,RECORD_INFO_SCORE) = 245316
-		record_info(0,RECORD_INFO_LEVEL) = 10
-		record_info(0,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
-		record_info(0,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
-		record_info(0,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
-		record_info(1,RECORD_INFO_SCORE) = 65124
-		record_info(1,RECORD_INFO_LEVEL) = 0
-		record_info(1,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
-		record_info(1,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
-		record_info(1,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
-		record_info(2,RECORD_INFO_SCORE) = 2849
-		record_info(2,RECORD_INFO_LEVEL) = -19
-		record_info(2,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
-		record_info(2,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
-		record_info(2,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
+		bload "record_v2.txt",record_info
+	}
+	else { ; 古いバージョンの記録ファイルしかない場合
+		exist "record.txt"
+		if strsize >= 0 {
+			bload "record.txt",record_info_v1
+			for sub_load_record_i,0,RECORD_V1_MAX
+				if record_info_v1(sub_load_record_i,RECORD_INFO_SCORE) > 0 {
+					for sub_load_record_j,0,RECORD_INFO_V1_MAX
+						record_info(sub_load_record_i,sub_load_record_j) = record_info_v1(sub_load_record_i,sub_load_record_j)
+						record_info(sub_load_record_i,RECORD_INFO_SELECTPLAYER) = 0
+						record_info(sub_load_record_i,RECORD_INFO_MAPSET) = 1
+					next
+				}
+			next
+		} else {
+			; 作者の記録をとりあえず書き込んでおく
+			record_info(0,RECORD_INFO_SCORE) = 245316
+			record_info(0,RECORD_INFO_LEVEL) = 10
+			record_info(0,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
+			record_info(0,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
+			record_info(0,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
+			record_info(1,RECORD_INFO_SCORE) = 65124
+			record_info(1,RECORD_INFO_LEVEL) = 0
+			record_info(1,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
+			record_info(1,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
+			record_info(1,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
+			record_info(2,RECORD_INFO_SCORE) = 2849
+			record_info(2,RECORD_INFO_LEVEL) = -19
+			record_info(2,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
+			record_info(2,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
+			record_info(2,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
+		}
 	}
 	return
 
@@ -689,7 +756,7 @@
 		_break
 	next
 
-	logmes "D exec *sub_add_record target="+sub_add_record_target
+	if DEBUG_MODE : logmes "D exec *sub_add_record target="+sub_add_record_target
 	if sub_add_record_target = -1 : return ; ランキング外のため何もしない
 	
 	; targetより後ろのデータを繰り下げる
@@ -699,7 +766,9 @@
 		record_info(sub_add_record_i,RECORD_INFO_VER_MAJOR) = record_info(sub_add_record_i-1,RECORD_INFO_VER_MAJOR)
 		record_info(sub_add_record_i,RECORD_INFO_VER_MINOR) = record_info(sub_add_record_i-1,RECORD_INFO_VER_MINOR)
 		record_info(sub_add_record_i,RECORD_INFO_VER_PATCH) = record_info(sub_add_record_i-1,RECORD_INFO_VER_PATCH)
-		logmes "D exec *sub_add_record copy from="+(sub_add_record_i-1)+" to="+sub_add_record_i
+		record_info(sub_add_record_i,RECORD_INFO_SELECTPLAYER) = record_info(sub_add_record_i-1,RECORD_INFO_SELECTPLAYER)
+		record_info(sub_add_record_i,RECORD_INFO_MAPSET) = record_info(sub_add_record_i-1,RECORD_INFO_MAPSET)
+		if DEBUG_MODE : logmes "D exec *sub_add_record copy from="+(sub_add_record_i-1)+" to="+sub_add_record_i
 	next
 
 	record_info(sub_add_record_target,RECORD_INFO_SCORE) = game_info(GAME_INFO_SCORE)
@@ -707,9 +776,152 @@
 	record_info(sub_add_record_target,RECORD_INFO_VER_MAJOR) = GAME_VERSION_MAJOR
 	record_info(sub_add_record_target,RECORD_INFO_VER_MINOR) = GAME_VERSION_MINOR
 	record_info(sub_add_record_target,RECORD_INFO_VER_PATCH) = GAME_VERSION_PATCH
-
+	record_info(sub_add_record_target,RECORD_INFO_SELECTPLAYER) = game_info(GAME_INFO_SELECTPLAYER)
+	record_info(sub_add_record_target,RECORD_INFO_MAPSET) = game_info(GAME_INFO_SELECTMAPSET)
+						
 	gosub *sub_save_record
 	return
+
+
+	;---------------------------------------------------------------------------------
+	; 空いているところにバフをセットする
+	;   引数: sub_set_buff_charid   キャラクタID
+	;   引数: sub_set_buff_resttime バフの効果時間
+	;   引数: sub_set_buff_type     バフのタイプ
+	;   引数: sub_set_buff_value    バフの効果量
+	;---------------------------------------------------------------------------------
+*sub_set_buff
+	logmes "I call *sub_set_buff: charid="+sub_set_buff_charid+", buff_type="+sub_set_buff_type
+	if ( sub_set_buff_charid < 0 ) or ( sub_set_buff_resttime < 0 ) or ( sub_set_buff_type < 0 ) {
+		logmes "W exec *sub_set_buff: 引数が正しくありません"
+		; 引数が正しくないので処理しない
+		; 次に備えて引数は初期化
+		sub_set_buff_charid = -1
+		sub_set_buff_resttime = -1
+		sub_set_buff_type = BUFF_TYPE_NONE
+		sub_set_buff_value = 0
+		return
+	}
+
+	for sub_set_buff_i,0,BUFF_STACK_MAX
+		sub_set_buff_buffindex_active   = CHAR_INFO_BUFF_BEGIN+sub_set_buff_i*BUFF_STACK_INFO_MAX+BUFF_STACK_INFO_ACTIVE
+		sub_set_buff_buffindex_resttime = CHAR_INFO_BUFF_BEGIN+sub_set_buff_i*BUFF_STACK_INFO_MAX+BUFF_STACK_INFO_RESTTIME
+		sub_set_buff_buffindex_type     = CHAR_INFO_BUFF_BEGIN+sub_set_buff_i*BUFF_STACK_INFO_MAX+BUFF_STACK_INFO_TYPE
+		sub_set_buff_buffindex_value    = CHAR_INFO_BUFF_BEGIN+sub_set_buff_i*BUFF_STACK_INFO_MAX+BUFF_STACK_INFO_VALUE
+
+		if char_info(sub_set_buff_charid,sub_set_buff_buffindex_type) = BUFF_TYPE_NONE {	; 空いていることを確認
+			logmes "D exec *sub_set_buff: i="+sub_set_buff_i+"にバフをセット"
+			char_info(sub_set_buff_charid,sub_set_buff_buffindex_type)     = sub_set_buff_type
+			char_info(sub_set_buff_charid,sub_set_buff_buffindex_resttime) = sub_set_buff_resttime
+			char_info(sub_set_buff_charid,sub_set_buff_buffindex_value)    = sub_set_buff_value
+			_break
+		}
+		if sub_set_buff_i = BUFF_STACK_MAX -1 {
+			logmes "W exec *sub_set_buff: 空きがなくバフがセットできません"
+		}
+	next
+
+	; 次に備えて引数は初期化
+	sub_set_buff_charid = -1
+	sub_set_buff_resttime = -1
+	sub_set_buff_type = BUFF_TYPE_NONE
+	sub_set_buff_value = 0
+	return
+
+
+	;---------------------------------------------------------------------------------
+	; 空いているところにステートをセットする
+	;   引数: sub_set_state_charid   キャラクタID
+	;   引数: sub_set_state_resttime ステートの効果時間
+	;   引数: sub_set_state_type     ステートのタイプ
+	;---------------------------------------------------------------------------------
+*sub_set_state
+	if DEBUG_MODE : logmes "I call *sub_set_state: charid="+sub_set_state_charid+", state_type="+sub_set_state_type
+	if ( sub_set_state_charid < 0 ) or ( sub_set_state_resttime < 0 ) or ( sub_set_state_type < 0 ) {
+		if DEBUG_MODE : logmes "W exec *sub_set_state: 引数が正しくありません"
+		; 引数が正しくないので処理しない
+		; 次に備えて引数は初期化
+		sub_set_state_charid = -1
+		sub_set_state_resttime = -1
+		sub_set_state_type = STATE_TYPE_NONE
+		return
+	}
+
+	for sub_set_state_i,0,STATE_STACK_MAX
+		sub_set_state_index_active   = CHAR_INFO_STATE_BEGIN+sub_set_state_i*STATE_STACK_INFO_MAX+STATE_STACK_INFO_ACTIVE
+		sub_set_state_index_resttime = CHAR_INFO_STATE_BEGIN+sub_set_state_i*STATE_STACK_INFO_MAX+STATE_STACK_INFO_RESTTIME
+		sub_set_state_index_type     = CHAR_INFO_STATE_BEGIN+sub_set_state_i*STATE_STACK_INFO_MAX+STATE_STACK_INFO_TYPE
+		sub_set_state_index_spid     = CHAR_INFO_STATE_BEGIN+sub_set_state_i*STATE_STACK_INFO_MAX+STATE_STACK_INFO_SPID
+		if DEBUG_MODE : logmes "D exec *sub_set_state: i="+sub_set_state_i+", index_type="+sub_set_state_index_type+", type="+char_info(sub_set_state_charid,sub_set_state_index_type)
+		if char_info(sub_set_state_charid,sub_set_state_index_type) = STATE_TYPE_NONE {	; 空いていることを確認
+			if DEBUG_MODE : logmes "D exec *sub_set_state: i="+sub_set_state_i+"にステートをセット"
+			char_info(sub_set_state_charid,sub_set_state_index_active)   = 0
+			char_info(sub_set_state_charid,sub_set_state_index_type)     = sub_set_state_type
+			char_info(sub_set_state_charid,sub_set_state_index_resttime) = sub_set_state_resttime
+			_break
+		}
+		if sub_set_state_i = STATE_STACK_MAX -1 {
+			logmes "W exec *sub_set_state: 空きがなくステートがセットできません"
+		}
+	next
+
+	; 次に備えて引数は初期化
+	sub_set_state_charid = -1
+	sub_set_state_resttime = -1
+	sub_set_state_type = STATE_TYPE_NONE
+	return
+
+
+	;---------------------------------------------------------------------------------
+	; ダメージアイコンを表示する
+	;   引数: sub_show_damage_value 数字（マイナスを赤、プラスを青で表示）
+	;   引数: sub_show_damage_x     起点となるx座標(px座標系)
+	;   引数: sub_show_damage_y     起点となるy座標(px座標系)
+	;---------------------------------------------------------------------------------
+*sub_show_damage
+	; マイナスを赤、プラスを青
+	if sub_show_damage_value < 0{
+		sub_show_damage_offset = SPCHAR_RNUMBER_STATIC
+		sub_show_damage_v = sub_show_damage_value * -1
+	} else {
+		sub_show_damage_offset = SPCHAR_BNUMBER_STATIC
+		sub_show_damage_v = sub_show_damage_value
+	}
+	
+	; 100の位、10の位、1の位に分割
+	dim sub_show_damage_n,3
+	sub_show_damage_n(0) = sub_show_damage_v / 100 \ 10
+	sub_show_damage_n(1) = sub_show_damage_v / 10 \ 10
+	sub_show_damage_n(2) = sub_show_damage_v \ 10
+
+	sub_show_damage_display = 0
+	dim sub_show_damage_sp,3
+	for sub_show_damage_i,0,3
+		if sub_show_damage_n(sub_show_damage_i) > 0 : sub_show_damage_display = 1
+		if sub_show_damage_display = 1 {
+			; 空きスプライトIDを検索
+			es_exnew sub_show_damage_sp(sub_show_damage_i),SP_NUMBER_STATIC,-1
+			; スプライトを生成
+			es_set sub_show_damage_sp(sub_show_damage_i),sub_show_damage_x+16*sub_show_damage_i-16,sub_show_damage_y,sub_show_damage_offset+sub_show_damage_n(sub_show_damage_i),0,1
+			; スプライトを移動
+			if sub_show_damage_x < WINDOW_X-70 {
+				es_adir sub_show_damage_sp(sub_show_damage_i),135,300
+			} else {
+				es_adir sub_show_damage_sp(sub_show_damage_i),225,300
+			}
+			es_flag sub_show_damage_sp(sub_show_damage_i),$400
+			es_gravity sub_show_damage_sp(sub_show_damage_i),0,64
+			; スプライトを自動で消滅
+			es_fade sub_show_damage_sp(sub_show_damage_i),ESSPF_TIMEWIPE,20
+		}
+	next
+
+	; 次に備えて引数は初期化	
+	sub_show_damage_value=0
+	sub_show_damage_x=-1
+	sub_show_damage_y=-1
+	return
+	
 
 *end_sub_hsp
 

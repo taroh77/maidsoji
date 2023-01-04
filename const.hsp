@@ -1,15 +1,16 @@
 	#const GAME_VERSION_MAJOR 1	; ゲームのバージョン
-	#const GAME_VERSION_MINOR 1
-	#const GAME_VERSION_PATCH 1
+	#const GAME_VERSION_MINOR 2
+	#const GAME_VERSION_PATCH 0
 	#const DEBUG_MODE 0		; 1:デバッグ情報の表示
 	
 	#const CHAR_MAX 4		; 管理するキャラクタの最大数
 	#const TEAM_MAX 2		; 最大チーム数
 	#const BULLET_MAX 16	; 管理する弾丸の最大数
-	#const WEAPON_MAX 16	; 武器の最大数
+	#const WEAPON_MAX 24	; 武器の最大数
 	#const DEFCHAR_MAX 8	; 登場するキャラクタ定義の最大数
 	#const SEARCH_RANGE 9	; キャラが認識できる距離（大きくすると遠くの敵も認識できるがゲームが重くなる）
-	#const RECORD_MAX 16	; スコアの最大保持数
+	#const RECORD_V1_MAX 16	; スコアの最大保持数(v1用)
+	#const RECORD_MAX 9999	; スコアの最大保持数
 	WINDOW_X = ginfo_winx
 	WINDOW_Y = ginfo_winy
 	#const MAP_REAL_X 10					; 実効値としてのマップのX軸の大きさ（表示座標系）
@@ -18,5 +19,14 @@
 	#const MAP_X MAP_MERGIN*2 + MAP_REAL_X 	; ダミーデータ込みのマップのX軸の大きさ（データ座標系）
 	#const MAP_Y MAP_MERGIN*2 + MAP_REAL_Y	; ダミーデータ込みのマップのY軸の大きさ（データ座標系）
 
-	#const ANIME_FRAME 8  ; スプライトのアニメーション切り替えフレーム
+	#const ANIME_FRAME 8  ; スプライトのキャラクタアニメーション切り替えフレーム
+	#const POPUP_FRAME 4  ; スプライトのポップアップアニメーション切り替えフレーム
 
+	; バッファID
+	#const BUFID_MEI_NORMAL  2		; メイの立ち絵（立ち絵）
+	#const BUFID_MEI_EGAO    3		; メイの立ち絵（笑顔）
+	#const BUFID_MEI_ODOROKI 4		; メイの立ち絵（驚き）
+	#const BUFID_BULLET      5		; 弾丸
+	#const BUFID_POPUP       6		; ポップアップ
+	#const BUFID_NUMBER      7		; 数字
+	#const BUFID_DEFCHAR_BEGIN 21	; キャラ定義の開始(DEFCHAR_MAX個)
