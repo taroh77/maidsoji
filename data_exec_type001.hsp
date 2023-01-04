@@ -1,0 +1,561 @@
+; ステージ1の情報読み込み
+*load_data_stage1
+	gosub *load_data_defchar		; キャラクタ定義の設定
+
+	game_info(GAME_INFO_LIMITTIME) = 700	; 今のステージの制限時間
+	game_info(GAME_INFO_RESTTIME) = 700	; 今のステージの残り時間
+
+	gosub *load_data_team_stage1	; ステージ1のマップ情報読み込み
+	gosub *load_data_char_stage1	; ステージ1のチーム情報読み込み
+	gosub *load_data_map_stage1		; ステージ1のキャラ情報読み込み
+	gosub *load_data_char_duff		; 難易度選択によるキャラのバフを設定する
+
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_NORMAL)	; 通常ステージの音楽
+
+	return
+
+
+; ステージ2の情報読み込み
+*load_data_stage2
+	gosub *load_data_defchar		; キャラクタ定義の設定
+
+	game_info(GAME_INFO_LIMITTIME) = 750	; 今のステージの制限時間
+	game_info(GAME_INFO_RESTTIME) = 750	; 今のステージの残り時間
+
+	gosub *load_data_team_stage2	; ステージ2のマップ情報読み込み
+	gosub *load_data_char_stage2	; ステージ2のチーム情報読み込み
+	gosub *load_data_map_stage2		; ステージ2のキャラ情報読み込み
+	gosub *load_data_char_duff		; 難易度選択によるキャラのバフを設定する
+
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_NORMAL)	; 通常ステージの音楽
+
+	return
+
+
+; ステージ3の情報読み込み
+*load_data_stage3
+	gosub *load_data_defchar		; キャラクタ定義の設定
+
+	game_info(GAME_INFO_LIMITTIME) = 800	; 今のステージの制限時間
+	game_info(GAME_INFO_RESTTIME) = 800	; 今のステージの残り時間
+
+	gosub *load_data_team_stage3	; ステージ2のマップ情報読み込み
+	gosub *load_data_char_stage3	; ステージ2のチーム情報読み込み
+	gosub *load_data_map_stage3		; ステージ2のキャラ情報読み込み
+	gosub *load_data_char_duff		; 難易度選択によるキャラのバフを設定する
+
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_NORMAL2)	; 通常ステージ2の音楽
+
+	return
+
+
+; ステージ4の情報読み込み
+*load_data_stage4
+	gosub *load_data_defchar		; キャラクタ定義の設定
+
+	game_info(GAME_INFO_LIMITTIME) = 850	; 今のステージの制限時間
+	game_info(GAME_INFO_RESTTIME) = 850	; 今のステージの残り時間
+
+	gosub *load_data_team_stage4	; ステージ2のマップ情報読み込み
+	gosub *load_data_char_stage4	; ステージ2のチーム情報読み込み
+	gosub *load_data_map_stage4		; ステージ2のキャラ情報読み込み
+	gosub *load_data_char_duff		; 難易度選択によるキャラのバフを設定する
+
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_NORMAL2)	; 通常ステージ2の音楽
+
+	return
+	
+
+; ステージ5の情報読み込み
+*load_data_stage5
+	gosub *load_data_defchar		; キャラクタ定義の設定
+
+	game_info(GAME_INFO_LIMITTIME) = 1200	; 今のステージの制限時間
+	game_info(GAME_INFO_RESTTIME) = 1200	; 今のステージの残り時間
+
+	gosub *load_data_team_stage5	; ステージ2のマップ情報読み込み
+	gosub *load_data_char_stage5	; ステージ2のチーム情報読み込み
+	gosub *load_data_map_stage5		; ステージ2のキャラ情報読み込み
+	gosub *load_data_char_duff		; 難易度選択によるキャラのバフを設定する
+
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_BOSS)	; ボスステージの音楽
+
+	return
+
+
+; ステージ1のマップ情報読み込み
+*load_data_map_stage1
+	
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+5 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+5 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+5 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	; キャラの場所
+	char_mappos(0,CIE_X) = MAP_MERGIN+4 : char_mappos(0,CIE_Y) = MAP_MERGIN+8
+	char_mappos(1,CIE_X) = MAP_MERGIN+1 : char_mappos(1,CIE_Y) = MAP_MERGIN+1
+	char_mappos(2,CIE_X) = MAP_MERGIN+8 : char_mappos(2,CIE_Y) = MAP_MERGIN+1
+	if game_info(GAME_INFO_DIFFICULTY) = 1 {	; ハードの場合は増員
+		char_mappos(3,CIE_X) = MAP_MERGIN+5 : char_mappos(3,CIE_Y) = MAP_MERGIN+6
+	}
+	
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+		; リスポーン地点の設定
+		char_basepos(i,CIE_X) = char_mappos(i,CIE_X)
+		char_basepos(i,CIE_Y) = char_mappos(i,CIE_Y)
+		; 拠点として設定
+		map_info(char_basepos(i,CIE_X),char_basepos(i,CIE_Y),MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+	next
+
+	return
+
+; ステージ2のマップ情報読み込み
+*load_data_map_stage2
+	
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	if game_info(GAME_INFO_DIFFICULTY) = 1 {	; ハードの場合は壁が増える
+		map_info(MAP_MERGIN+5 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(MAP_MERGIN+3 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(MAP_MERGIN+5 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	}
+	
+	; キャラの場所
+	char_mappos(0,CIE_X) = MAP_MERGIN+5 : char_mappos(0,CIE_Y) = MAP_MERGIN+9
+	char_mappos(1,CIE_X) = MAP_MERGIN+4 : char_mappos(1,CIE_Y) = MAP_MERGIN+4
+	char_mappos(2,CIE_X) = MAP_MERGIN+1 : char_mappos(2,CIE_Y) = MAP_MERGIN+4
+	char_mappos(3,CIE_X) = MAP_MERGIN+8 : char_mappos(3,CIE_Y) = MAP_MERGIN+4
+	
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+		; リスポーン地点の設定
+		char_basepos(i,CIE_X) = char_mappos(i,CIE_X)
+		char_basepos(i,CIE_Y) = char_mappos(i,CIE_Y)
+		; 拠点として設定
+		map_info(char_basepos(i,CIE_X),char_basepos(i,CIE_Y),MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+	next
+
+	return
+
+; ステージ3のマップ情報読み込み
+*load_data_map_stage3
+	
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	if game_info(GAME_INFO_DIFFICULTY) = 0 {	; ハード時は壁が消える
+		map_info(MAP_MERGIN+4 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(MAP_MERGIN+6 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		map_info(MAP_MERGIN+4 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	}
+
+	; キャラの場所
+	char_mappos(0,CIE_X) = MAP_MERGIN+1 : char_mappos(0,CIE_Y) = MAP_MERGIN+8
+	char_mappos(1,CIE_X) = MAP_MERGIN+8 : char_mappos(1,CIE_Y) = MAP_MERGIN+1
+	char_mappos(2,CIE_X) = MAP_MERGIN+4 : char_mappos(2,CIE_Y) = MAP_MERGIN+4
+	
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+		; リスポーン地点の設定
+		char_basepos(i,CIE_X) = char_mappos(i,CIE_X)
+		char_basepos(i,CIE_Y) = char_mappos(i,CIE_Y)
+		; 拠点として設定
+		map_info(char_basepos(i,CIE_X),char_basepos(i,CIE_Y),MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+	next
+
+	return
+
+
+; ステージ4のマップ情報読み込み
+*load_data_map_stage4
+	
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+2 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+3 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+2 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+3 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+6 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+6 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+7 ,MAP_MERGIN+7 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	; キャラの場所
+	char_mappos(0,CIE_X) = MAP_MERGIN+4 : char_mappos(0,CIE_Y) = MAP_MERGIN+5
+	char_mappos(1,CIE_X) = MAP_MERGIN+8 : char_mappos(1,CIE_Y) = MAP_MERGIN+1
+	char_mappos(2,CIE_X) = MAP_MERGIN+8 : char_mappos(2,CIE_Y) = MAP_MERGIN+8
+	if game_info(GAME_INFO_DIFFICULTY) = 1 { ; ハード時は敵が増える
+		char_mappos(3,CIE_X) = MAP_MERGIN+1 : char_mappos(3,CIE_Y) = MAP_MERGIN+8
+	}
+	
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+		; リスポーン地点の設定
+		char_basepos(i,CIE_X) = char_mappos(i,CIE_X)
+		char_basepos(i,CIE_Y) = char_mappos(i,CIE_Y)
+		; 拠点として設定
+		map_info(char_basepos(i,CIE_X),char_basepos(i,CIE_Y),MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+	next
+
+	return
+
+
+; ステージ5のマップ情報読み込み
+*load_data_map_stage5
+	
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+4 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+5 ,MAP_MERGIN+4 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+	map_info(MAP_MERGIN+5 ,MAP_MERGIN+5 ,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+
+	; キャラの場所
+	char_mappos(0,CIE_X) = MAP_MERGIN+4 : char_mappos(0,CIE_Y) = MAP_MERGIN+8
+	char_mappos(1,CIE_X) = MAP_MERGIN+5 : char_mappos(1,CIE_Y) = MAP_MERGIN+1
+	char_mappos(2,CIE_X) = MAP_MERGIN+2 : char_mappos(2,CIE_Y) = MAP_MERGIN+3
+	char_mappos(3,CIE_X) = MAP_MERGIN+7 : char_mappos(3,CIE_Y) = MAP_MERGIN+6
+	
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+		; リスポーン地点の設定
+		char_basepos(i,CIE_X) = char_mappos(i,CIE_X)
+		char_basepos(i,CIE_Y) = char_mappos(i,CIE_Y)
+		; 拠点として設定
+		map_info(char_basepos(i,CIE_X),char_basepos(i,CIE_Y),MAP_INFO_TEAMBASE) = char_info(i,CHAR_INFO_TEAM)
+	next
+
+	return
+
+
+; ステージ1,2,3,4,5のチーム情報読み込み
+*load_data_team_stage1
+*load_data_team_stage2
+*load_data_team_stage3
+*load_data_team_stage4
+*load_data_team_stage5
+	
+	team_desc(0,0) = "お掃除隊"
+	team_info(0,COLOR_R) = 255 : team_info(0,COLOR_G) = 255 : team_info(0,COLOR_B) = 255 ; 白
+	team_desc(1,0) = "散らかし隊"
+	team_info(1,COLOR_R) = 139 : team_info(1,COLOR_G) =  69 : team_info(1,COLOR_B) =  19 ; 茶色SaddleBrown
+	
+	return
+
+
+; ステージ1のキャラ情報読み込み
+*load_data_char_stage1
+	; 主人公（キャラID:0）
+
+	char_info(0,CHAR_INFO_DEFINECHAR) = game_info(GAME_INFO_SELECTPLAYER)	; メニューで選択したプレイヤー
+
+	sub_load_defchar_defcharid = char_info(0,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 0
+	gosub *sub_load_defchar
+	
+	char_info(0,CHAR_INFO_TEAM) = 0		; お掃除隊所属
+	char_info(0,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_MANUAL	; キー入力の操作
+
+
+	; 敵キャラ（キャラID:1）
+
+	char_info(1,CHAR_INFO_DEFINECHAR) = 1	; キャラクタ定義ID:1（サボリーマ）
+
+	sub_load_defchar_defcharid = char_info(1,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 1
+	gosub *sub_load_defchar
+	
+	char_info(1,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(1,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_RANDOM	; ランダムに行動する
+
+	;; バフのテスト
+	;char_info(1,CHAR_INFO_BUFF1_RESTTIME) = 999
+	;char_info(1,CHAR_INFO_BUFF1_TYPE) = BUFF_TYPE_MOVE
+	;char_info(1,CHAR_INFO_BUFF1_VALUE) = 800
+	;char_info(1,CHAR_INFO_BUFF2_RESTTIME) = 999
+	;char_info(1,CHAR_INFO_BUFF2_TYPE) = BUFF_TYPE_COLORPOWER
+	;char_info(1,CHAR_INFO_BUFF2_VALUE) = 100
+
+	; 敵キャラ（キャラID:2）
+	
+	char_info(2,CHAR_INFO_DEFINECHAR) = 1	; キャラクタ定義ID:1（サボリーマ）
+	
+	sub_load_defchar_defcharid = char_info(2,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 2
+	gosub *sub_load_defchar
+	
+	char_info(2,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_RANDOM	; ランダムに行動する
+
+	if game_info(GAME_INFO_DIFFICULTY) = 1 {	; ハードの場合は増員
+
+		; 敵キャラ（キャラID:3）
+		
+		char_info(3,CHAR_INFO_DEFINECHAR) = 1	; キャラクタ定義ID:1（サボリーマ）
+		
+		sub_load_defchar_defcharid = char_info(3,CHAR_INFO_DEFINECHAR)
+		sub_load_defchar_charid = 3
+		gosub *sub_load_defchar
+		
+		char_info(3,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+		char_info(3,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_RANDOM	; ランダムに行動する
+
+	}
+	
+	return
+
+
+; ステージ2のキャラ情報読み込み
+*load_data_char_stage2
+	; 主人公（キャラID:0）
+
+	char_info(0,CHAR_INFO_DEFINECHAR) = game_info(GAME_INFO_SELECTPLAYER)	; メニューで選択したプレイヤー
+
+	sub_load_defchar_defcharid = char_info(0,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 0
+	gosub *sub_load_defchar
+	
+	char_info(0,CHAR_INFO_TEAM) = 0		; お掃除隊所属
+	char_info(0,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_MANUAL	; キー入力の操作
+
+
+	; 敵キャラ（キャラID:1）
+
+	char_info(1,CHAR_INFO_DEFINECHAR) = 2	; キャラクタ定義ID:2（ポイステー）
+
+	sub_load_defchar_defcharid = char_info(1,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 1
+	gosub *sub_load_defchar
+	
+	char_info(1,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(1,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_NOMOVE	; 動かないが弾丸は発射する
+	if game_info(GAME_INFO_DIFFICULTY) = 1 {	; ハード時、HP+200%のバフ
+		;char_info(1,CHAR_INFO_BUFF1_RESTTIME) = 9999
+		;char_info(1,CHAR_INFO_BUFF1_TYPE) = BUFF_TYPE_MAXHP
+		;char_info(1,CHAR_INFO_BUFF1_VALUE) = 200
+		sub_set_buff_charid   = 1
+		sub_set_buff_resttime = 9999
+		sub_set_buff_type     = BUFF_TYPE_MAXHP
+		sub_set_buff_value    = 200
+		gosub *sub_set_buff
+	}
+	
+	; 敵キャラ（キャラID:2）
+
+	char_info(2,CHAR_INFO_DEFINECHAR) = 1	; キャラクタ定義ID:1（サボリーマ）
+
+	sub_load_defchar_defcharid = char_info(2,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 2
+	gosub *sub_load_defchar
+	
+	char_info(2,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_RANDOM	; ランダムに行動する
+
+	; 敵キャラ（キャラID:3）
+	
+	char_info(3,CHAR_INFO_DEFINECHAR) = 1	; キャラクタ定義ID:1（サボリーマ）
+	
+	sub_load_defchar_defcharid = char_info(3,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 3
+	gosub *sub_load_defchar
+	
+	char_info(3,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(3,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_RANDOM	; ランダムに行動する
+
+	return
+
+
+; ステージ3のキャラ情報読み込み
+*load_data_char_stage3
+	; 主人公（キャラID:0）
+
+	char_info(0,CHAR_INFO_DEFINECHAR) = game_info(GAME_INFO_SELECTPLAYER)	; メニューで選択したプレイヤー
+
+	sub_load_defchar_defcharid = char_info(0,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 0
+	gosub *sub_load_defchar
+	
+	char_info(0,CHAR_INFO_TEAM) = 0		; お掃除隊所属
+	char_info(0,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_MANUAL	; キー入力の操作
+
+
+	; 敵キャラ（キャラID:1）
+
+	char_info(1,CHAR_INFO_DEFINECHAR) = 3	; キャラクタ定義ID:3（マメニ　ヌール）
+
+	sub_load_defchar_defcharid = char_info(1,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 1
+	gosub *sub_load_defchar
+	
+	char_info(1,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(1,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_PAINTER	; 色蓄積を重視する
+
+	; 敵キャラ（キャラID:2）
+
+	char_info(2,CHAR_INFO_DEFINECHAR) = 2	; キャラクタ定義ID:2（ポイステー）
+
+	sub_load_defchar_defcharid = char_info(2,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 2
+	gosub *sub_load_defchar
+	
+	char_info(2,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_NOMOVE	; 動かないが弾丸は発射する
+
+	return
+
+
+; ステージ4のキャラ情報読み込み
+*load_data_char_stage4
+	; 主人公（キャラID:0）
+
+	char_info(0,CHAR_INFO_DEFINECHAR) = game_info(GAME_INFO_SELECTPLAYER)	; メニューで選択したプレイヤー
+	
+	sub_load_defchar_defcharid = char_info(0,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 0
+	gosub *sub_load_defchar
+	
+	char_info(0,CHAR_INFO_TEAM) = 0		; お掃除隊所属
+	char_info(0,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_MANUAL	; キー入力の操作
+
+
+	; 敵キャラ（キャラID:1）
+
+	char_info(1,CHAR_INFO_DEFINECHAR) = 4	; キャラクタ定義ID:4（ワルガキー）
+
+	sub_load_defchar_defcharid = char_info(1,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 1
+	gosub *sub_load_defchar
+	
+	char_info(1,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(1,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_ATTACKER ; 攻撃を重視する
+
+	; 敵キャラ（キャラID:2）
+	
+	char_info(2,CHAR_INFO_DEFINECHAR) = 3	; キャラクタ定義ID:3（マメニ　ヌール）
+	
+	sub_load_defchar_defcharid = char_info(2,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 2
+	gosub *sub_load_defchar
+	
+	char_info(2,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_PAINTER	; 色蓄積を重視する
+
+	if game_info(GAME_INFO_DIFFICULTY) = 1 {	; ハード時は敵が増える
+
+		; 敵キャラ（キャラID:3）
+	
+		char_info(3,CHAR_INFO_DEFINECHAR) = 4	; キャラクタ定義ID:4（ワルガキー）
+	
+		sub_load_defchar_defcharid = char_info(3,CHAR_INFO_DEFINECHAR)
+		sub_load_defchar_charid = 3
+		gosub *sub_load_defchar
+		
+		char_info(3,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+		char_info(3,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_ATTACKER ; 攻撃を重視する
+		
+	}
+
+	return
+
+
+; ステージ5のキャラ情報読み込み
+*load_data_char_stage5
+	; 主人公（キャラID:0）
+
+	char_info(0,CHAR_INFO_DEFINECHAR) = game_info(GAME_INFO_SELECTPLAYER)	; メニューで選択したプレイヤー
+
+	sub_load_defchar_defcharid = char_info(0,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 0
+	gosub *sub_load_defchar
+	
+	char_info(0,CHAR_INFO_TEAM) = 0		; お掃除隊所属
+	char_info(0,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_MANUAL	; キー入力の操作
+
+
+	; 敵キャラ（キャラID:1）
+
+	char_info(1,CHAR_INFO_DEFINECHAR) = 5	; キャラクタ定義ID:5（ゴミ魔王）
+
+	sub_load_defchar_defcharid = char_info(1,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 1
+	gosub *sub_load_defchar
+	
+	char_info(1,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	char_info(1,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_PAINTER	; 色蓄積を重視する
+	
+	; 敵キャラ（キャラID:2）
+
+	if game_info(GAME_INFO_DIFFICULTY) = 0 {	; ハード時は敵が変わる
+		char_info(2,CHAR_INFO_DEFINECHAR) = 2	; キャラクタ定義ID:2（ポイステー）
+	} else {
+		char_info(2,CHAR_INFO_DEFINECHAR) = 3	; キャラクタ定義ID:3（マメニ　ヌール）
+	}
+
+	sub_load_defchar_defcharid = char_info(2,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 2
+	gosub *sub_load_defchar
+	
+	char_info(2,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	if game_info(GAME_INFO_DIFFICULTY) = 0 {	; ハード時は敵が変わる
+		char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_NOMOVE	; 動かないが弾丸は発射する
+	} else {
+		char_info(2,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_PAINTER	; 色蓄積を重視する
+	}
+
+	; 敵キャラ（キャラID:3）
+	
+	if game_info(GAME_INFO_DIFFICULTY) = 0 {	; ハード時は敵が変わる
+		char_info(3,CHAR_INFO_DEFINECHAR) = 2	; キャラクタ定義ID:2（ポイステー）
+	} else {
+		char_info(3,CHAR_INFO_DEFINECHAR) = 4	; キャラクタ定義ID:4（ワルガキー）
+	}	
+	sub_load_defchar_defcharid = char_info(3,CHAR_INFO_DEFINECHAR)
+	sub_load_defchar_charid = 3
+	gosub *sub_load_defchar
+	
+	char_info(3,CHAR_INFO_TEAM) = 1		; 散らかし隊所属
+	if game_info(GAME_INFO_DIFFICULTY) = 0 {	; ハード時は敵が変わる
+		char_info(3,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_NOMOVE	; 動かないが弾丸は発射する
+	} else {
+		char_info(3,CHAR_INFO_CTRLMODE) = CHAR_CTRLMODE_ATTACKER ; 攻撃を重視する
+	}
+	return

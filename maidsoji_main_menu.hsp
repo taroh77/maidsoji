@@ -1,0 +1,1343 @@
+; ======================================================================================
+; トップメニュー
+; ======================================================================================
+
+*restart_game
+	game_info(GAME_INFO_NEXTSTAGE) = 1
+	game_info(GAME_INFO_SCORE) = 0
+	game_info(GAME_INFO_RETRY) = 0
+	gosub *reset_data
+	gosub *load_data_defchar
+	mmstop
+	mmplay music_def_mediabuffid(MUSIC_DEF_OPENING)	; オープニングの音楽
+*return_opening
+	clrobj
+	input_button_display = 0
+; オープニングのメインループ
+*main_opening
+	redraw 0				; 画面クリア
+	gosub *opening_title	; タイトル画面表示
+	redraw 1				; 画面の更新
+	await 1000/16		; 時間待ち(1/60秒)
+	goto *main_opening
+
+; マニュアルの確認
+*show_manual
+	mmplay sound_def_mediabuffid(SOUND_DEF_DECISION)	; 決定の効果音
+	clrobj
+	input_button_display = 0
+*main_manual
+	redraw 0				; 画面クリア
+	gosub *opening_manual	; マニュアル表示
+	redraw 1				; 画面の更新
+	await 1000/16		; 時間待ち(1/60秒)
+	goto *main_manual
+
+; 操作キャラの変更
+*select_player
+	mmplay sound_def_mediabuffid(SOUND_DEF_DECISION)	; 決定の効果音
+	clrobj
+	input_button_display = 0
+*main_selectplayer
+	redraw 0				; 画面クリア
+	gosub *selecting_player	; 操作キャラの選択画面表示
+	redraw 1				; 画面の更新
+	await 1000/16		; 時間待ち(1/60秒)
+	goto *main_selectplayer
+
+; 記録の閲覧
+*record_list
+	mmplay sound_def_mediabuffid(SOUND_DEF_DECISION)	; 決定の効果音
+	clrobj
+	input_button_display = 0
+*main_record
+	redraw 0				; 画面クリア
+	gosub *record_view		; 記録の一覧を表示
+	redraw 1				; 画面の更新
+	await 1000/16			; 時間待ち(1/60秒)
+	goto *main_record
+
+; 難易度選択
+*stage_option
+	mmplay sound_def_mediabuffid(SOUND_DEF_DECISION)	; 決定の効果音
+	clrobj
+	input_button_display = 0
+*main_option
+	redraw 0				; 画面クリア
+	gosub *option_select	; ステージオプション選択表示
+	redraw 1				; 画面の更新
+	await 1000/16			; 時間待ち(1/60秒)
+	goto *main_option
+
+
+; ======================================================================================
+; 次のステージの読み込み
+; ======================================================================================
+
+; 勝利した場合
+*next_stage
+	game_info(GAME_INFO_RETRY) = 0
+	goto *load_stage
+
+; リトライの場合
+*retry_stage
+	game_info(GAME_INFO_RETRY) += 1
+	goto *load_stage
+
+; ステージ情報のロード
+*load_stage
+	mmplay sound_def_mediabuffid(SOUND_DEF_DECISION)	; 決定の効果音
+	clrobj
+	input_button_display = 0
+	gosub *reset_data		; ステージデータを読み込む前にデータの初期化
+	if game_info(GAME_INFO_NEXTSTAGE) = 1 { ; ステージ1の情報読み込み
+		gosub *load_data_stage1
+		game_info(GAME_INFO_STAGE) = 1
+	}
+	if game_info(GAME_INFO_NEXTSTAGE) = 2 { ; ステージ2の情報読み込み
+		gosub *load_data_stage2
+		game_info(GAME_INFO_STAGE) = 2
+	}
+	if game_info(GAME_INFO_NEXTSTAGE) = 3 { ; ステージ3の情報読み込み
+		gosub *load_data_stage3
+		game_info(GAME_INFO_STAGE) = 3
+	}
+	if game_info(GAME_INFO_NEXTSTAGE) = 4 { ; ステージ4の情報読み込み
+		gosub *load_data_stage4
+		game_info(GAME_INFO_STAGE) = 4
+	}
+	if game_info(GAME_INFO_NEXTSTAGE) = 5 { ; ステージ5の情報読み込み
+		gosub *load_data_stage5
+		game_info(GAME_INFO_STAGE) = 5
+	}
+	if game_info(GAME_INFO_NEXTSTAGE) >= 6 { ; 終了
+		goto *game_ending
+	}
+	gosub *reset_vars		; ゲームを始める前に全ての可変データを初期化
+	gosub *execbuff			; ループに入る前に最初からバフが付与されていれば処理する
+	gosub *execdamage		; ループに入る前に最初からキャラへのダメージ処理があれば処理する（主にバフの発動時効果）
+
+	; 処理時間の計測
+	timeindex = 0
+	sdim rangetitle,32,9
+	rangetitle(0) = "入力キー確認","主人公以外の行動決定","行動の処理","弾丸の処理","色蓄積の計算","キャラのダメージ処理","自然回復などの処理","バフの処理","ステートの処理"
+	dim record,10,2
+	dim rangetime,9,2
+
+	dim record_comthink,CHAR_MAX+1,8
+	dim rangetime_comthink,CHAR_MAX,8
+
+	goto *main_game
+
+
+; ======================================================================================
+; トップメニューの各種画面
+; ======================================================================================
+
+; タイトル画面表示
+*opening_title
+	color 255,240,245
+	boxf
+
+	; メイドさんの背景
+	pos 0,80
+	gzoom 320,400,BUFID_MEI_NORMAL,0,0,755,755*400/320,0
+	
+	color 0,0,0
+	font "",24
+	pos 25,40
+	mes "メイドさんのお掃除し隊"
+	font "",12
+	
+	pos 10,160
+	if input_button_display = 0 : button goto "操作方法",*show_manual
+	pos 10,200
+	if input_button_display = 0 : button goto "記録",*record_list
+	pos 240,140
+	if input_button_display = 0 : button goto "キャラ選択",*select_player
+	pos 240,180
+	if input_button_display = 0 : button goto "難易度選択",*stage_option
+
+	; プレイ条件
+	pos 230,240 : mes "キャラ"
+	pos 234,252 : mes defchar_desc(game_info(GAME_INFO_SELECTPLAYER),0)
+	pos 230,272 : mes "難易度レベル"
+	pos 230,284 : mes strf("%8d", game_info(GAME_INFO_TOTALLEVEL))
+
+	pos 240,320
+	if input_button_display = 0 : button goto "ゲームスタート",*load_stage
+
+	; バージョンとライセンスは薄い文字で
+	color 128,128,196
+	pos 10,432
+	mes strf("version %d.%d.%d",GAME_VERSION_MAJOR,GAME_VERSION_MINOR,GAME_VERSION_PATCH)
+	pos 10,444
+	mes "Copyright (c) 2022 taroh77"
+	pos 10,456
+	mes "Released under the MIT license"
+	pos 10,468
+	mes "詳細はLICENSEファイルをご確認ください"
+	color 0,0,0
+
+	input_button_display = 1
+	return
+
+; マニュアルの表示
+*opening_manual
+	color 255,240,245
+	boxf
+
+	color 0,0,0
+	font "",24
+	pos 25,20
+	mes "ルールと操作方法"
+	font "",12
+	pos 10,110
+	mes "メイドさんを操作してマップを白色に染めます"
+	mes "残り時間がなくなった時にお邪魔キャラより"
+	mes "多く色を塗っている状態にすれば勝利です"
+	mes "全部で5ステージあります"
+	pos 10,170
+	mes "キー操作"
+	mes "　矢印キー：キャラの移動"
+	mes "　zキー：武器1を使う(近距離、通常攻撃)"
+	mes "　xキー：武器2を使う(遠距離、時々使える)"
+	mes "　cキー：武器3を使う(設置型爆弾、たまに使える)"
+	mes "　"
+	mes "　※移動は矢印キーを押し続ける感じで"
+	mes "　　武器は使うときに押す感じで"
+	mes "　※武器を使うにはWPが必要になります"
+	mes "　　自チームの色に塗られいている場所に居れば"
+	mes "　　WPは自然と回復します"
+	mes "　※キャラはHPが0になると一時的に退場します"
+	mes "　　その後初期位置で復活します"
+	
+	pos 240,450
+	if input_button_display = 0 :button goto "タイトルに戻る",*return_opening
+	
+	input_button_display = 1
+	return
+
+; 操作キャラクターの選択画面
+*selecting_player
+	charid = game_info(GAME_INFO_SELECTPLAYER)
+
+	color 255,240,245
+	boxf
+	color 0,0,0
+	font "",24
+	pos 25,20
+	mes "操作キャラクターの選択"
+	font "",12
+	
+	es_put 30,70,defchar_sp(charid,DEFCHAR_SP_STATIC),$3ff,65536,65536,0
+	pos 100,60
+	mes strf("名前：%s",defchar_desc(charid,0))
+	mes strf("最大HP　：%s",defchar_info(charid,DEFCHAR_INFO_MAXHP))
+	mes strf("最大WP　：%s",defchar_info(charid,DEFCHAR_INFO_MAXWP))
+	mes strf("防御力　：%s",defchar_info(charid,DEFCHAR_INFO_DEF))
+	mes strf("移動速度：%s",100/defchar_info(charid,DEFCHAR_INFO_MOVEFREQ))
+	if defchar_info(charid,DEFCHAR_INFO_WEAPON1) >= 0{
+		pos 80,130
+		mes strf("武器１：%s",weapon_desc(defchar_info(charid,DEFCHAR_INFO_WEAPON1),0))
+		mes strf("　　　　%s",weapon_desc(defchar_info(charid,DEFCHAR_INFO_WEAPON1),1))
+		mes strf("　消費WP      ：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON1),WEAPON_INFO_COSTWP))
+		mes strf("　再装填時間  ：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON1),WEAPON_INFO_COOLDOWN))
+		if weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON1),WEAPON_INFO_SPREAD) > 0 {
+			range = weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON1),WEAPON_INFO_RANGE) * weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON1),WEAPON_INFO_SPPED) /32
+			mes strf("　射程+拡散   ：%d+%d",range,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON1),WEAPON_INFO_SPREAD))
+		} else {
+			mes strf("　射程+拡散   ：%d",range)
+		}
+		mes strf("　攻撃力(ATC) ：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON1),WEAPON_INFO_ATC))
+		mes strf("　色蓄積力(CP)：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON1),WEAPON_INFO_COLORPOWER))
+	}
+	if defchar_info(charid,DEFCHAR_INFO_WEAPON2) >= 0{
+		pos 80,230
+		mes strf("武器２：%s",weapon_desc(defchar_info(charid,DEFCHAR_INFO_WEAPON2),0))
+		mes strf("　　　　%s",weapon_desc(defchar_info(charid,DEFCHAR_INFO_WEAPON2),1))
+		mes strf("　消費WP      ：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON2),WEAPON_INFO_COSTWP))
+		mes strf("　再装填時間  ：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON2),WEAPON_INFO_COOLDOWN))
+		if weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON2),WEAPON_INFO_SPREAD) > 0 {
+			range = weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON2),WEAPON_INFO_RANGE) * weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON2),WEAPON_INFO_SPPED) /32
+			mes strf("　射程+拡散   ：%d+%d",range,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON2),WEAPON_INFO_SPREAD))
+		} else {
+			mes strf("　射程+拡散   ：%d",range)
+		}
+		mes strf("　攻撃力(ATC) ：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON2),WEAPON_INFO_ATC))
+		mes strf("　色蓄積力(CP)：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON2),WEAPON_INFO_COLORPOWER))
+	}
+	if defchar_info(charid,DEFCHAR_INFO_WEAPON3) >= 0{
+		pos 80,330
+		mes strf("武器３：%s",weapon_desc(defchar_info(charid,DEFCHAR_INFO_WEAPON3),0))
+		mes strf("　　　　%s",weapon_desc(defchar_info(charid,DEFCHAR_INFO_WEAPON3),1))
+		mes strf("　消費WP      ：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_COSTWP))
+		mes strf("　再装填時間  ：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_COOLDOWN))
+		if weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_BULLET {
+			if weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_SPREAD) > 0 {
+				range = weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_RANGE) * weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_SPPED) /32
+				mes strf("　射程+拡散   ：%d+%d",range,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_SPREAD))
+			} else {
+				mes strf("　射程+拡散   ：%d",range)
+			}
+			mes strf("　攻撃力(ATC) ：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_ATC))
+			mes strf("　色蓄積力(CP)：%d"   ,weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_COLORPOWER))
+		} else {
+			if weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_SELF {
+				mes "　効果範囲    ：自分"
+			}
+			if weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_ALLYALL {
+				mes "　効果範囲    ：味方全員"
+			}
+			if weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_ENEMYALL {
+				mes "　効果範囲    ：敵全員"
+			}
+			mes strf("　ステート    ：%s",state_desc(weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_ADDSTATE)))
+			mes strf("　持続時間    ：%s",weapon_info(defchar_info(charid,DEFCHAR_INFO_WEAPON3),WEAPON_INFO_ADDSTATETIME))
+		}
+	}
+	pos 10,450
+	if input_button_display = 0 :button goto "キャラ変更",*change_player
+	pos 240,450
+	if input_button_display = 0 :button goto "タイトルに戻る",*return_opening
+	
+	input_button_display = 1
+	return
+
+
+; 操作キャラの変更
+*change_player
+	switch game_info(GAME_INFO_SELECTPLAYER)
+	case 0
+		game_info(GAME_INFO_SELECTPLAYER) = 6
+		swbreak
+	case 6
+		game_info(GAME_INFO_SELECTPLAYER) = 7
+		swbreak
+	case 7
+		game_info(GAME_INFO_SELECTPLAYER) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_SELECTPLAYER) = 0
+		swbreak
+	swend
+	goto *select_player
+		
+; 記録の一覧を表示
+*record_view
+	color 255,240,245
+	boxf
+	color 0,0,0
+	font "",24
+	pos 25,20
+	mes "スコアの記録"
+	font "",12
+	pos 20,80
+	mes strf("順位    キャラ        スコア レベル  バージョン")
+	for i,0,RECORD_MAX
+		if record_info(i,RECORD_INFO_SCORE) <= 0 : _break
+		y = 92 + i * 12
+		pos 20,y
+		mes strf("  %2d  %s  %8d   %4d    v%d.%d.%d",i+1,defchar_desc(record_info(i,RECORD_INFO_SELECTPLAYER),0),record_info(i,RECORD_INFO_SCORE), record_info(i,RECORD_INFO_LEVEL), record_info(i,RECORD_INFO_VER_MAJOR), record_info(i,RECORD_INFO_VER_MINOR), record_info(i,RECORD_INFO_VER_PATCH))
+		if i >= 30 : _break
+	next
+	
+	pos 240,450
+	if input_button_display = 0 :button goto "タイトルに戻る",*return_opening
+	
+	input_button_display = 1
+	return
+
+; ステージオプション選択表示
+*option_select
+	color 255,240,245
+	boxf
+	color 0,0,0
+	font "",24
+	pos 10,10
+	mes strf("難易度選択  レベル:%d",game_info(GAME_INFO_TOTALLEVEL))
+	font "",12
+	;#const GAME_INFO_DIFFICULTY             5	; マップの難易度 0:ノーマル 1:ハード	        ハード +5 LEVEL
+	pos 10,50 : mes "マップ難易度:"
+	pos 90,50
+	if game_info(GAME_INFO_DIFFICULTY) = 0 :                 mes "ノーマル"
+	if game_info(GAME_INFO_DIFFICULTY) = 1 { color 255,0,0 : mes "ハード(+5)" }
+	color 0,0,0
+	pos 160,45 : if input_button_display = 0 : button goto "変更",*option_select_difficulty
+	;#const GAME_INFO_BUFF_ALLY_HP           6	; 味方のHPのバフ				+100: -5 LEVEL |  -20: +1 LEVEL |  -45: +2 LEVEL |  -75: +3 LEVEL
+	pos 10,70 : mes "味方HP:"
+	pos 55,70
+	if game_info(GAME_INFO_BUFF_ALLY_HP) =   0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ALLY_HP) = -20 { color 255,0,0 : mes " -20%(+1)"}
+	if game_info(GAME_INFO_BUFF_ALLY_HP) = -45 { color 255,0,0 : mes " -45%(+2)"}
+	if game_info(GAME_INFO_BUFF_ALLY_HP) = -75 { color 255,0,0 : mes " -75%(+3)"}
+	if game_info(GAME_INFO_BUFF_ALLY_HP) = 100 { color 0,192,0 : mes "+100%(-5)"}
+	color 0,0,0
+	pos 120,65 : if input_button_display = 0 : button goto "変更",*option_select_ally_maxhp
+	;#const GAME_INFO_BUFF_ALLY_WP           7	; 味方のWPのバフ				+100: -5 LEVEL |  -20: +1 LEVEL |  -40: +2 LEVEL |  -60: +3 LEVEL
+	pos 10,90 : mes "　　WP:"
+	pos 55,90
+	if game_info(GAME_INFO_BUFF_ALLY_WP) =   0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ALLY_WP) = -20 { color 255,0,0 : mes " -20%(+1)"}
+	if game_info(GAME_INFO_BUFF_ALLY_WP) = -40 { color 255,0,0 : mes " -40%(+2)"}
+	if game_info(GAME_INFO_BUFF_ALLY_WP) = -60 { color 255,0,0 : mes " -60%(+3)"}
+	if game_info(GAME_INFO_BUFF_ALLY_WP) = 100 { color 0,192,0 : mes "+100%(-5)"}
+	color 0,0,0
+	pos 120,85 : if input_button_display = 0 : button goto "変更",*option_select_ally_maxwp
+	;#const GAME_INFO_BUFF_ALLY_ATC          8	; 味方の攻撃力のバフ			+100: -5 LEVEL |  -30: +1 LEVEL |  -80: +2 LEVEL |  -99: +3 LEVEL
+	pos 10,110 : mes "　攻撃:"
+	pos 55,110
+	if game_info(GAME_INFO_BUFF_ALLY_ATC) =   0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ALLY_ATC) = -30 { color 255,0,0 : mes " -30%(+1)"}
+	if game_info(GAME_INFO_BUFF_ALLY_ATC) = -80 { color 255,0,0 : mes " -80%(+2)"}
+	if game_info(GAME_INFO_BUFF_ALLY_ATC) = -99 { color 255,0,0 : mes " -99%(+3)"}
+	if game_info(GAME_INFO_BUFF_ALLY_ATC) = 100 { color 0,192,0 : mes "+100%(-5)"}
+	color 0,0,0
+	pos 120,105 : if input_button_display = 0 : button goto "変更",*option_select_ally_atc
+	;#const GAME_INFO_BUFF_ALLY_COLORPOWER   9	; 味方の色蓄積のバフ			+100: -5 LEVEL |  -10: +1 LEVEL |  -20: +2 LEVEL |  -35: +3 LEVEL
+	pos 10,130 : mes "　蓄積:"
+	pos 55,130
+	if game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) =   0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = -10 { color 255,0,0 : mes " -10%(+1)"}
+	if game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = -20 { color 255,0,0 : mes " -20%(+2)"}
+	if game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = -35 { color 255,0,0 : mes " -35%(+3)"}
+	if game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = 100 { color 0,192,0 : mes "+100%(-5)"}
+	color 0,0,0
+	pos 120,125 : if input_button_display = 0 : button goto "変更",*option_select_ally_colorpower
+	;#const GAME_INFO_BUFF_ALLY_MOVE        10	; 味方の移動速度のバフ			+200: -5 LEVEL | -100: +2 LEVEL
+	pos 10,150 : mes "　移動:"
+	pos 55,150
+	if game_info(GAME_INFO_BUFF_ALLY_MOVE) =    0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ALLY_MOVE) = -100 { color 255,0,0 : mes " 減速(+2)"}
+	if game_info(GAME_INFO_BUFF_ALLY_MOVE) =  200 { color 0,192,0 : mes " 加速(-5)"}
+	color 0,0,0
+	pos 120,145 : if input_button_display = 0 : button goto "変更",*option_select_ally_move
+	;#const GAME_INFO_BUFF_ALLY_RESPAWN     11	; 味方のリスポーン回数のバフ	                 -997: +1 LEVEL | -998: +2 LEVEL | -999: +3 LEVEL
+	;#const GAME_INFO_BUFF_ALLY_DOWNTIME    12	; 味方のリスポーン時間のバフ	+400: -5 LEVEL | -200:    LEVEL | -300:    LEVEL
+	pos 10,170 : mes "　復活:"
+	pos 55,170
+	if game_info(GAME_INFO_BUFF_ALLY_RESPAWN) =    0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ALLY_RESPAWN) = -997 { color 255,0,0 : mes "2回まで(+1)"}
+	if game_info(GAME_INFO_BUFF_ALLY_RESPAWN) = -998 { color 255,0,0 : mes "1回だけ(+2)"}
+	if game_info(GAME_INFO_BUFF_ALLY_RESPAWN) = -999 { color 255,0,0 : mes "  不可(+3)"}
+	if game_info(GAME_INFO_BUFF_ALLY_RESPAWN) =    1 { color 0,192,0 : mes "即復活(-5)"}
+	color 0,0,0
+	pos 120,165 : if input_button_display = 0 : button goto "変更",*option_select_ally_respawn
+	;#const GAME_INFO_BUFF_ALLY_COSTWP      13	; 味方の消費WPのバフ			 +50: -5 LEVEL |  -20: +1 LEVEL |  -50: +2 LEVEL | -100: +3 LEVEL
+	pos 10,190 : mes "消費WP:"
+	pos 55,190
+	if game_info(GAME_INFO_BUFF_ALLY_COSTWP) =    0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ALLY_COSTWP) =  -20 { color 255,0,0 : mes " 1.2倍(+1)"}
+	if game_info(GAME_INFO_BUFF_ALLY_COSTWP) =  -50 { color 255,0,0 : mes " 1.5倍(+2)"}
+	if game_info(GAME_INFO_BUFF_ALLY_COSTWP) = -100 { color 255,0,0 : mes " 2.0倍(+3)"}
+	if game_info(GAME_INFO_BUFF_ALLY_COSTWP) =   50 { color 0,192,0 : mes " 0.5倍(-5)"}
+	color 0,0,0
+	pos 120,185 : if input_button_display = 0 : button goto "変更",*option_select_ally_costwp
+	;#const GAME_INFO_BUFF_ALLY_RANGE       14	; 味方の射程のバフ			      +1:    LEVEL |                |   -1:    LEVEL |   -1:    LEVEL
+	;#const GAME_INFO_BUFF_ALLY_SPREAD      15	; 味方の拡散範囲のバフ			  +1:    LEVEL |                |                |   -1:    LEVEL
+	;#const GAME_INFO_BUFF_ALLY_WEAKEN      16	; 味方の減衰率のバフ			 +20: -9 LEVEL |  -20: +1 LEVEL |  -25: +3 LEVEL |  -30: +5 LEVEL	
+	pos 10,210 : mes "　武器:"
+	pos 55,210
+	if game_info(GAME_INFO_BUFF_ALLY_WEAKEN) =    0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ALLY_WEAKEN) =  -20 { color 255,0,0 : mes "　弱化(+1)"}
+	if game_info(GAME_INFO_BUFF_ALLY_WEAKEN) =  -25 { color 255,0,0 : mes "大弱化(+3)"}
+	if game_info(GAME_INFO_BUFF_ALLY_WEAKEN) =  -30 { color 255,0,0 : mes "超弱化(+5)"}
+	if game_info(GAME_INFO_BUFF_ALLY_WEAKEN) =   20 { color 0,192,0 : mes "　強化(-9)"}
+	color 0,0,0
+	pos 120,205 : if input_button_display = 0 : button goto "変更",*option_select_ally_weaken
+	;#const GAME_INFO_BUFF_ALLY_COOLDOWN    21	; 味方の再装填速度のバフ		 -50: -5 LEVEL |  -20: +1 LEVEL |  -50: +2 LEVEL | -100: +3 LEVEL
+	pos 10,230 : mes "再装填:"
+	pos 55,230
+	if game_info(GAME_INFO_BUFF_ALLY_COOLDOWN) =    0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ALLY_COOLDOWN) =  -20 { color 255,0,0 : mes "  -20%(+1)"}
+	if game_info(GAME_INFO_BUFF_ALLY_COOLDOWN) =  -50 { color 255,0,0 : mes "  -50%(+2)"}
+	if game_info(GAME_INFO_BUFF_ALLY_COOLDOWN) = -100 { color 255,0,0 : mes " -100%(+3)"}
+	if game_info(GAME_INFO_BUFF_ALLY_COOLDOWN) =   50 { color 0,192,0 : mes "　+50%(-5)"}
+	color 0,0,0
+	pos 120,225 : if input_button_display = 0 : button goto "変更",*option_select_ally_cooldown
+
+	;#const GAME_INFO_BUFF_ENEMY_HP         19	; 敵のHPのバフ				     -50: -5 LEVEL |  +60: +1 LEVEL | +120: +2 LEVEL | +300: +3 LEVEL
+	pos 10,260 : mes "敵　HP:"
+	pos 55,260
+	if game_info(GAME_INFO_BUFF_ENEMY_HP) =   0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ENEMY_HP) =  60 { color 255,0,0 : mes " +60%(+1)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_HP) = 120 { color 255,0,0 : mes "+120%(+2)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_HP) = 300 { color 255,0,0 : mes "+300%(+3)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_HP) = -50 { color 0,192,0 : mes " -50%(-5)"}
+	color 0,0,0
+	pos 120,255 : if input_button_display = 0 : button goto "変更",*option_select_enemy_maxhp
+	;#const GAME_INFO_BUFF_ENEMY_WP         20	; 敵のWPのバフ				     -50: -5 LEVEL
+	pos 10,280 : mes "　　WP:"
+	pos 55,280
+	if game_info(GAME_INFO_BUFF_ENEMY_WP) =   0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ENEMY_WP) = -50 { color 0,192,0 : mes " -50%(-5)"}
+	color 0,0,0
+	pos 120,275 : if input_button_display = 0 : button goto "変更",*option_select_enemy_maxwp
+	;#const GAME_INFO_BUFF_ENEMY_ATC        21	; 敵の攻撃力のバフ				 -50: -5 LEVEL |  +20: +1 LEVEL |  +50: +2 LEVEL | +100: +3 LEVEL
+	pos 10,300 : mes "　攻撃:"
+	pos 55,300
+	if game_info(GAME_INFO_BUFF_ENEMY_ATC) =   0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ENEMY_ATC) =  20 { color 255,0,0 : mes " +20%(+1)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_ATC) =  50 { color 255,0,0 : mes " +50%(+2)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_ATC) = 100 { color 255,0,0 : mes "+100%(+3)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_ATC) = -50 { color 0,192,0 : mes " -50%(-5)"}
+	color 0,0,0
+	pos 120,295 : if input_button_display = 0 : button goto "変更",*option_select_enemy_atc
+	;#const GAME_INFO_BUFF_ENEMY_COLORPOWER 22	; 敵の色蓄積のバフ				 -50: -5 LEVEL |  +20: +1 LEVEL |  +40: +2 LEVEL |  +80: +3 LEVEL
+	pos 10,320 : mes "　蓄積:"
+	pos 55,320
+	if game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) =   0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) =  20 { color 255,0,0 : mes " +20%(+1)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) =  40 { color 255,0,0 : mes " +40%(+2)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) =  80 { color 255,0,0 : mes " +80%(+3)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = -50 { color 0,192,0 : mes " -50%(-5)"}
+	color 0,0,0
+	pos 120,315 : if input_button_display = 0 : button goto "変更",*option_select_enemy_colorpower
+	;#const GAME_INFO_BUFF_ENEMY_MOVE       23	; 敵の移動速度のバフ			-100: -5 LEVEL | +200: +1 LEVEL | +400: +2 LEVEL | +800: +3 LEVEL
+	pos 10,340 : mes "　移動:"
+	pos 55,340
+	if game_info(GAME_INFO_BUFF_ENEMY_MOVE) =    0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ENEMY_MOVE) =  200 { color 255,0,0 : mes " 加速(+1)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_MOVE) =  400 { color 255,0,0 : mes "超加速(+2)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_MOVE) =  800 { color 255,0,0 : mes " 爆速(+3)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_MOVE) = -100 { color 0,192,0 : mes " 減速(-5)"}
+	color 0,0,0
+	pos 120,335 : if input_button_display = 0 : button goto "変更",*option_select_enemy_move
+	;#const GAME_INFO_BUFF_ENEMY_RESPAWN    24	; 敵のリスポーン回数のバフ	    -999: -5 LEVEL |   +2: +2 LEVEL
+	;#const GAME_INFO_BUFF_ENEMY_DOWNTIME   25	; 敵のリスポーン時間のバフ	    -300:    LEVEL | +400:    LEVEL
+	pos 10,360 : mes "　復活:"
+	pos 55,360
+	if game_info(GAME_INFO_BUFF_ENEMY_RESPAWN) =    0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ENEMY_RESPAWN) =    2 { color 255,0,0 : mes "2回追加(+2)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_RESPAWN) = -999 { color 0,192,0 : mes " 禁止(-5)"}
+	color 0,0,0
+	pos 120,355 : if input_button_display = 0 : button goto "変更",*option_select_enemy_respawn
+	
+	;#const GAME_INFO_BUFF_ENEMY_COSTWP     26	; 敵の消費WPのバフ			    -100: -5 LEVEL | +100: +1 LEVEL
+	pos 10,380 : mes "消費WP:"
+	pos 55,380
+	if game_info(GAME_INFO_BUFF_ENEMY_COSTWP) =    0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ENEMY_COSTWP) =  100 { color 255,0,0 : mes "  0に(+1)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_COSTWP) = -100 { color 0,192,0 : mes "2.0倍(-5)"}
+	color 0,0,0
+	pos 120,375 : if input_button_display = 0 : button goto "変更",*option_select_enemy_costwp
+	;#const GAME_INFO_BUFF_ENEMY_RANGE      27	; 敵の射程のバフ			      -1:    LEVEL |                |   +1:    LEVEL |   +1:    LEVEL
+	;#const GAME_INFO_BUFF_ENEMY_SPREAD     28	; 敵の拡散範囲のバフ			  -1:    LEVEL |                |                |   +1:    LEVEL
+	;#const GAME_INFO_BUFF_ENEMY_WEAKEN     29	; 敵の減衰率のバフ  			 -20: -9 LEVEL |  +20: +1 LEVEL |  +25: +3 LEVEL |  +30: +5 LEVEL
+	pos 10,400 : mes "　武器:"
+	pos 55,400
+	if game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) =    0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) =   20 { color 255,0,0 : mes "　強化(+1)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) =   25 { color 255,0,0 : mes "大強化(+3)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) =   30 { color 255,0,0 : mes "超強化(+5)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) =  -20 { color 0,192,0 : mes "　弱化(-9)"}
+	color 0,0,0
+	pos 120,395 : if input_button_display = 0 : button goto "変更",*option_select_enemy_weaken
+	;#const GAME_INFO_BUFF_ENEMY_COOLDOWN   33	; 敵の再装填速度のバフ  		+100: -5 LEVEL |   20: +1 LEVEL |   35: +2 LEVEL |   50: +3 LEVEL
+	pos 10,420 : mes "再装填:"
+	pos 55,420
+	if game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN) =    0 : mes " 補正なし"
+	if game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN) =   20 { color 255,0,0 : mes "   20%(+1)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN) =   35 { color 255,0,0 : mes "   35%(+2)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN) =   50 { color 255,0,0 : mes "   50%(+3)"}
+	if game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN) = -100 { color 0,192,0 : mes " -100%(-5)"}
+	color 0,0,0
+	pos 120,415 : if input_button_display = 0 : button goto "変更",*option_select_enemy_cooldown
+
+	pos 200,100 : mes "難易度セット"
+	pos 200,120 : if input_button_display = 0 : button goto "イージー",*option_select_set002
+	pos 200,145 : if input_button_display = 0 : button goto "ノーマル",*option_select_set001
+	pos 200,170 : if input_button_display = 0 : button goto "ぷちハード",*option_select_set003
+	pos 200,195 : if input_button_display = 0 : button goto "ハード",*option_select_set004
+	pos 200,220 : if input_button_display = 0 : button goto "ベリーハード",*option_select_set005
+	pos 200,245 : if input_button_display = 0 : button goto "ウルトラハード",*option_select_set006
+
+	pos 240,450
+	if input_button_display = 0 :button goto "タイトルに戻る",*return_opening
+
+	input_button_display = 1
+	return
+
+
+; 難易度セット001(ノーマル)
+*option_select_set001
+	game_info(GAME_INFO_DIFFICULTY)            = 0
+	game_info(GAME_INFO_BUFF_ALLY_HP)          = 0
+	game_info(GAME_INFO_BUFF_ALLY_WP)          = 0
+	game_info(GAME_INFO_BUFF_ALLY_ATC)         = 0
+	game_info(GAME_INFO_BUFF_ALLY_COLORPOWER)  = 0
+	game_info(GAME_INFO_BUFF_ALLY_MOVE)        = 0
+	game_info(GAME_INFO_BUFF_ALLY_RESPAWN)     = 0
+	game_info(GAME_INFO_BUFF_ALLY_COSTWP)      = 0
+	game_info(GAME_INFO_BUFF_ALLY_WEAKEN)      = 0
+	game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_HP)         = 0
+	game_info(GAME_INFO_BUFF_ENEMY_WP)         = 0
+	game_info(GAME_INFO_BUFF_ENEMY_ATC)        = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = 0
+	game_info(GAME_INFO_BUFF_ENEMY_MOVE)       = 0
+	game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COSTWP)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_WEAKEN)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)   = 0
+	goto *option_select_culcu_level
+	
+; 難易度セット002(イージー)
+*option_select_set002
+	game_info(GAME_INFO_DIFFICULTY)            = 0
+	game_info(GAME_INFO_BUFF_ALLY_HP)          = 100
+	game_info(GAME_INFO_BUFF_ALLY_WP)          = 0
+	game_info(GAME_INFO_BUFF_ALLY_ATC)         = 0
+	game_info(GAME_INFO_BUFF_ALLY_COLORPOWER)  = 100
+	game_info(GAME_INFO_BUFF_ALLY_MOVE)        = 0
+	game_info(GAME_INFO_BUFF_ALLY_RESPAWN)     = 0
+	game_info(GAME_INFO_BUFF_ALLY_COSTWP)      = 0
+	game_info(GAME_INFO_BUFF_ALLY_WEAKEN)      = 20
+	game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_HP)         = -50
+	game_info(GAME_INFO_BUFF_ENEMY_WP)         = 0
+	game_info(GAME_INFO_BUFF_ENEMY_ATC)        = -50
+	game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = -50
+	game_info(GAME_INFO_BUFF_ENEMY_MOVE)       = 0
+	game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COSTWP)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_WEAKEN)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)   = 0
+	goto *option_select_culcu_level
+
+	
+; 難易度セット003(ぷちハード)
+*option_select_set003
+	game_info(GAME_INFO_DIFFICULTY)            = 0
+	game_info(GAME_INFO_BUFF_ALLY_HP)          = -20
+	game_info(GAME_INFO_BUFF_ALLY_WP)          = -20
+	game_info(GAME_INFO_BUFF_ALLY_ATC)         = -30
+	game_info(GAME_INFO_BUFF_ALLY_COLORPOWER)  = 0
+	game_info(GAME_INFO_BUFF_ALLY_MOVE)        = 0
+	game_info(GAME_INFO_BUFF_ALLY_RESPAWN)     = 0
+	game_info(GAME_INFO_BUFF_ALLY_COSTWP)      = 0
+	game_info(GAME_INFO_BUFF_ALLY_WEAKEN)      = 0
+	game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_HP)         = 60
+	game_info(GAME_INFO_BUFF_ENEMY_WP)         = 0
+	game_info(GAME_INFO_BUFF_ENEMY_ATC)        = 20
+	game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = 0
+	game_info(GAME_INFO_BUFF_ENEMY_MOVE)       = 0
+	game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COSTWP)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_WEAKEN)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)   = 0
+	goto *option_select_culcu_level
+		
+; 難易度セット004(ハード)
+*option_select_set004
+	game_info(GAME_INFO_DIFFICULTY)            = 1
+	game_info(GAME_INFO_BUFF_ALLY_HP)          = -20
+	game_info(GAME_INFO_BUFF_ALLY_WP)          = -20
+	game_info(GAME_INFO_BUFF_ALLY_ATC)         = -30
+	game_info(GAME_INFO_BUFF_ALLY_COLORPOWER)  = -10
+	game_info(GAME_INFO_BUFF_ALLY_MOVE)        = 0
+	game_info(GAME_INFO_BUFF_ALLY_RESPAWN)     = 0
+	game_info(GAME_INFO_BUFF_ALLY_COSTWP)      = 0
+	game_info(GAME_INFO_BUFF_ALLY_WEAKEN)      = 0
+	game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_HP)         = 60
+	game_info(GAME_INFO_BUFF_ENEMY_WP)         = 0
+	game_info(GAME_INFO_BUFF_ENEMY_ATC)        = 20
+	game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = 20
+	game_info(GAME_INFO_BUFF_ENEMY_MOVE)       = 0
+	game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COSTWP)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_WEAKEN)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)   = 0
+	goto *option_select_culcu_level
+
+		
+; 難易度セット005(ベリーハード)
+*option_select_set005
+	game_info(GAME_INFO_DIFFICULTY)            = 1
+	game_info(GAME_INFO_BUFF_ALLY_HP)          = -45
+	game_info(GAME_INFO_BUFF_ALLY_WP)          = -40
+	game_info(GAME_INFO_BUFF_ALLY_ATC)         = -80
+	game_info(GAME_INFO_BUFF_ALLY_COLORPOWER)  = -20
+	game_info(GAME_INFO_BUFF_ALLY_MOVE)        = 0
+	game_info(GAME_INFO_BUFF_ALLY_RESPAWN)     = 0
+	game_info(GAME_INFO_BUFF_ALLY_COSTWP)      = -20
+	game_info(GAME_INFO_BUFF_ALLY_WEAKEN)      = 0
+	game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_HP)         = 120
+	game_info(GAME_INFO_BUFF_ENEMY_WP)         = 0
+	game_info(GAME_INFO_BUFF_ENEMY_ATC)        = 50
+	game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = 40
+	game_info(GAME_INFO_BUFF_ENEMY_MOVE)       = 0
+	game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COSTWP)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_WEAKEN)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)   = 0
+	goto *option_select_culcu_level
+
+		
+; 難易度セット006(ウルトラハード)
+*option_select_set006
+	game_info(GAME_INFO_DIFFICULTY)            = 1
+	game_info(GAME_INFO_BUFF_ALLY_HP)          = -75
+	game_info(GAME_INFO_BUFF_ALLY_WP)          = -60
+	game_info(GAME_INFO_BUFF_ALLY_ATC)         = -99
+	game_info(GAME_INFO_BUFF_ALLY_COLORPOWER)  = -35
+	game_info(GAME_INFO_BUFF_ALLY_MOVE)        = 0
+	game_info(GAME_INFO_BUFF_ALLY_RESPAWN)     = 0
+	game_info(GAME_INFO_BUFF_ALLY_COSTWP)      = -50
+	game_info(GAME_INFO_BUFF_ALLY_WEAKEN)      = 0
+	game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)    = 0
+	game_info(GAME_INFO_BUFF_ENEMY_HP)         = 300
+	game_info(GAME_INFO_BUFF_ENEMY_WP)         = 0
+	game_info(GAME_INFO_BUFF_ENEMY_ATC)        = 100
+	game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = 80
+	game_info(GAME_INFO_BUFF_ENEMY_MOVE)       = 0
+	game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)    = 2
+	game_info(GAME_INFO_BUFF_ENEMY_COSTWP)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_WEAKEN)     = 0
+	game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)   = 0
+	goto *option_select_culcu_level
+	
+
+; マップ難易度の変更
+*option_select_difficulty
+	if game_info(GAME_INFO_DIFFICULTY) = 0 {
+		game_info(GAME_INFO_DIFFICULTY) = 1
+	} else {
+		game_info(GAME_INFO_DIFFICULTY) = 0
+	}
+	goto *option_select_culcu_level
+
+; 味方HPの変更
+*option_select_ally_maxhp
+	switch game_info(GAME_INFO_BUFF_ALLY_HP)
+	case 0
+		game_info(GAME_INFO_BUFF_ALLY_HP) = -20
+		swbreak
+	case -20
+		game_info(GAME_INFO_BUFF_ALLY_HP) = -45
+		swbreak
+	case -45
+		game_info(GAME_INFO_BUFF_ALLY_HP) = -75
+		swbreak
+	case -75
+		game_info(GAME_INFO_BUFF_ALLY_HP) = 100
+		swbreak
+	case 100
+		game_info(GAME_INFO_BUFF_ALLY_HP) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ALLY_HP) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 味方WPの変更
+*option_select_ally_maxwp
+	switch game_info(GAME_INFO_BUFF_ALLY_WP)
+	case 0
+		game_info(GAME_INFO_BUFF_ALLY_WP) = -20
+		swbreak
+	case -20
+		game_info(GAME_INFO_BUFF_ALLY_WP) = -40
+		swbreak
+	case -40
+		game_info(GAME_INFO_BUFF_ALLY_WP) = -60
+		swbreak
+	case -60
+		game_info(GAME_INFO_BUFF_ALLY_WP) = 100
+		swbreak
+	case 100
+		game_info(GAME_INFO_BUFF_ALLY_WP) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ALLY_WP) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 味方ATCの変更
+*option_select_ally_atc
+	switch game_info(GAME_INFO_BUFF_ALLY_ATC)
+	case 0
+		game_info(GAME_INFO_BUFF_ALLY_ATC) = -30
+		swbreak
+	case -30
+		game_info(GAME_INFO_BUFF_ALLY_ATC) = -80
+		swbreak
+	case -80
+		game_info(GAME_INFO_BUFF_ALLY_ATC) = -99
+		swbreak
+	case -99
+		game_info(GAME_INFO_BUFF_ALLY_ATC) = 100
+		swbreak
+	case 100
+		game_info(GAME_INFO_BUFF_ALLY_ATC) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ALLY_ATC) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 味方色蓄積の変更
+*option_select_ally_colorpower
+	switch game_info(GAME_INFO_BUFF_ALLY_COLORPOWER)
+	case 0
+		game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = -10
+		swbreak
+	case -10
+		game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = -20
+		swbreak
+	case -20
+		game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = -35
+		swbreak
+	case -35
+		game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = 100
+		swbreak
+	case 100
+		game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 味方移動の変更
+*option_select_ally_move
+	switch game_info(GAME_INFO_BUFF_ALLY_MOVE)
+	case 0
+		game_info(GAME_INFO_BUFF_ALLY_MOVE) = -100
+		swbreak
+	case -100
+		game_info(GAME_INFO_BUFF_ALLY_MOVE) = 200
+		swbreak
+	case 200
+		game_info(GAME_INFO_BUFF_ALLY_MOVE) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ALLY_MOVE) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 味方リスポーン・ダウンタイムの変更
+*option_select_ally_respawn
+	switch game_info(GAME_INFO_BUFF_ALLY_RESPAWN)
+	case 0
+		game_info(GAME_INFO_BUFF_ALLY_RESPAWN)  = -997
+		game_info(GAME_INFO_BUFF_ALLY_DOWNTIME) = -200
+		swbreak
+	case -997
+		game_info(GAME_INFO_BUFF_ALLY_RESPAWN)  = -998
+		game_info(GAME_INFO_BUFF_ALLY_DOWNTIME) = -300
+		swbreak
+	case -998
+		game_info(GAME_INFO_BUFF_ALLY_RESPAWN)  = -999
+		game_info(GAME_INFO_BUFF_ALLY_DOWNTIME) = 0
+		swbreak
+	case -999
+		game_info(GAME_INFO_BUFF_ALLY_RESPAWN)  = 1
+		game_info(GAME_INFO_BUFF_ALLY_DOWNTIME) = 400
+		swbreak
+	case 1
+		game_info(GAME_INFO_BUFF_ALLY_RESPAWN)  = 0
+		game_info(GAME_INFO_BUFF_ALLY_DOWNTIME) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ALLY_RESPAWN)  = 0
+		game_info(GAME_INFO_BUFF_ALLY_DOWNTIME) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+	
+	; 味方消費WPの変更
+*option_select_ally_costwp
+	switch game_info(GAME_INFO_BUFF_ALLY_COSTWP)
+	case 0
+		game_info(GAME_INFO_BUFF_ALLY_COSTWP) = -20
+		swbreak
+	case -20
+		game_info(GAME_INFO_BUFF_ALLY_COSTWP) = -50
+		swbreak
+	case -50
+		game_info(GAME_INFO_BUFF_ALLY_COSTWP) = -100
+		swbreak
+	case -100
+		game_info(GAME_INFO_BUFF_ALLY_COSTWP) = 50
+		swbreak
+	case 50
+		game_info(GAME_INFO_BUFF_ALLY_COSTWP) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ALLY_COSTWP) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 味方武器の変更
+*option_select_ally_weaken
+	switch game_info(GAME_INFO_BUFF_ALLY_WEAKEN)
+	case 0
+		game_info(GAME_INFO_BUFF_ALLY_RANGE)  = 0
+		game_info(GAME_INFO_BUFF_ALLY_SPREAD) = 0
+		game_info(GAME_INFO_BUFF_ALLY_WEAKEN) = -20
+		swbreak
+	case -20
+		game_info(GAME_INFO_BUFF_ALLY_RANGE)  = -1
+		game_info(GAME_INFO_BUFF_ALLY_SPREAD) = 0
+		game_info(GAME_INFO_BUFF_ALLY_WEAKEN) = -25
+		swbreak
+	case -25
+		game_info(GAME_INFO_BUFF_ALLY_RANGE)  = -1
+		game_info(GAME_INFO_BUFF_ALLY_SPREAD) = -1
+		game_info(GAME_INFO_BUFF_ALLY_WEAKEN) = -30
+		swbreak
+	case -30
+		game_info(GAME_INFO_BUFF_ALLY_RANGE)  = 1
+		game_info(GAME_INFO_BUFF_ALLY_SPREAD) = 1
+		game_info(GAME_INFO_BUFF_ALLY_WEAKEN) = 20
+		swbreak
+	case 20
+		game_info(GAME_INFO_BUFF_ALLY_RANGE)  = 0
+		game_info(GAME_INFO_BUFF_ALLY_SPREAD) = 0
+		game_info(GAME_INFO_BUFF_ALLY_WEAKEN) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ALLY_RANGE)  = 0
+		game_info(GAME_INFO_BUFF_ALLY_SPREAD) = 0
+		game_info(GAME_INFO_BUFF_ALLY_WEAKEN) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 味方再装填速度の変更
+*option_select_ally_cooldown
+	switch game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)
+	case 0
+		game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)  = -20
+		swbreak
+	case -20
+		game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)  = -50
+		swbreak
+	case -50
+		game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)  = -100
+		swbreak
+	case -100
+		game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)  = 50
+		swbreak
+	case 50
+		game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)  = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)  = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 敵HPの変更
+*option_select_enemy_maxhp
+	switch game_info(GAME_INFO_BUFF_ENEMY_HP)
+	case 0
+		game_info(GAME_INFO_BUFF_ENEMY_HP) = 60
+		swbreak
+	case 60
+		game_info(GAME_INFO_BUFF_ENEMY_HP) = 120
+		swbreak
+	case 120
+		game_info(GAME_INFO_BUFF_ENEMY_HP) = 300
+		swbreak
+	case 300
+		game_info(GAME_INFO_BUFF_ENEMY_HP) = -50
+		swbreak
+	case -50
+		game_info(GAME_INFO_BUFF_ENEMY_HP) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ENEMY_HP) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 敵WPの変更
+*option_select_enemy_maxwp
+	switch game_info(GAME_INFO_BUFF_ENEMY_WP)
+	case 0
+		game_info(GAME_INFO_BUFF_ENEMY_WP) = -50
+		swbreak
+	case -50
+		game_info(GAME_INFO_BUFF_ENEMY_WP) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ENEMY_WP) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 敵攻撃力の変更
+*option_select_enemy_atc
+	switch game_info(GAME_INFO_BUFF_ENEMY_ATC)
+	case 0
+		game_info(GAME_INFO_BUFF_ENEMY_ATC) = 20
+		swbreak
+	case 20
+		game_info(GAME_INFO_BUFF_ENEMY_ATC) = 50
+		swbreak
+	case 50
+		game_info(GAME_INFO_BUFF_ENEMY_ATC) = 100
+		swbreak
+	case 100
+		game_info(GAME_INFO_BUFF_ENEMY_ATC) = -50
+		swbreak
+	case -50
+		game_info(GAME_INFO_BUFF_ENEMY_ATC) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ENEMY_ATC) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 敵色蓄積力の変更
+*option_select_enemy_colorpower
+	switch game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER)
+	case 0
+		game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = 20
+		swbreak
+	case 20
+		game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = 40
+		swbreak
+	case 40
+		game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = 80
+		swbreak
+	case 80
+		game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = -50
+		swbreak
+	case -50
+		game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 敵移動速度の変更
+*option_select_enemy_move
+	switch game_info(GAME_INFO_BUFF_ENEMY_MOVE)
+	case 0
+		game_info(GAME_INFO_BUFF_ENEMY_MOVE) = 200
+		swbreak
+	case 200
+		game_info(GAME_INFO_BUFF_ENEMY_MOVE) = 400
+		swbreak
+	case 400
+		game_info(GAME_INFO_BUFF_ENEMY_MOVE) = 800
+		swbreak
+	case 800
+		game_info(GAME_INFO_BUFF_ENEMY_MOVE) = -100
+		swbreak
+	case -100
+		game_info(GAME_INFO_BUFF_ENEMY_MOVE) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ENEMY_MOVE) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 敵リスポーン・ダウンタイムの変更
+*option_select_enemy_respawn
+	switch game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)
+	case 0
+		game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)  = 2
+		game_info(GAME_INFO_BUFF_ENEMY_DOWNTIME) = 400
+		swbreak
+	case 2
+		game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)  = -999
+		game_info(GAME_INFO_BUFF_ENEMY_DOWNTIME) = -300
+		swbreak
+	case -999
+		game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)  = 0
+		game_info(GAME_INFO_BUFF_ENEMY_DOWNTIME) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)  = 0
+		game_info(GAME_INFO_BUFF_ENEMY_DOWNTIME) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+	
+	; 敵消費WPの変更
+*option_select_enemy_costwp
+	switch game_info(GAME_INFO_BUFF_ENEMY_COSTWP)
+	case 0
+		game_info(GAME_INFO_BUFF_ENEMY_COSTWP) = 100
+		swbreak
+	case 100
+		game_info(GAME_INFO_BUFF_ENEMY_COSTWP) = -100
+		swbreak
+	case -100
+		game_info(GAME_INFO_BUFF_ENEMY_COSTWP) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ENEMY_COSTWP) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 敵武器の変更
+*option_select_enemy_weaken
+	switch game_info(GAME_INFO_BUFF_ENEMY_WEAKEN)
+	case 0
+		game_info(GAME_INFO_BUFF_ENEMY_RANGE)  = 0
+		game_info(GAME_INFO_BUFF_ENEMY_SPREAD) = 0
+		game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) = 20
+		swbreak
+	case 20
+		game_info(GAME_INFO_BUFF_ENEMY_RANGE)  = 1
+		game_info(GAME_INFO_BUFF_ENEMY_SPREAD) = 0
+		game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) = 25
+		swbreak
+	case 25
+		game_info(GAME_INFO_BUFF_ENEMY_RANGE)  = 1
+		game_info(GAME_INFO_BUFF_ENEMY_SPREAD) = 1
+		game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) = 30
+		swbreak
+	case 30
+		game_info(GAME_INFO_BUFF_ENEMY_RANGE)  = -1
+		game_info(GAME_INFO_BUFF_ENEMY_SPREAD) = -1
+		game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) = -20
+		swbreak
+	case -20
+		game_info(GAME_INFO_BUFF_ENEMY_RANGE)  = 0
+		game_info(GAME_INFO_BUFF_ENEMY_SPREAD) = 0
+		game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ENEMY_RANGE)  = 0
+		game_info(GAME_INFO_BUFF_ENEMY_SPREAD) = 0
+		game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+
+; 敵攻撃頻度の変更
+*option_select_enemy_cooldown
+	switch game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)
+	case 0
+		game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)  = 20
+		swbreak
+	case 20
+		game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)  = 35
+		swbreak
+	case 35
+		game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)  = 50
+		swbreak
+	case 50
+		game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)  = -100
+		swbreak
+	case -100
+		game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)  = 0
+		swbreak
+	default
+		game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)  = 0
+		swbreak
+	swend
+	goto *option_select_culcu_level
+	
+; レベルの計算
+*option_select_culcu_level
+	game_info(GAME_INFO_TOTALLEVEL) = 0
+	if game_info(GAME_INFO_DIFFICULTY) = 1 : game_info(GAME_INFO_TOTALLEVEL) += 5
+	if game_info(GAME_INFO_BUFF_ALLY_HP) = -20 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ALLY_HP) = -45 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ALLY_HP) = -75 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ALLY_HP) = 100 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ALLY_WP) = -20 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ALLY_WP) = -40 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ALLY_WP) = -60 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ALLY_WP) = 100 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ALLY_ATC) = -30 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ALLY_ATC) = -80 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ALLY_ATC) = -99 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ALLY_ATC) = 100 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = -10 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = -20 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = -35 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) = 100 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ALLY_MOVE) = -100 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ALLY_MOVE) = 200 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ALLY_RESPAWN) = -997 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ALLY_RESPAWN) = -998 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ALLY_RESPAWN) = -999 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ALLY_RESPAWN) =    1 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ALLY_COSTWP) =  -20 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ALLY_COSTWP) =  -50 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ALLY_COSTWP) = -100 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ALLY_COSTWP) =   50 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ALLY_WEAKEN) = -20 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ALLY_WEAKEN) = -25 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ALLY_WEAKEN) = -30 : game_info(GAME_INFO_TOTALLEVEL) += 5
+	if game_info(GAME_INFO_BUFF_ALLY_WEAKEN) =  20 : game_info(GAME_INFO_TOTALLEVEL) -= 9
+	if game_info(GAME_INFO_BUFF_ALLY_COOLDOWN) =  -20 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ALLY_COOLDOWN) =  -50 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ALLY_COOLDOWN) = -100 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ALLY_COOLDOWN) =   50 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ENEMY_HP) =  60 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ENEMY_HP) = 120 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ENEMY_HP) = 300 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ENEMY_HP) = -50 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ENEMY_WP) = -50 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ENEMY_ATC) =  20 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ENEMY_ATC) =  50 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ENEMY_ATC) = 100 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ENEMY_ATC) = -50 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) =  20 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) =  40 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) =  80 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) = -50 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ENEMY_MOVE) =  200 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ENEMY_MOVE) =  400 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ENEMY_MOVE) =  800 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ENEMY_MOVE) = -100 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ENEMY_RESPAWN) =     2 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ENEMY_RESPAWN) =  -999 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ENEMY_COSTWP) =  100 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ENEMY_COSTWP) = -100 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+	if game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) =  20 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) =  25 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) =  30 : game_info(GAME_INFO_TOTALLEVEL) += 5
+	if game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) = -20 : game_info(GAME_INFO_TOTALLEVEL) -= 9
+	if game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN) =   20 : game_info(GAME_INFO_TOTALLEVEL) += 1
+	if game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN) =   35 : game_info(GAME_INFO_TOTALLEVEL) += 2
+	if game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN) =   50 : game_info(GAME_INFO_TOTALLEVEL) += 3
+	if game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN) = -100 : game_info(GAME_INFO_TOTALLEVEL) -= 5
+
+	goto *main_option
+
+
+; ======================================================================================
+; ステージ終了後
+; ======================================================================================
+
+; リザルトのメインループ
+*main_stageend	
+	redraw 0			; 画面クリア
+	gosub *result_page	; リザルト画面表示
+	redraw 1			; 画面の更新
+	await 1000/16		; 時間待ち(1/60秒)
+	goto *main_stageend
+
+
+; リザルト画面表示
+*result_page
+	color 255,240,245
+	boxf
+	color 0,0,0
+	font "",24
+	pos 25,40
+	mes "メイドさんのお掃除し隊"
+	font "",12
+
+	; メイドさんの背景
+	pos 0,220
+	if map_bucket_sum(0) > map_bucket_sum(1) {
+		gzoom 320,400,BUFID_MEI_EGAO,0,0,755,755*400/320,0
+	}
+	if map_bucket_sum(0) <= map_bucket_sum(1) {
+		gzoom 320,400,BUFID_MEI_ODOROKI,0,0,755,755*400/320,0
+	}	
+	
+	pos 10,70
+	if game_info(GAME_INFO_TOTALLEVEL) ! 0 {
+		mes strf("ステージ %d (レベル %d) 結果",game_info(GAME_INFO_STAGE),game_info(GAME_INFO_TOTALLEVEL))
+	} else {
+		mes strf("ステージ %d 結果",game_info(GAME_INFO_STAGE))
+	}
+	pos 10,82
+	if game_info(GAME_INFO_RETRY) > 0 {
+		mes strf("リトライ %d 回",game_info(GAME_INFO_RETRY))
+	} 
+	pos 10,110
+	for i,0,TEAM_MAX
+		mes strf("%18s : 色塗り %6d",team_desc(i,0),map_bucket_sum(i) )
+	next
+	pos 10,150
+	font "",16
+	if map_bucket_sum(0) > map_bucket_sum(1) {
+		mes "勝ちましたわ、当然のことです"
+	}
+	if map_bucket_sum(0) = map_bucket_sum(1) {
+		mes "引き分けなんて、実質負けですわね"
+	}
+	if map_bucket_sum(0) < map_bucket_sum(1) {
+		mes "負けてしまいましたわ"
+	}
+	pos 10,190
+	mes strf("　　得点: %8d",game_info(GAME_INFO_CURRSCORE))
+	mes strf("合計得点: %8d",game_info(GAME_INFO_SCORE))
+	
+	if map_bucket_sum(0) > map_bucket_sum(1) {
+		pos 10,400
+		if input_button_display = 0 : button goto "続ける",*next_stage
+	}
+	if map_bucket_sum(0) <= map_bucket_sum(1) {
+		pos 10,400
+		if input_button_display = 0 : button goto "リトライ",*retry_stage
+		pos 240,400
+		if input_button_display = 0 : button goto "ゲームオーバー",*game_retire_ending
+	}
+	font "",12
+	input_button_display = 1
+	return
+
+
+; エンディングのメインループ
+*game_retire_ending
+	mmplay sound_def_mediabuffid(SOUND_DEF_DECISION)	; 決定の効果音
+	clrobj
+	input_button_display = 0
+*game_ending
+	gosub *sub_add_record	; スコアの記録
+*main_ending
+	redraw 0			; 画面クリア
+	gosub *ending_title	; タイトル画面表示
+	redraw 1			; 画面の更新
+	await 1000/16		; 時間待ち(1/60秒)
+	goto *main_ending
+
+
+; エンディング画面表示
+*ending_title
+	color 255,240,245
+	boxf
+	color 0,0,0
+	font "",24
+	pos 25,40
+	mes "メイドさんのお掃除し隊"
+
+	; メイドさんの背景
+	pos 0,170
+	gzoom 320,400,BUFID_MEI_EGAO,0,0,755,755*400/320,0
+	
+	font "",12
+	pos 10,70
+	mes "ゲームで遊んで頂きありがとうございました"
+
+	font "",16
+	pos 10,120
+	if game_info(GAME_INFO_TOTALLEVEL) ! 0 {
+		mes strf("難易度　: %8d",game_info(GAME_INFO_TOTALLEVEL))
+	}
+	mes strf("合計得点: %8d",game_info(GAME_INFO_SCORE))
+	font "",12
+
+	pos 10,400
+	if input_button_display = 0 :button goto "タイトルに戻る",*restart_game
+
+	input_button_display = 1
+	return

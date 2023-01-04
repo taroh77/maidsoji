@@ -1,0 +1,465 @@
+; ステージデータを読み込む前にデータの初期化
+*reset_data
+
+	TIMES = 0		; ゲーム内時間（フレーム数）
+
+	es_ini 512,2048,360	; スプライトは512個まで、 キャラクタ定義数は2048個まで、周の精度は1周360度としてスプライトを初期化
+
+	;dim defchar_sp,DEFCHAR_MAX,DEFCHAR_SP_MAX	; スプライトキャラクタ画像の定義
+	;sdim defchar_desc,32,DEFCHAR_MAX,1		; キャラクタ定義情報（文字列）：名前
+	;dim defchar_info,DEFCHAR_MAX,DEFCHAR_INFO_MAX	; キャラクタ定義情報（数値）
+
+	dim char_spid,CHAR_MAX,CHAR_SPID_MAX	; スプライトのID（マップ上[アニメ]、ステータス表示[静止画]、マップ上のポップアップ）
+	dim char_spcharid,CHAR_MAX,4			; スプライトキャラクタ画像のID（下向き、左向き、上向き、右向き）　※マップ上[アニメ]に代入する用
+
+	sdim char_desc,32,CHAR_MAX,1			; キャラクタの情報（文字列）：名前
+
+	dim char_info,CHAR_MAX,CHAR_INFO_MAX
+	for i,0,CHAR_MAX
+		char_info(i,CHAR_INFO_NEXTMOVE) = DIREC_NONE	; 次の移動は 無 で初期化
+		char_info(i,CHAR_INFO_RESPAWNWEAPON) = -1		; 武器はなしで初期化
+		char_info(i,CHAR_INFO_WEAPON1) = -1				; 武器はなしで初期化
+		char_info(i,CHAR_INFO_WEAPON2) = -1				; 武器はなしで初期化
+		char_info(i,CHAR_INFO_WEAPON3) = -1				; 武器はなしで初期化
+	next
+
+	dim char_mappos,CHAR_MAX,2				; キャラクタのマップ上の位置（データ座標系）
+	dim char_basepos,CHAR_MAX,2				; キャラクタのリスポーン地点の位置（データ座標系）
+	dim char_sppos,CHAR_MAX,2				; キャラクタスプライトの画面上の位置
+	for i,0,CHAR_MAX
+		char_sppos(i,CIE_X) = -1			; -1, -1で初期化しておく
+		char_sppos(i,CIE_Y) = -1
+	next
+
+	sdim team_desc,32,TEAM_MAX,1			; チームの情報（文字列）：名前
+	dim team_info,TEAM_MAX,3				; チームの情報（数値）　：色R、G、B
+
+	dim map_info,MAP_X,MAP_Y,MAP_INFO_MAX	; マップ各マスの情報（データ座標系）
+	dim map_bucket,MAP_X,MAP_Y,TEAM_MAX		; マップ各マスの色蓄積情報（各チーム）（データ座標系）
+	dim map_bucket_lead,MAP_X,MAP_Y			; そのマスで最も色蓄積が多いチーム（データ座標系）
+	dim map_bucket_sum,TEAM_MAX				; 各チームの色蓄積の累積
+	map_bucket_globalsum = 0				; 全体の色蓄積の累積
+	for y,0,MAP_Y
+		for x,0,MAP_X
+			map_info(x,y,MAP_INFO_TEAMBASE) = -1	; チーム拠点はなしで初期化
+			map_bucket_lead(x,y) = -1		; 最も色蓄積が多いチームはなしで初期化
+			; MARGIN部分は侵入不可に
+			if x < MAP_MERGIN            : map_info( x, y,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+			if y < MAP_MERGIN            : map_info( x, y,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+			if x > MAP_X - MAP_MERGIN -1 : map_info( x, y,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+			if y > MAP_Y - MAP_MERGIN -1 : map_info( x, y,MAP_INFO_TYPE) = MAP_TYPE_IMPOSSIBLE
+		next
+	next
+	
+	dim map_bucket_lead,MAP_X,MAP_Y			; そのマスで最も色蓄積が多いチーム（データ座標系）
+
+	dim bullet_spid,BULLET_MAX				; スプライトのID
+
+	dim bullet_mappos,BULLET_MAX,2			; 弾丸のマップ上の位置（データ座標系）
+	dim bullet_sppos,BULLET_MAX,2			; 弾丸スプライトの画面上の位置
+
+	dim bullet_info,BULLET_MAX,BULLET_INFO_MAX	; 弾丸の情報
+
+	return
+
+
+; ゲームを始める前に全ての可変データを初期化
+*reset_vars		
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue
+
+		char_info(i,CHAR_INFO_HP) = char_info(i,CHAR_INFO_MAXHP)
+		char_info(i,CHAR_INFO_WP) = char_info(i,CHAR_INFO_MAXWP)
+		char_info(i,CHAR_INFO_RESTRESPAWN) = char_info(i,CHAR_INFO_RESPAWN)	
+		char_info(i,CHAR_INFO_WEAPON1HEAT) = 0
+		char_info(i,CHAR_INFO_WEAPON2HEAT) = 0
+		char_info(i,CHAR_INFO_WEAPON3HEAT) = 0
+		if char_info(i,CHAR_INFO_WEAPON1) >= 0{
+			if weapon_info(char_info(i,CHAR_INFO_WEAPON1),WEAPON_INFO_INITCOOLDOWN) > 0 {
+				char_info(i,CHAR_INFO_WEAPON1HEAT) = weapon_info(char_info(i,CHAR_INFO_WEAPON1),WEAPON_INFO_INITCOOLDOWN)
+			}
+		}
+		if char_info(i,CHAR_INFO_WEAPON2) >= 0{
+			if weapon_info(char_info(i,CHAR_INFO_WEAPON2),WEAPON_INFO_INITCOOLDOWN) > 0 {
+				char_info(i,CHAR_INFO_WEAPON2HEAT) = weapon_info(char_info(i,CHAR_INFO_WEAPON2),WEAPON_INFO_INITCOOLDOWN)
+			}
+		}
+		if char_info(i,CHAR_INFO_WEAPON3) >= 0{
+			if weapon_info(char_info(i,CHAR_INFO_WEAPON3),WEAPON_INFO_INITCOOLDOWN) > 0 {
+				char_info(i,CHAR_INFO_WEAPON3HEAT) = weapon_info(char_info(i,CHAR_INFO_WEAPON3),WEAPON_INFO_INITCOOLDOWN)
+			}
+		}
+			
+	next
+	
+	return
+
+
+; キャラクタ定義の設定
+*load_data_defchar
+	
+	; 弾丸の画像のスプライト設定
+	es_size 32,32,25	; キャラクタのサイズ、ヒットチェック領域が全体の25%
+	i = 0
+	for y,0,256,32
+		for x,0,256,32
+			es_pat SPCHAR_BULLET_STATIC+i,x,y,0,bullet_bufid
+			i += 1
+		next
+	next
+
+	
+	; ポップアップのスプライト設定
+	es_size 32,32,0	; キャラクタのサイズ、ヒットチェック領域が全体の0%
+
+	i = 0
+	; 便宜上、以下の i がポップアップIDになる
+	for i,0,180
+		sx = (i \ 10)*96
+		sy = (i / 10)*32
+		if DEBUG_MODE : logmes strf("(es_patanim) i=%d, popupid=%d, sx=%d, sy=%d",i,SPCHAR_POPUP_STATIC+i,sx,sy)
+		es_patanim SPCHAR_POPUP_STATIC+(i*4),3,sx,sy,POPUP_FRAME,popup_bufid	; まずは3個連続で読み込み
+		es_pat SPCHAR_POPUP_STATIC+(i*4)+3,sx+32,sy,POPUP_FRAME,popup_bufid		; 2番目のものを4個目として読み込み
+		es_link SPCHAR_POPUP_STATIC+(i*4)+2,SPCHAR_POPUP_STATIC+(i*4)+3			; 3個目から4個目へリンク
+		es_link SPCHAR_POPUP_STATIC+(i*4)+3,SPCHAR_POPUP_STATIC+(i*4)			; 4個目から1個目へリンク
+	next
+
+
+	; 数字のプライト設定
+	es_size 32,32,0	; キャラクタのサイズ、ヒットチェック領域が全体の0%
+	for i,0,10
+		if i < 8 {
+			es_pat SPCHAR_BNUMBER_STATIC+i,32*i,64,0,number_bufid
+			es_pat SPCHAR_RNUMBER_STATIC+i,256+32*i,64,0,number_bufid
+		} else {
+			es_pat SPCHAR_BNUMBER_STATIC+i,32*(i-8),96,0,number_bufid
+			es_pat SPCHAR_RNUMBER_STATIC+i,256+32*(i-8),96,0,number_bufid
+		}
+	next
+
+	; スプライトの生成
+	for i,0,DEFCHAR_MAX
+		if defchar_sp(i,DEFCHAR_SP_BUFID) > 0 {
+			es_size 32,32,100	; キャラクタのサイズ、ヒットチェック領域が全体の100%
+			es_pat defchar_sp(i,DEFCHAR_SP_STATIC),0,0,0,defchar_sp(i,DEFCHAR_SP_BUFID) ; 停止用
+			
+			; 1→2→3→2 の順番で表示させる必要あり
+			es_patanim defchar_sp(i,DEFCHAR_SP_ANIME_DOWN)   , 3, 0, 0,ANIME_FRAME,defchar_sp(i,DEFCHAR_SP_BUFID) ; 下向き
+			es_pat     defchar_sp(i,DEFCHAR_SP_ANIME_DOWN) +3,   32, 0,ANIME_FRAME,defchar_sp(i,DEFCHAR_SP_BUFID)
+			es_patanim defchar_sp(i,DEFCHAR_SP_ANIME_LEFT)   , 3, 0,32,ANIME_FRAME,defchar_sp(i,DEFCHAR_SP_BUFID) ; 左向き
+			es_pat     defchar_sp(i,DEFCHAR_SP_ANIME_LEFT) +3,   32,32,ANIME_FRAME,defchar_sp(i,DEFCHAR_SP_BUFID)
+			es_patanim defchar_sp(i,DEFCHAR_SP_ANIME_RIGHT)  , 3, 0,64,ANIME_FRAME,defchar_sp(i,DEFCHAR_SP_BUFID) ; 右向き
+			es_pat     defchar_sp(i,DEFCHAR_SP_ANIME_RIGHT)+3,   32,64,ANIME_FRAME,defchar_sp(i,DEFCHAR_SP_BUFID)
+			es_patanim defchar_sp(i,DEFCHAR_SP_ANIME_UP)     , 3, 0,96,ANIME_FRAME,defchar_sp(i,DEFCHAR_SP_BUFID) ; 上向き
+			es_pat     defchar_sp(i,DEFCHAR_SP_ANIME_UP)   +3,   32,96,ANIME_FRAME,defchar_sp(i,DEFCHAR_SP_BUFID)
+			
+			es_link defchar_sp(i,DEFCHAR_SP_ANIME_DOWN) +2,defchar_sp(i,DEFCHAR_SP_ANIME_DOWN) +3
+			es_link defchar_sp(i,DEFCHAR_SP_ANIME_DOWN) +3,defchar_sp(i,DEFCHAR_SP_ANIME_DOWN)
+			es_link defchar_sp(i,DEFCHAR_SP_ANIME_LEFT) +2,defchar_sp(i,DEFCHAR_SP_ANIME_LEFT) +3
+			es_link defchar_sp(i,DEFCHAR_SP_ANIME_LEFT) +3,defchar_sp(i,DEFCHAR_SP_ANIME_LEFT)
+			es_link defchar_sp(i,DEFCHAR_SP_ANIME_RIGHT)+2,defchar_sp(i,DEFCHAR_SP_ANIME_RIGHT)+3
+			es_link defchar_sp(i,DEFCHAR_SP_ANIME_RIGHT)+3,defchar_sp(i,DEFCHAR_SP_ANIME_RIGHT)
+			es_link defchar_sp(i,DEFCHAR_SP_ANIME_UP)   +2,defchar_sp(i,DEFCHAR_SP_ANIME_UP)   +3
+			es_link defchar_sp(i,DEFCHAR_SP_ANIME_UP)   +3,defchar_sp(i,DEFCHAR_SP_ANIME_UP)
+		}
+	next
+		
+	gsel 0			; 操作先IDを0に戻す
+	return
+
+
+; 難易度選択によるキャラのバフを設定する
+*load_data_char_duff
+	; 自チームにバフを付与
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue	; 有効でないキャラはスキップ
+		if char_info(i,CHAR_INFO_TEAM) > 0 : _continue		; 敵チームはスキップ
+
+		;#const GAME_INFO_BUFF_ALLY_HP           6	; 味方のHPのバフ
+		;char_info(i,CHAR_INFO_BUFF2_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF2_TYPE) = BUFF_TYPE_MAXHP
+		;char_info(i,CHAR_INFO_BUFF2_VALUE) = game_info(GAME_INFO_BUFF_ALLY_HP)
+		if game_info(GAME_INFO_BUFF_ALLY_HP) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_MAXHP
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_HP)
+			gosub *sub_set_buff
+		}
+		;#const GAME_INFO_BUFF_ALLY_WP           7	; 味方のWPのバフ
+		;char_info(i,CHAR_INFO_BUFF3_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF3_TYPE) = BUFF_TYPE_MAXWP
+		;char_info(i,CHAR_INFO_BUFF3_VALUE) = game_info(GAME_INFO_BUFF_ALLY_WP)
+		if game_info(GAME_INFO_BUFF_ALLY_WP) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_MAXWP
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_WP)
+			gosub *sub_set_buff
+		}
+		;#const GAME_INFO_BUFF_ALLY_ATC          8	; 味方の攻撃力のバフ
+		;char_info(i,CHAR_INFO_BUFF4_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF4_TYPE) = BUFF_TYPE_ATC
+		;char_info(i,CHAR_INFO_BUFF4_VALUE) = game_info(GAME_INFO_BUFF_ALLY_ATC)
+		if game_info(GAME_INFO_BUFF_ALLY_ATC) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_ATC
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_ATC)
+			gosub *sub_set_buff
+		}
+		;#const GAME_INFO_BUFF_ALLY_COLORPOWER   9	; 味方の色蓄積のバフ
+		;char_info(i,CHAR_INFO_BUFF5_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF5_TYPE) = BUFF_TYPE_COLORPOWER
+		;char_info(i,CHAR_INFO_BUFF5_VALUE) = game_info(GAME_INFO_BUFF_ALLY_COLORPOWER)
+		if game_info(GAME_INFO_BUFF_ALLY_COLORPOWER) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_COLORPOWER
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_COLORPOWER)
+			gosub *sub_set_buff
+		}
+		;#const GAME_INFO_BUFF_ALLY_MOVE        10	; 味方の移動速度のバフ
+		;char_info(i,CHAR_INFO_BUFF6_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF6_TYPE) = BUFF_TYPE_MOVE
+		;char_info(i,CHAR_INFO_BUFF6_VALUE) = game_info(GAME_INFO_BUFF_ALLY_MOVE)
+		if game_info(GAME_INFO_BUFF_ALLY_MOVE) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_MOVE
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_MOVE)
+			gosub *sub_set_buff
+		}
+		
+		;#const GAME_INFO_BUFF_ALLY_RESPAWN     11	; 味方のリスポーン回数のバフ
+		;char_info(i,CHAR_INFO_BUFF7_RESTTIME) = 2
+		;char_info(i,CHAR_INFO_BUFF7_TYPE) = BUFF_TYPE_RESPAWN
+		;char_info(i,CHAR_INFO_BUFF7_VALUE) = game_info(GAME_INFO_BUFF_ALLY_RESPAWN)
+		if game_info(GAME_INFO_BUFF_ALLY_RESPAWN) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 2
+			sub_set_buff_type     = BUFF_TYPE_RESPAWN
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_RESPAWN)
+			gosub *sub_set_buff
+		}
+		;#const GAME_INFO_BUFF_ALLY_DOWNTIME    12	; 味方のリスポーン時間のバフ
+		;char_info(i,CHAR_INFO_BUFF8_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF8_TYPE) = BUFF_TYPE_DOWNTIME
+		;char_info(i,CHAR_INFO_BUFF8_VALUE) = game_info(GAME_INFO_BUFF_ALLY_DOWNTIME)
+		if game_info(GAME_INFO_BUFF_ALLY_DOWNTIME) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_DOWNTIME
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_DOWNTIME)
+			gosub *sub_set_buff
+		}
+		if game_info(GAME_INFO_BUFF_ALLY_DOWNTIME) >= 400 {	; リスポーン時間のバフが400以上の場合は拠点防衛砲・改に変更
+			char_info(i,CHAR_INFO_RESPAWNWEAPON) = 9
+		}
+
+		;#const GAME_INFO_BUFF_ALLY_COSTWP      13	; 味方の消費WPのバフ
+		;char_info(i,CHAR_INFO_BUFF9_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF9_TYPE) = BUFF_TYPE_COSTWP
+		;char_info(i,CHAR_INFO_BUFF9_VALUE) = game_info(GAME_INFO_BUFF_ALLY_COSTWP)
+		if game_info(GAME_INFO_BUFF_ALLY_COSTWP) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_COSTWP
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_COSTWP)
+			gosub *sub_set_buff
+		}
+
+		;#const GAME_INFO_BUFF_ALLY_RANGE       14	; 味方の射程のバフ
+		;char_info(i,CHAR_INFO_BUFF10_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF10_TYPE) = BUFF_TYPE_RANGE
+		;char_info(i,CHAR_INFO_BUFF10_VALUE) = game_info(GAME_INFO_BUFF_ALLY_RANGE)
+		if game_info(GAME_INFO_BUFF_ALLY_RANGE) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_RANGE
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_RANGE)
+			gosub *sub_set_buff
+		}
+		;#const GAME_INFO_BUFF_ALLY_SPREAD      15	; 味方の拡散範囲のバフ
+		;char_info(i,CHAR_INFO_BUFF11_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF11_TYPE) = BUFF_TYPE_SPREAD
+		;char_info(i,CHAR_INFO_BUFF11_VALUE) = game_info(GAME_INFO_BUFF_ALLY_SPREAD)
+		if game_info(GAME_INFO_BUFF_ALLY_SPREAD) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_SPREAD
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_SPREAD)
+			gosub *sub_set_buff
+		}
+		;#const GAME_INFO_BUFF_ALLY_WEAKEN      16	; 味方の減衰率のバフ
+		;char_info(i,CHAR_INFO_BUFF12_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF12_TYPE) = BUFF_TYPE_WEAKEN
+		;char_info(i,CHAR_INFO_BUFF12_VALUE) = game_info(GAME_INFO_BUFF_ALLY_WEAKEN)
+		if game_info(GAME_INFO_BUFF_ALLY_WEAKEN) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_WEAKEN
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_WEAKEN)
+			gosub *sub_set_buff
+		}
+		;#const GAME_INFO_BUFF_ALLY_COOLDOWN    21	; 味方の再装填速度のバフ
+		if game_info(GAME_INFO_BUFF_ALLY_COOLDOWN) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_COOLDOWN
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ALLY_COOLDOWN)
+			gosub *sub_set_buff
+		}
+
+	next
+
+	; 敵全員にバフ追加
+	for i,0,CHAR_MAX
+		if char_info(i,CHAR_INFO_ACTIVE) = 0 : _continue	; 有効でないキャラはスキップ
+		if char_info(i,CHAR_INFO_TEAM) = 0 : _continue		; 自チームはスキップ
+		
+		;#const GAME_INFO_BUFF_ENEMY_HP         17	; 敵のHPのバフ
+		;#const GAME_INFO_BUFF_ENEMY_WP         18	; 敵のWPのバフ
+		;#const GAME_INFO_BUFF_ENEMY_ATC        19	; 敵の攻撃力のバフ
+		;#const GAME_INFO_BUFF_ENEMY_COLORPOWER 20	; 敵の色蓄積のバフ
+		;#const GAME_INFO_BUFF_ENEMY_MOVE       21	; 敵の移動速度のバフ
+		;#const GAME_INFO_BUFF_ENEMY_RESPAWN    22	; 敵のリスポーン回数のバフ
+		;#const GAME_INFO_BUFF_ENEMY_DOWNTIME   23	; 敵のリスポーン時間のバフ
+		;#const GAME_INFO_BUFF_ENEMY_COSTWP     24	; 敵の消費WPのバフ
+		;#const GAME_INFO_BUFF_ENEMY_RANGE      25	; 敵の射程のバフ
+		;#const GAME_INFO_BUFF_ENEMY_SPREAD     26	; 敵の拡散範囲のバフ
+		;#const GAME_INFO_BUFF_ENEMY_WEAKEN     27	; 敵の減衰率のバフ
+		;#const GAME_INFO_BUFF_ENEMY_COOLDOWN   33	; 敵の再装填速度のバフ
+
+		;char_info(i,CHAR_INFO_BUFF2_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF2_TYPE) = BUFF_TYPE_MAXHP
+		;char_info(i,CHAR_INFO_BUFF2_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_HP)
+		if game_info(GAME_INFO_BUFF_ENEMY_HP) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_MAXHP
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_HP)
+			gosub *sub_set_buff
+		}
+
+		;char_info(i,CHAR_INFO_BUFF3_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF3_TYPE) = BUFF_TYPE_MAXWP
+		;char_info(i,CHAR_INFO_BUFF3_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_WP)
+		if game_info(GAME_INFO_BUFF_ENEMY_WP) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_MAXWP
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_WP)
+			gosub *sub_set_buff
+		}
+
+		;char_info(i,CHAR_INFO_BUFF4_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF4_TYPE) = BUFF_TYPE_ATC
+		;char_info(i,CHAR_INFO_BUFF4_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_ATC)
+		if game_info(GAME_INFO_BUFF_ENEMY_ATC) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_ATC
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_ATC)
+			gosub *sub_set_buff
+		}
+
+		;char_info(i,CHAR_INFO_BUFF5_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF5_TYPE) = BUFF_TYPE_COLORPOWER
+		;char_info(i,CHAR_INFO_BUFF5_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER)
+		if game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_COLORPOWER
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_COLORPOWER)
+			gosub *sub_set_buff
+		}
+
+		;char_info(i,CHAR_INFO_BUFF6_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF6_TYPE) = BUFF_TYPE_MOVE
+		;char_info(i,CHAR_INFO_BUFF6_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_MOVE)
+		if game_info(GAME_INFO_BUFF_ENEMY_MOVE) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_MOVE
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_MOVE)
+			gosub *sub_set_buff
+		}
+
+		;char_info(i,CHAR_INFO_BUFF7_RESTTIME) = 2
+		;char_info(i,CHAR_INFO_BUFF7_TYPE) = BUFF_TYPE_RESPAWN
+		;char_info(i,CHAR_INFO_BUFF7_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)
+		if game_info(GAME_INFO_BUFF_ENEMY_RESPAWN) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 2
+			sub_set_buff_type     = BUFF_TYPE_RESPAWN
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_RESPAWN)
+			gosub *sub_set_buff
+		}
+
+		;char_info(i,CHAR_INFO_BUFF8_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF8_TYPE) = BUFF_TYPE_DOWNTIME
+		;char_info(i,CHAR_INFO_BUFF8_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_DOWNTIME)
+		if game_info(GAME_INFO_BUFF_ENEMY_DOWNTIME) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_DOWNTIME
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_DOWNTIME)
+			gosub *sub_set_buff
+		}
+		if game_info(GAME_INFO_BUFF_ENEMY_DOWNTIME) >= 400 {	; リスポーン時間のバフが400以上の場合は拠点防衛砲・改に変更
+			char_info(i,CHAR_INFO_RESPAWNWEAPON) = 9
+		}
+
+		;char_info(i,CHAR_INFO_BUFF9_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF9_TYPE) = BUFF_TYPE_COSTWP
+		;char_info(i,CHAR_INFO_BUFF9_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_COSTWP)
+		if game_info(GAME_INFO_BUFF_ENEMY_COSTWP) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_COSTWP
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_COSTWP)
+			gosub *sub_set_buff
+		}
+
+		;char_info(i,CHAR_INFO_BUFF10_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF10_TYPE) = BUFF_TYPE_RANGE
+		;char_info(i,CHAR_INFO_BUFF10_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_RANGE)
+		if game_info(GAME_INFO_BUFF_ENEMY_RANGE) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_RANGE
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_RANGE)
+			gosub *sub_set_buff
+		}
+		;char_info(i,CHAR_INFO_BUFF11_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF11_TYPE) = BUFF_TYPE_SPREAD
+		;char_info(i,CHAR_INFO_BUFF11_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_SPREAD)
+		if game_info(GAME_INFO_BUFF_ENEMY_SPREAD) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_SPREAD
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_SPREAD)
+			gosub *sub_set_buff
+		}
+
+		;char_info(i,CHAR_INFO_BUFF12_RESTTIME) = 9999
+		;char_info(i,CHAR_INFO_BUFF12_TYPE) = BUFF_TYPE_WEAKEN
+		;char_info(i,CHAR_INFO_BUFF12_VALUE) = game_info(GAME_INFO_BUFF_ENEMY_WEAKEN)
+		if game_info(GAME_INFO_BUFF_ENEMY_WEAKEN) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_WEAKEN
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_WEAKEN)
+			gosub *sub_set_buff
+		}
+		if game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN) ! 0 {
+			sub_set_buff_charid   = i
+			sub_set_buff_resttime = 9999
+			sub_set_buff_type     = BUFF_TYPE_COOLDOWN
+			sub_set_buff_value    = game_info(GAME_INFO_BUFF_ENEMY_COOLDOWN)
+			gosub *sub_set_buff
+		}
+
+	next
+	return
