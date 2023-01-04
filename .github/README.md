@@ -5,7 +5,7 @@
 
 メイドさんのお掃除し隊のページです。  
 
-![スクリーンショット 2022-10-22 013233](https://user-images.githubusercontent.com/19423263/197347597-a6f05bb2-3737-4b7e-8864-f0d9ffabda0b.png)
+![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m2s](https://user-images.githubusercontent.com/19423263/210504197-816457aa-ad4c-44b7-95a1-981386795708.jpg)
 
 # 動作環境
 
@@ -51,8 +51,6 @@ https://github.com/taroh77/maidsoji/releases
 数字が大きければ大きい程難しくなり、マイナスであれば簡単になります。  
 ただし、組み合わせによっては...  
 
-![image](https://user-images.githubusercontent.com/19423263/198838336-0cbbab3e-fb14-42e0-9676-eb5c98728ae0.png)
-
 # 質問、不具合などの受付
 
 以下のページより受け付けています。  
@@ -76,3 +74,24 @@ HSP3のソースコードを[本ページ](https://github.com/taroh77/maidsoji)�
 ソフトウェア、ソースコードの利用に関する制限事項などの詳細は  
 以下のライセンスファイルを参照してください。  
 https://github.com/taroh77/maidsoji/blob/main/LICENSE
+
+# スクリーンショット
+
+## ゲームシーン
+
+![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m53s](https://user-images.githubusercontent.com/19423263/210504412-e840adcc-f023-47d4-80f1-54bc46377a14.jpg)
+![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 3m48s](https://user-images.githubusercontent.com/19423263/210504419-76dd3dc3-9d58-4ec1-9763-fedb5a2230d8.jpg)
+![メイドさんのお掃除し隊 2023-01-04 15-31-40 - frame at 1m40s](https://user-images.githubusercontent.com/19423263/210504427-36569b99-feaf-41c5-a4ea-79f661740023.jpg)
+![メイドさんのお掃除し隊 2023-01-04 15-56-09 - frame at 2m27s](https://user-images.githubusercontent.com/19423263/210504435-6c67fdb5-fd2e-45d1-b70e-cfe97a6e767f.jpg)
+![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 5m47s](https://user-images.githubusercontent.com/19423263/210504462-554c89f5-4d0b-4185-b9d3-db5797053eff.jpg)
+![メイドさんのお掃除し隊 2023-01-04 15-31-40 - frame at 5m15s](https://user-images.githubusercontent.com/19423263/210504470-231d53ff-b038-4c5e-a0c6-ac15bbcd33cd.jpg)
+
+## それぞれのキャラクターの紹介
+
+![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m14s](https://user-images.githubusercontent.com/19423263/210504306-3b3662cb-c882-46eb-bced-a32717cb436b.jpg)
+![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m17s](https://user-images.githubusercontent.com/19423263/210504322-9537bf0d-b92f-48c4-a5bf-959820afa8b4.jpg)
+![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m28s](https://user-images.githubusercontent.com/19423263/210504338-bec01b58-f5c0-4014-846c-92d4c14361e4.jpg)
+
+## 難易度調整
+
+![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m42s](https://user-images.githubusercontent.com/19423263/210504402-72521aeb-ccc2-45ce-a663-388c78075f43.jpg)
