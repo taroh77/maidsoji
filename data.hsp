@@ -10,6 +10,6 @@
 
 	#include "data_exec_common.hsp"		; データの処理（共通部分）
 
-	#include "data_exec_type001.hsp"	; 部屋の掃除（ベース）
-
+	#include "data_exec_stageset001.hsp"	; ステージセット1の処理
+	#include "data_exec_stageset002.hsp"	; ステージセット2の処理
 *end_data

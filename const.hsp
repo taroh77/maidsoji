@@ -1,14 +1,16 @@
 	#const GAME_VERSION_MAJOR 1	; ゲームのバージョン
-	#const GAME_VERSION_MINOR 2
+	#const GAME_VERSION_MINOR 3
 	#const GAME_VERSION_PATCH 0
 	#const DEBUG_MODE 0		; 1:デバッグ情報の表示
 	
 	#const CHAR_MAX 4		; 管理するキャラクタの最大数
 	#const TEAM_MAX 2		; 最大チーム数
 	#const BULLET_MAX 16	; 管理する弾丸の最大数
-	#const WEAPON_MAX 24	; 武器の最大数
-	#const DEFCHAR_MAX 8	; 登場するキャラクタ定義の最大数
-	#const SEARCH_RANGE 9	; キャラが認識できる距離（大きくすると遠くの敵も認識できるがゲームが重くなる）
+	#const WEAPON_MAX 32	; 武器の最大数
+	#const DEFCHAR_MAX 16	; 登場するキャラクタ定義の最大数
+	#const STAGESET_MAX 8		; ステージセットの最大数(0はダミーなので、実質-1個)
+	#const STAGESET_STEGEMAX 11	; 1ステージセットの最大ステージ(0はダミーなので、実質-1個)
+	#const SEARCH_RANGE 5	; キャラが認識できる距離（大きくすると遠くの敵も認識できるがゲームが重くなる）
 	#const RECORD_V1_MAX 16	; スコアの最大保持数(v1用)
 	#const RECORD_MAX 9999	; スコアの最大保持数
 	WINDOW_X = ginfo_winx

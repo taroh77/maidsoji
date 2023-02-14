@@ -1,3 +1,109 @@
+	; ステージセット
+
+	;dim stageset_info,STAGESET_MAX,STAGESET_INFO_MAX	; ステージセットの情報
+	;dim stageset_label,STAGESET_MAX,STAGESET_STEGEMAX,4	; ステージをロードするときのラベル（0:全体、1:マップ、2:チーム、3:キャラ）
+	;sdim stageset_desc,32,STAGESET_MAX,2				; ステージセット情報（文字列）：名前、説明
+
+	stageset_desc(1,0) = "散らかし魔の部屋"
+	stageset_desc(1,1) = "特に小細工のない部屋"
+	stageset_desc(1,2) = "ゴミ魔王率いるモンスターたち"
+	stageset_desc(1,3) = "世界制服など考えておらず"
+	stageset_desc(1,4) = "自由気ままにゴミを捨てる"
+
+	stageset_info(1,STAGESET_INFO_MAXSTAGE) = 5
+
+	stageset_label(1,1) = *load_data_stageset001_stage1
+	stageset_label(1,2) = *load_data_stageset001_stage2
+	stageset_label(1,3) = *load_data_stageset001_stage3
+	stageset_label(1,4) = *load_data_stageset001_stage4
+	stageset_label(1,5) = *load_data_stageset001_stage5
+
+	stageset_desc(2,0) = "ずぼら勇者の部屋"
+	stageset_desc(2,1) = "片付けのできない人たちの散らかった部屋"
+	stageset_desc(2,2) = "平和な世界なので勇者は暇"
+	stageset_desc(2,3) = "あり余った力は周りのモノにあたり"
+	stageset_desc(2,4) = "そして誰も片づけない"
+
+	stageset_info(2,STAGESET_INFO_MAXSTAGE) = 5
+
+	stageset_label(2,1) = *load_data_stageset002_stage1
+	stageset_label(2,2) = *load_data_stageset002_stage2
+	stageset_label(2,3) = *load_data_stageset002_stage3
+	stageset_label(2,4) = *load_data_stageset002_stage4
+	stageset_label(2,5) = *load_data_stageset002_stage5
+
+	; パッシブスキル
+
+	pid = 1
+	passive_desc(pid,0) = "許しませんわ"
+	passive_desc(pid,1) = "退場時に武器３を使用する"
+	passive_desc(pid,2) = "その際、攻撃力+20%、消費WP-100%"
+	passive_info(pid,PASSIVE_INFO_HIDDEN) = 0
+	passive_info(pid,PASSIVE_INFO_FLAG)   = PASSIVE_FLAG_FABUFF
+	passive_info(pid,PASSIVE_INFO_VALUE1) = 3
+	passive_info(pid,PASSIVE_INFO_VALUE2) = BUFF_TYPE_ATC
+	passive_info(pid,PASSIVE_INFO_VALUE3) = 20
+	passive_info(pid,PASSIVE_INFO_VALUE4) = 3
+	passive_info(pid,PASSIVE_INFO_VALUE5) = BUFF_TYPE_COSTWP
+	passive_info(pid,PASSIVE_INFO_VALUE6) = 100
+
+	pid = 2
+	passive_desc(pid,0) = "本気を出すぜ！"
+	passive_desc(pid,1) = "HPが半分以下になると攻撃力、移動速度が上昇"
+	passive_desc(pid,2) = "被ダメージが半減、HPが自然回復しなくなる"
+	passive_info(pid,PASSIVE_INFO_HIDDEN) = 0
+	passive_info(pid,PASSIVE_INFO_FLAG)   = PASSIVE_FLAG_HALFHPSTATE
+	passive_info(pid,PASSIVE_INFO_VALUE1) = 9999
+	passive_info(pid,PASSIVE_INFO_VALUE2) = STATE_TYPE_AWAKE
+
+	pid = 3
+	passive_desc(pid,0) = "お出口はあちらです"
+	passive_desc(pid,1) = "自身が狂化状態の時の攻撃で敵を倒した場合"
+	passive_desc(pid,2) = "相手は退場時のスキルが使えなくなる"
+	passive_info(pid,PASSIVE_INFO_HIDDEN) = 0
+	passive_info(pid,PASSIVE_INFO_FLAG)   = PASSIVE_FLAG_ATCADDSTATE
+	passive_info(pid,PASSIVE_INFO_VALUE1) = STATE_TYPE_BERSERKER
+	;passive_info(pid,PASSIVE_INFO_VALUE2) = (バフ/ステートのタイプ)
+	;passive_info(pid,PASSIVE_INFO_VALUE3) = (バフの効果量)
+	passive_info(pid,PASSIVE_INFO_VALUE4) = 3
+	passive_info(pid,PASSIVE_INFO_VALUE5) = STATE_TYPE_GIVEUP
+	;passive_info(pid,PASSIVE_INFO_VALUE6) = (バフの効果量)
+	;passive_info(pid,PASSIVE_INFO_VALUE7) = (バフ/ステートの効果時間)
+	;passive_info(pid,PASSIVE_INFO_VALUE8) = (バフ/ステートのタイプ)
+	;passive_info(pid,PASSIVE_INFO_VALUE9) = (バフの効果量)
+
+	pid = 4
+	passive_desc(pid,0) = "邪魔だと言っているでしょう"
+	passive_desc(pid,1) = "委縮状態の敵を攻撃する際に"
+	passive_desc(pid,2) = "スタンさせる確率が4倍になる"
+	passive_info(pid,PASSIVE_INFO_HIDDEN) = 0
+	passive_info(pid,PASSIVE_INFO_FLAG)   = PASSIVE_FLAG_STATEADDUP
+	passive_info(pid,PASSIVE_INFO_VALUE1) = STATE_TYPE_ATROPHY
+	;passive_info(pid,PASSIVE_INFO_VALUE2) = (バフ/ステートのタイプ)
+	passive_info(pid,PASSIVE_INFO_VALUE3) = 300
+	;passive_info(pid,PASSIVE_INFO_VALUE4) = (バフ/ステートの効果時間)
+	;passive_info(pid,PASSIVE_INFO_VALUE5) = (バフ/ステートのタイプ)
+	;passive_info(pid,PASSIVE_INFO_VALUE6) = (バフの効果量)
+	;passive_info(pid,PASSIVE_INFO_VALUE7) = (バフ/ステートの効果時間)
+	;passive_info(pid,PASSIVE_INFO_VALUE8) = (バフ/ステートのタイプ)
+	;passive_info(pid,PASSIVE_INFO_VALUE9) = (バフの効果量)
+
+	;pid = 1
+	;passive_desc(pid,0) = ""
+	;passive_desc(pid,1) = ""
+	;passive_desc(pid,2) = ""
+	;passive_info(pid,PASSIVE_INFO_HIDDEN) = 0
+	;passive_info(pid,PASSIVE_INFO_FLAG)   = PASSIVE_FLAG_XXXXXX
+	;passive_info(pid,PASSIVE_INFO_VALUE1) = (バフ/ステートの効果時間)
+	;passive_info(pid,PASSIVE_INFO_VALUE2) = (バフ/ステートのタイプ)
+	;passive_info(pid,PASSIVE_INFO_VALUE3) = (バフの効果量)
+	;passive_info(pid,PASSIVE_INFO_VALUE4) = (バフ/ステートの効果時間)
+	;passive_info(pid,PASSIVE_INFO_VALUE5) = (バフ/ステートのタイプ)
+	;passive_info(pid,PASSIVE_INFO_VALUE6) = (バフの効果量)
+	;passive_info(pid,PASSIVE_INFO_VALUE7) = (バフ/ステートの効果時間)
+	;passive_info(pid,PASSIVE_INFO_VALUE8) = (バフ/ステートのタイプ)
+	;passive_info(pid,PASSIVE_INFO_VALUE9) = (バフの効果量)
+
 	; 武器データ
 	
 	weapon_desc(0,0) = "メイド用水ハンドモップ"
@@ -306,9 +412,9 @@
 	weapon_info(12,WEAPON_INFO_WEAKEN) = 0		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
 	weapon_info(12,WEAPON_INFO_PERSIST) = 0 	; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
 	weapon_info(12,WEAPON_INFO_SPPED) = 32		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
-	weapon_info(12,WEAPON_INFO_ADDSTATE) = STATE_TYPE_NONE	; 追加で付与するステート
-	weapon_info(12,WEAPON_INFO_ADDSTATERATE) = 0	; 追加でステートを付与する確率
-	weapon_info(12,WEAPON_INFO_ADDSTATETIME) = 0	; ステートの効果時間
+	weapon_info(12,WEAPON_INFO_ADDSTATE) = STATE_TYPE_STAN	; 追加で付与するステート
+	weapon_info(12,WEAPON_INFO_ADDSTATERATE) = 5	; 追加でステートを付与する確率
+	weapon_info(12,WEAPON_INFO_ADDSTATETIME) = 50	; ステートの効果時間
 	weapon_info(12,WEAPON_INFO_BULLETSPID) = 44	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
 	weapon_info(12,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
 	weapon_info(12,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT2	; 命中時のサウンドID
@@ -326,7 +432,7 @@
 	weapon_info(13,WEAPON_INFO_RANGE) = 40		; 射程（全部で何回移動できるか）
 	weapon_info(13,WEAPON_INFO_HIT) = 0			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
 	weapon_info(13,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
-	weapon_info(13,WEAPON_INFO_SPREAD) = 2		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(13,WEAPON_INFO_SPREAD) = 3		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
 	weapon_info(13,WEAPON_INFO_WEAKEN) = 70		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
 	weapon_info(13,WEAPON_INFO_PERSIST) = 40 	; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
 	weapon_info(13,WEAPON_INFO_SPPED) = 0		; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
@@ -384,30 +490,281 @@
 	weapon_info(15,WEAPON_INFO_BULLETSPID) = -1	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
 	weapon_info(15,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_LOWER1	; 発射時のサウンドID
 	weapon_info(15,WEAPON_INFO_SOUND_HIT) = -1	; 命中時のサウンドID
-	
-	;weapon_desc(0,0) = "武器の名前"
-	;weapon_desc(0,1) = "武器の説明"
-	;weapon_info(0,WEAPON_INFO_ACTIVE) = 		; 1:有効、0:使用していない
-	;weapon_info(0,WEAPON_INFO_COSTWP) = 		; 消費WP
-	;weapon_info(0,WEAPON_INFO_COOLDOWN) = 		; 次を発射できるようになるTIME数
-	;weapon_info(0,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
-	;weapon_info(0,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_BULLET ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
-	;weapon_info(0,WEAPON_INFO_ATC) = 			; 攻撃力（対キャラ）
-	;weapon_info(0,WEAPON_INFO_COLORPOWER) = 	; 色蓄積力（対バケツ）
-	;weapon_info(0,WEAPON_INFO_COLORFLY) = 		; 飛翔時（非命中時）の色蓄積力（対バケツ）
-	;weapon_info(0,WEAPON_INFO_RANGE) = 		; 射程（全部で何回移動できるか）
-	;weapon_info(0,WEAPON_INFO_HIT) = 			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
-	;weapon_info(0,WEAPON_INFO_AUTOSPREAD) = 	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
-	;weapon_info(0,WEAPON_INFO_SPREAD) = 		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
-	;weapon_info(0,WEAPON_INFO_WEAKEN) = 		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
-	;weapon_info(0,WEAPON_INFO_PERSIST) =   		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
-	;weapon_info(0,WEAPON_INFO_SPPED) = 			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
-	;weapon_info(0,WEAPON_INFO_ADDSTATE) = STATE_TYPE_NONE	; 追加で付与するステート
-	;weapon_info(0,WEAPON_INFO_ADDSTATERATE) = 0	; 追加でステートを付与する確率
-	;weapon_info(0,WEAPON_INFO_ADDSTATETIME) = 0	; ステートの効果時間
-	;weapon_info(0,WEAPON_INFO_BULLETSPID) = 	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
-	;weapon_info(0,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_SHOT1	; 発射時のサウンドID
-	;weapon_info(0,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
+
+	wid = 16
+	weapon_desc(wid,0) = "散らかしソード"
+	weapon_desc(wid,1) = "モノをまき散らすための棒"
+	weapon_info(wid,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(wid,WEAPON_INFO_COSTWP) = 4		; 消費WP
+	weapon_info(wid,WEAPON_INFO_COOLDOWN) = 12		; 次を発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_BULLET ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	weapon_info(wid,WEAPON_INFO_ATC) = 60			; 攻撃力（対キャラ）
+	weapon_info(wid,WEAPON_INFO_COLORPOWER) = 60	; 色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_COLORFLY) = 60		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_RANGE) = 2		; 射程（全部で何回移動できるか）
+	weapon_info(wid,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(wid,WEAPON_INFO_SPREAD) = 1		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(wid,WEAPON_INFO_WEAKEN) = 20		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(wid,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(wid,WEAPON_INFO_SPPED) = 32			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_NONE	; 追加で付与するステート
+	weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 0	; 追加でステートを付与する確率
+	weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 0	; ステートの効果時間
+	weapon_info(wid,WEAPON_INFO_BULLETSPID) = 16	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
+	weapon_info(wid,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
+
+	wid = 17
+	weapon_desc(wid,0) = "散らかしブレード"
+	weapon_desc(wid,1) = "モノをまき散らすための長い棒"
+	weapon_info(wid,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(wid,WEAPON_INFO_COSTWP) = 5		; 消費WP
+	weapon_info(wid,WEAPON_INFO_COOLDOWN) = 16		; 次を発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_BULLET ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	weapon_info(wid,WEAPON_INFO_ATC) = 90			; 攻撃力（対キャラ）
+	weapon_info(wid,WEAPON_INFO_COLORPOWER) = 70	; 色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_COLORFLY) = 60		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_RANGE) = 3		; 射程（全部で何回移動できるか）
+	weapon_info(wid,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(wid,WEAPON_INFO_SPREAD) = 2		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(wid,WEAPON_INFO_WEAKEN) = 30		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(wid,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(wid,WEAPON_INFO_SPPED) = 32			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_NONE	; 追加で付与するステート
+	weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 0	; 追加でステートを付与する確率
+	weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 0	; ステートの効果時間
+	weapon_info(wid,WEAPON_INFO_BULLETSPID) = 20	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
+	weapon_info(wid,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
+
+	wid = 18
+	weapon_desc(wid,0) = "肉食の誘惑"
+	weapon_desc(wid,1) = "味方全員の攻撃力上昇"
+	weapon_info(wid,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(wid,WEAPON_INFO_COSTWP) = 20		; 消費WP
+	weapon_info(wid,WEAPON_INFO_COOLDOWN) = 500		; 次を発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 500	; 最初に発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_ALLYALL ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	weapon_info(wid,WEAPON_INFO_ATC) = 0			; 攻撃力（対キャラ）
+	weapon_info(wid,WEAPON_INFO_COLORPOWER) = 0	; 色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_COLORFLY) = 0		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_RANGE) = 0		; 射程（全部で何回移動できるか）
+	weapon_info(wid,WEAPON_INFO_HIT) = 0			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 0	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(wid,WEAPON_INFO_SPREAD) = 0		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(wid,WEAPON_INFO_WEAKEN) = 0		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(wid,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(wid,WEAPON_INFO_SPPED) = 0			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_MEAT	; 追加で付与するステート
+	weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 100	; 追加でステートを付与する確率
+	weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 100	; ステートの効果時間
+	weapon_info(wid,WEAPON_INFO_BULLETSPID) = -1	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_RAISE1	; 発射時のサウンドID
+	weapon_info(wid,WEAPON_INFO_SOUND_HIT) = -1	; 命中時のサウンドID
+
+	wid = 19
+	weapon_desc(wid,0) = "散らかしの祈り"
+	weapon_desc(wid,1) = "祈ると周りが散らかる"
+	weapon_info(wid,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(wid,WEAPON_INFO_COSTWP) = 20		; 消費WP
+	weapon_info(wid,WEAPON_INFO_COOLDOWN) = 60		; 次を発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_BULLET ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	weapon_info(wid,WEAPON_INFO_ATC) = 40			; 攻撃力（対キャラ）
+	weapon_info(wid,WEAPON_INFO_COLORPOWER) = 70	; 色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_COLORFLY) = 0		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_RANGE) = 0		; 射程（全部で何回移動できるか）
+	weapon_info(wid,WEAPON_INFO_HIT) = 0			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(wid,WEAPON_INFO_SPREAD) = 3		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(wid,WEAPON_INFO_WEAKEN) = 70		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(wid,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(wid,WEAPON_INFO_SPPED) = 32			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_NONE	; 追加で付与するステート
+	weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 0	; 追加でステートを付与する確率
+	weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 0	; ステートの効果時間
+	weapon_info(wid,WEAPON_INFO_BULLETSPID) = 47	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_SHOT5	; 発射時のサウンドID
+	weapon_info(wid,WEAPON_INFO_SOUND_HIT) = -1	; 命中時のサウンドID
+
+	wid = 20
+	weapon_desc(wid,0) = "スイーツパラダイス"
+	weapon_desc(wid,1) = "味方全員の防御力上昇"
+	weapon_info(wid,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(wid,WEAPON_INFO_COSTWP) = 20		; 消費WP
+	weapon_info(wid,WEAPON_INFO_COOLDOWN) = 500		; 次を発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 500	; 最初に発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_ALLYALL ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	weapon_info(wid,WEAPON_INFO_ATC) = 0			; 攻撃力（対キャラ）
+	weapon_info(wid,WEAPON_INFO_COLORPOWER) = 0	; 色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_COLORFLY) = 0		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_RANGE) = 0		; 射程（全部で何回移動できるか）
+	weapon_info(wid,WEAPON_INFO_HIT) = 0			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 0	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(wid,WEAPON_INFO_SPREAD) = 0		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(wid,WEAPON_INFO_WEAKEN) = 0		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(wid,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(wid,WEAPON_INFO_SPPED) = 0			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_SWEETS	; 追加で付与するステート
+	weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 100	; 追加でステートを付与する確率
+	weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 100	; ステートの効果時間
+	weapon_info(wid,WEAPON_INFO_BULLETSPID) = -1	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_RAISE1	; 発射時のサウンドID
+	weapon_info(wid,WEAPON_INFO_SOUND_HIT) = -1	; 命中時のサウンドID
+
+	wid = 21
+	weapon_desc(wid,0) = "散らかしファイア"
+	weapon_desc(wid,1) = "ちょっとした爆風で散らかす"
+	weapon_info(wid,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(wid,WEAPON_INFO_COSTWP) = 18		; 消費WP
+	weapon_info(wid,WEAPON_INFO_COOLDOWN) = 40		; 次を発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_BULLET ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	weapon_info(wid,WEAPON_INFO_ATC) = 60			; 攻撃力（対キャラ）
+	weapon_info(wid,WEAPON_INFO_COLORPOWER) = 80	; 色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_COLORFLY) = 40		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_RANGE) = 3		; 射程（全部で何回移動できるか）
+	weapon_info(wid,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(wid,WEAPON_INFO_SPREAD) = 2		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(wid,WEAPON_INFO_WEAKEN) = 60		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(wid,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(wid,WEAPON_INFO_SPPED) = 32			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_NONE	; 追加で付与するステート
+	weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 0	; 追加でステートを付与する確率
+	weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 0	; ステートの効果時間
+	weapon_info(wid,WEAPON_INFO_BULLETSPID) = 46	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_SHOT1	; 発射時のサウンドID
+	weapon_info(wid,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
+
+	wid = 22
+	weapon_desc(wid,0) = "散らかしボンバー"
+	weapon_desc(wid,1) = "ちょっとした？爆風で散らかす"
+	weapon_info(wid,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(wid,WEAPON_INFO_COSTWP) = 38		; 消費WP
+	weapon_info(wid,WEAPON_INFO_COOLDOWN) = 140		; 次を発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 140	; 最初に発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_4WAYBULLET ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	weapon_info(wid,WEAPON_INFO_ATC) = 70			; 攻撃力（対キャラ）
+	weapon_info(wid,WEAPON_INFO_COLORPOWER) = 50	; 色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_COLORFLY) = 40		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_RANGE) = 4		; 射程（全部で何回移動できるか）
+	weapon_info(wid,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(wid,WEAPON_INFO_SPREAD) = 3		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(wid,WEAPON_INFO_WEAKEN) = 40		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(wid,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(wid,WEAPON_INFO_SPPED) = 32			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_NONE	; 追加で付与するステート
+	weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 0	; 追加でステートを付与する確率
+	weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 0	; ステートの効果時間
+	weapon_info(wid,WEAPON_INFO_BULLETSPID) = 42	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_SHOT1	; 発射時のサウンドID
+	weapon_info(wid,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
+
+	wid = 23
+	weapon_desc(wid,0) = "浪費ボンバー"
+	weapon_desc(wid,1) = "爆風で散らかし、時間を浪費させる"
+	weapon_info(wid,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(wid,WEAPON_INFO_COSTWP) = 45		; 消費WP
+	weapon_info(wid,WEAPON_INFO_COOLDOWN) = 150		; 次を発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 150	; 最初に発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_4WAYBULLET ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	weapon_info(wid,WEAPON_INFO_ATC) = 70			; 攻撃力（対キャラ）
+	weapon_info(wid,WEAPON_INFO_COLORPOWER) = 50	; 色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_COLORFLY) = 40		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_RANGE) = 5		; 射程（全部で何回移動できるか）
+	weapon_info(wid,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(wid,WEAPON_INFO_SPREAD) = 3		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(wid,WEAPON_INFO_WEAKEN) = 40		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(wid,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(wid,WEAPON_INFO_SPPED) = 32			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_TIMEWASTE	; 追加で付与するステート
+	weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 100	; 追加でステートを付与する確率
+	weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 30	; ステートの効果時間
+	weapon_info(wid,WEAPON_INFO_BULLETSPID) = 42	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_SHOT1	; 発射時のサウンドID
+	weapon_info(wid,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
+
+	wid = 24
+	weapon_desc(wid,0) = "散らしカリバー"
+	weapon_desc(wid,1) = "モノをまき散らす伝説の棒"
+	weapon_info(wid,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(wid,WEAPON_INFO_COSTWP) = 6		; 消費WP
+	weapon_info(wid,WEAPON_INFO_COOLDOWN) = 18		; 次を発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_BULLET ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	weapon_info(wid,WEAPON_INFO_ATC) = 60			; 攻撃力（対キャラ）
+	weapon_info(wid,WEAPON_INFO_COLORPOWER) = 70	; 色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_COLORFLY) = 70		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_RANGE) = 1		; 射程（全部で何回移動できるか）
+	weapon_info(wid,WEAPON_INFO_HIT) = 1			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(wid,WEAPON_INFO_SPREAD) = 1		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(wid,WEAPON_INFO_WEAKEN) = 80		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(wid,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(wid,WEAPON_INFO_SPPED) = 32			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_NONE	; 追加で付与するステート
+	weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 0	; 追加でステートを付与する確率
+	weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 0	; ステートの効果時間
+	weapon_info(wid,WEAPON_INFO_BULLETSPID) = 50	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = -1	; 発射時のサウンドID
+	weapon_info(wid,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
+
+	wid = 25
+	weapon_desc(wid,0) = "光よ！散らかせ！"
+	weapon_desc(wid,1) = "伝説の棒から繰り出される必殺技"
+	weapon_info(wid,WEAPON_INFO_ACTIVE) = 1		; 1:有効、0:使用していない
+	weapon_info(wid,WEAPON_INFO_COSTWP) = 36		; 消費WP
+	weapon_info(wid,WEAPON_INFO_COOLDOWN) = 300		; 次を発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 300	; 最初に発射できるようになるTIME数
+	weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_4WAYBULLET ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	weapon_info(wid,WEAPON_INFO_ATC) = 80			; 攻撃力（対キャラ）
+	weapon_info(wid,WEAPON_INFO_COLORPOWER) = 60	; 色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_COLORFLY) = 60		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	weapon_info(wid,WEAPON_INFO_RANGE) = 5		; 射程（全部で何回移動できるか）
+	weapon_info(wid,WEAPON_INFO_HIT) = 5			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 1	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	weapon_info(wid,WEAPON_INFO_SPREAD) = 1		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	weapon_info(wid,WEAPON_INFO_WEAKEN) = 80		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	weapon_info(wid,WEAPON_INFO_PERSIST) = 0  		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	weapon_info(wid,WEAPON_INFO_SPPED) = 32			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_NONE	; 追加で付与するステート
+	weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 0	; 追加でステートを付与する確率
+	weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 0	; ステートの効果時間
+	weapon_info(wid,WEAPON_INFO_BULLETSPID) = 29	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_HIT4	; 発射時のサウンドID
+	weapon_info(wid,WEAPON_INFO_SOUND_HIT) = -1	; 命中時のサウンドID
+
+	;wid = 0
+	;weapon_desc(wid,0) = "武器の名前"
+	;weapon_desc(wid,1) = "武器の説明"
+	;weapon_info(wid,WEAPON_INFO_ACTIVE) = 		; 1:有効、0:使用していない
+	;weapon_info(wid,WEAPON_INFO_COSTWP) = 		; 消費WP
+	;weapon_info(wid,WEAPON_INFO_COOLDOWN) = 		; 次を発射できるようになるTIME数
+	;weapon_info(wid,WEAPON_INFO_INITCOOLDOWN) = 0	; 最初に発射できるようになるTIME数
+	;weapon_info(wid,WEAPON_INFO_TYPE) = WEAPON_INFO_TYPE_BULLET ; 使用時の種類（0:弾丸発射、1:自分に直接効果あり、2:味方全員に直接効果あり、3:敵全員に直接効果あり）
+	;weapon_info(wid,WEAPON_INFO_ATC) = 			; 攻撃力（対キャラ）
+	;weapon_info(wid,WEAPON_INFO_COLORPOWER) = 	; 色蓄積力（対バケツ）
+	;weapon_info(wid,WEAPON_INFO_COLORFLY) = 		; 飛翔時（非命中時）の色蓄積力（対バケツ）
+	;weapon_info(wid,WEAPON_INFO_RANGE) = 		; 射程（全部で何回移動できるか）
+	;weapon_info(wid,WEAPON_INFO_HIT) = 			; 命中数（何回当たり判定があるか。1:単発弾、2以上:貫通弾、0:命中しない）　※0の場合はAUTOSPREAD=1にしないと意味がない
+	;weapon_info(wid,WEAPON_INFO_AUTOSPREAD) = 	; 1:残り射程が0になったら拡散、0:残り射程が0になったら消滅
+	;weapon_info(wid,WEAPON_INFO_SPREAD) = 		; 命中時の拡散範囲（0:着弾地点のみ、1以上:そのマスだけ拡散）
+	;weapon_info(wid,WEAPON_INFO_WEAKEN) = 		; 拡散時の威力減衰率（100: 減衰しない ⇔ 50: 1マス移動するごとに半減 ⇔ 0:ダメージや色蓄積がない）
+	;weapon_info(wid,WEAPON_INFO_PERSIST) =   		; 拡散が持続するかどうか（0:持続しない、1以上:そのTIMEだけ持続）
+	;weapon_info(wid,WEAPON_INFO_SPPED) = 			; 1 TIMEで何マス移動(32で1マス)できるか（通常は32を想定。0にすると移動しないが残り射程は減る）※今は0を含む32の倍数のみサポート
+	;weapon_info(wid,WEAPON_INFO_ADDSTATE) = STATE_TYPE_NONE	; 追加で付与するステート
+	;weapon_info(wid,WEAPON_INFO_ADDSTATERATE) = 0	; 追加でステートを付与する確率
+	;weapon_info(wid,WEAPON_INFO_ADDSTATETIME) = 0	; ステートの効果時間
+	;weapon_info(wid,WEAPON_INFO_BULLETSPID) = 	; 弾丸の画像ID（弾丸画像の何番目か。自動的にSPCHAR_BULLET_STATICを加算してスプライトキャラクタ画像IDを特定する）
+	;weapon_info(wid,WEAPON_INFO_SOUND_FIRE) = SOUND_DEF_SHOT1	; 発射時のサウンドID
+	;weapon_info(wid,WEAPON_INFO_SOUND_HIT) = SOUND_DEF_HIT1	; 命中時のサウンドID
 	
 	; 効果音
 	sound_def_file(SOUND_DEF_DECISION) = "sound/8bit選択8.wav"		; 決定したときの音
@@ -418,6 +775,7 @@
 	sound_def_file(SOUND_DEF_SHOT2) = "sound/8bitショット3.wav"		; 発射音2の音
 	sound_def_file(SOUND_DEF_SHOT3) = "sound/8bit詠唱1.wav"			; 発射音3の音
 	sound_def_file(SOUND_DEF_SHOT4) = "sound/8bit詠唱2.wav"			; 発射音4の音
+	sound_def_file(SOUND_DEF_SHOT5) = "sound/8bit詠唱4.wav"			; 発射音5の音
 	sound_def_file(SOUND_DEF_HIT1) = "sound/8bitダメージ1.wav"		; 命中1の音
 	sound_def_file(SOUND_DEF_HIT2) = "sound/8bitダメージ4.wav"		; 命中2の音
 	sound_def_file(SOUND_DEF_HIT3) = "sound/8bitダメージ6.wav"		; 命中3の音
@@ -439,7 +797,11 @@
 	music_def_file(MUSIC_DEF_OPENING) = "music/Short60_ゆったりDIY_01.mp3"	; オープニングの音楽
 	music_def_file(MUSIC_DEF_NORMAL)  = "music/Breakbeats_01.mp3"			; 通常ステージの音楽
 	music_def_file(MUSIC_DEF_NORMAL2) = "music/Shooting_04.mp3"				; 通常ステージ2の音楽
+	music_def_file(MUSIC_DEF_NORMAL3) = "music/RPG_Battle_02.mp3"			; 通常ステージ3の音楽
+	music_def_file(MUSIC_DEF_NORMAL4) = "music/RPG_Battle_01.mp3"			; 通常ステージ4の音楽
 	music_def_file(MUSIC_DEF_BOSS)    = "music/Drumnbass_03.mp3"			; ボスステージの音楽
+	music_def_file(MUSIC_DEF_BOSS2)   = "music/RPG_Battle_04.mp3"			; ボスステージ2の音楽
+	music_def_file(MUSIC_DEF_BOSS3)   = "music/RPG_Battle_03.mp3"			; ボスステージ3の音楽
 	music_def_file(MUSIC_DEF_RESULT)  = "music/LoFi_01.mp3"					; リザルト画面の音楽
 	for i,0,MUSIC_MAX
 		if strlen(music_def_file(i)) > 0 {
@@ -483,11 +845,11 @@
 	id = 0
 	bufid = BUFID_DEFCHAR_BEGIN + id
 	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
-	defchar_sp(id,DEFCHAR_SP_STATIC) = 1
-	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN) = 2
-	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT) = 6
-	defchar_sp(id,DEFCHAR_SP_ANIME_UP) = 10
-	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = 14
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
 	defchar_desc(id,0) = "メイド　メイ"
 	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 8	; 移動可能な頻度（x TIMEに1度）
 	defchar_info(id,DEFCHAR_INFO_MAXHP) = 100	; 最大HP
@@ -498,6 +860,10 @@
 	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 0	; 1つ目の武器（メイド用水ハンドモップ）
 	defchar_info(id,DEFCHAR_INFO_WEAPON2) = 1	; 2つ目の武器（メイド用水ランチャー）
 	defchar_info(id,DEFCHAR_INFO_WEAPON3) = 4	; 3つ目の武器（メイドさんのお土産）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = 4	; 退場時に自動的に使うの武器（メイドさんのお土産）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 1	; パッシブスキル1（許しませんわ）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
 	
 	; 主人公画像ロード
 	buffer bufid	; ウインドウバッファを作成する
@@ -524,6 +890,10 @@
 	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 10	; 1つ目の武器（メイド用ひしゃく）
 	defchar_info(id,DEFCHAR_INFO_WEAPON2) = 11	; 2つ目の武器（メイド用水ライフル）
 	defchar_info(id,DEFCHAR_INFO_WEAPON3) = 14	; 3つ目の武器（ソラ！がんばります！）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = -1	; 退場時に自動的に使うの武器（なし）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 3	; パッシブスキル1（そのまま消えなさい）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
 	
 	; 主人公2画像ロード
 	buffer bufid	; ウインドウバッファを作成する
@@ -542,14 +912,18 @@
 	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
 	defchar_desc(id,0) = "メイド　モモ"
 	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 8	; 移動可能な頻度（x TIMEに1度）
-	defchar_info(id,DEFCHAR_INFO_MAXHP) =  80	; 最大HP
-	defchar_info(id,DEFCHAR_INFO_MAXWP) = 120	; 最大WP
-	defchar_info(id,DEFCHAR_INFO_DEF) = 5		; 防御力
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 140	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 100	; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 20		; 防御力
 	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 999	; 何回リスポーンできるか
 	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 50	; リスポーンまでにかかる時間
 	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 12	; 1つ目の武器（メイド用水ローラー）
 	defchar_info(id,DEFCHAR_INFO_WEAPON2) = 13	; 2つ目の武器（メイド用小型噴水）
 	defchar_info(id,DEFCHAR_INFO_WEAPON3) = 15	; 3つ目の武器（邪魔しないでくださいまし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = -1	; 退場時に自動的に使うの武器（なし）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 4	; パッシブスキル1（邪魔だと言っているでしょう）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
 	
 	; 主人公3画像ロード
 	buffer bufid	; ウインドウバッファを作成する
@@ -561,12 +935,14 @@
 	id = 1
 	bufid = BUFID_DEFCHAR_BEGIN + id
 	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
-	defchar_sp(id,DEFCHAR_SP_STATIC) = 21
-	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN) = 22
-	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT) = 26
-	defchar_sp(id,DEFCHAR_SP_ANIME_UP) = 30
-	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = 34
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
 	defchar_desc(id,0) = "サボリーマ"
+	defchar_desc(id,1) = "ゴミを捨てることすらよくサボる"
+	defchar_desc(id,2) = "投げずに足元に捨てる"
 	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 32	; 移動可能な頻度（x TIMEに1度）
 	defchar_info(id,DEFCHAR_INFO_MAXHP) = 100	; 最大HP
 	defchar_info(id,DEFCHAR_INFO_MAXWP) = 80		; 最大WP
@@ -576,6 +952,10 @@
 	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 2	; 1つ目の武器（ゴミ袋）
 	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
 	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = -1	; 退場時に自動的に使うの武器（なし）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 0	; パッシブスキル1（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
 
 	; 敵キャラ画像ロード
 	buffer bufid	; ウインドウバッファを作成する
@@ -587,12 +967,14 @@
 	id = 2
 	bufid = BUFID_DEFCHAR_BEGIN + id
 	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
-	defchar_sp(id,DEFCHAR_SP_STATIC) = 41
-	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN) = 42
-	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT) = 46
-	defchar_sp(id,DEFCHAR_SP_ANIME_UP) = 50
-	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = 54
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
 	defchar_desc(id,0) = "ポイステー"
+	defchar_desc(id,1) = "一切移動せずにその場からゴミを投げる"
+	defchar_desc(id,2) = "飲みかけの缶ジュースを投げる"
 	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 16	; 移動可能な頻度（x TIMEに1度）
 	defchar_info(id,DEFCHAR_INFO_MAXHP) = 250	; 最大HP
 	defchar_info(id,DEFCHAR_INFO_MAXWP) = 100	; 最大WP
@@ -602,6 +984,10 @@
 	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 5	; 1つ目の武器（飲みかけの缶）
 	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
 	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = -1	; 退場時に自動的に使うの武器（なし）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 0	; パッシブスキル1（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
 
 	; 敵キャラ画像ロード
 	buffer bufid	; ウインドウバッファを作成する
@@ -613,12 +999,14 @@
 	id = 3
 	bufid = BUFID_DEFCHAR_BEGIN + id
 	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
-	defchar_sp(id,DEFCHAR_SP_STATIC) = 61
-	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN) = 62
-	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT) = 66
-	defchar_sp(id,DEFCHAR_SP_ANIME_UP) = 70
-	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = 74
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
 	defchar_desc(id,0) = "マメニ　ヌール"
+	defchar_desc(id,1) = "綺麗な床は許さない"
+	defchar_desc(id,2) = "泥水を念入りに塗りたくる"
 	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 10	; 移動可能な頻度（x TIMEに1度）
 	defchar_info(id,DEFCHAR_INFO_MAXHP) = 120	; 最大HP
 	defchar_info(id,DEFCHAR_INFO_MAXWP) = 100	; 最大WP
@@ -628,6 +1016,10 @@
 	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 6	; 1つ目の武器（泥水ローラー）
 	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
 	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = -1	; 退場時に自動的に使うの武器（なし）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 0	; パッシブスキル1（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
 
 	; 敵キャラ画像ロード
 	buffer bufid	; ウインドウバッファを作成する
@@ -639,12 +1031,14 @@
 	id = 4
 	bufid = BUFID_DEFCHAR_BEGIN + id
 	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
-	defchar_sp(id,DEFCHAR_SP_STATIC) = 81
-	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN) = 82
-	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT) = 86
-	defchar_sp(id,DEFCHAR_SP_ANIME_UP) = 90
-	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = 94
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
 	defchar_desc(id,0) = "ワルガキー"
+	defchar_desc(id,1) = "掃除するひとの邪魔をしたい"
+	defchar_desc(id,2) = "遠距離から泥水で狙い撃ち"
 	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 20	; 移動可能な頻度（x TIMEに1度）
 	defchar_info(id,DEFCHAR_INFO_MAXHP) = 150	; 最大HP
 	defchar_info(id,DEFCHAR_INFO_MAXWP) = 100	; 最大WP
@@ -654,6 +1048,10 @@
 	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 7	; 1つ目の武器（泥水ライフル）
 	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
 	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = -1	; 退場時に自動的に使うの武器（なし）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 0	; パッシブスキル1（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
 
 	; 敵キャラ画像ロード
 	buffer bufid	; ウインドウバッファを作成する
@@ -665,12 +1063,14 @@
 	id = 5
 	bufid = BUFID_DEFCHAR_BEGIN + id
 	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
-	defchar_sp(id,DEFCHAR_SP_STATIC) = 101
-	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN) = 102
-	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT) = 106
-	defchar_sp(id,DEFCHAR_SP_ANIME_UP) = 110
-	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = 114
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
 	defchar_desc(id,0) = "ゴミ魔王"
+	defchar_desc(id,1) = "超マイペースな魔王"
+	defchar_desc(id,2) = "腐敗させたゴミ袋に穴をあけて破裂させる"
 	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 12	; 移動可能な頻度（x TIMEに1度）
 	defchar_info(id,DEFCHAR_INFO_MAXHP) = 3000	; 最大HP
 	defchar_info(id,DEFCHAR_INFO_MAXWP) = 200	; 最大WP
@@ -680,6 +1080,10 @@
 	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 8	; 1つ目の武器（腐敗ごみ袋）
 	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
 	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = -1	; 退場時に自動的に使うの武器（なし）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 0	; パッシブスキル1（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
 
 	; 敵キャラ画像ロード
 	buffer bufid	; ウインドウバッファを作成する
@@ -687,7 +1091,196 @@
 	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,defchar_sp(id,DEFCHAR_SP_BUFID) ; 停止用
 
 
+	; 下っ端兵士のデータ設定（キャラクタ定義ID:8）
+	id = 8
+	bufid = BUFID_DEFCHAR_BEGIN + id
+	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
+	defchar_desc(id,0) = "下っ端兵士"
+	defchar_desc(id,1) = "勇者の荷物持ちでこき使われている"
+	defchar_desc(id,2) = "持っている棒で近くのものを散らかす"
+	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 16	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 120	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 50		; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 10		; 防御力
+	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 999	; 何回リスポーンできるか
+	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 50	; リスポーンまでにかかる時間
+	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 16	; 1つ目の武器（散らかしソード）
+	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = -1	; 退場時に自動的に使うの武器（なし）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 0	; パッシブスキル1（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
 
+	; 敵キャラ画像ロード
+	buffer bufid	; ウインドウバッファを作成する
+	picload "image/兵士.png" ; 画像ファイルを読み込む
+	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,defchar_sp(id,DEFCHAR_SP_BUFID) ; 停止用
+
+
+	; 暴れん坊戦士のデータ設定（キャラクタ定義ID:9）
+	id = 9
+	bufid = BUFID_DEFCHAR_BEGIN + id
+	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
+	defchar_desc(id,0) = "暴れん坊戦士"
+	defchar_desc(id,1) = "長いものを持ったらとりあえず振り回す"
+	defchar_desc(id,2) = "退場時に残った味方の攻撃力を上げる"
+	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 24	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 300	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 50		; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 25		; 防御力
+	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 3	; 何回リスポーンできるか
+	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 60	; リスポーンまでにかかる時間
+	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 17	; 1つ目の武器（散らかしブレード）
+	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = 18	; 退場時に自動的に使うの武器（肉食の誘惑）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 0	; パッシブスキル1（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
+
+	; 敵キャラ画像ロード
+	buffer bufid	; ウインドウバッファを作成する
+	picload "image/男_戦士.png" ; 画像ファイルを読み込む
+	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,defchar_sp(id,DEFCHAR_SP_BUFID) ; 停止用
+
+
+	; マメな僧侶のデータ設定（キャラクタ定義ID:10）
+	id = 10
+	bufid = BUFID_DEFCHAR_BEGIN + id
+	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
+	defchar_desc(id,0) = "マメな僧侶"
+	defchar_desc(id,1) = "大好きな勇者の教えに沿って散らかす"
+	defchar_desc(id,2) = "退場時に味方に加護を授ける"
+	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 24	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 200	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 200	; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 15		; 防御力
+	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 3	; 何回リスポーンできるか
+	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 80	; リスポーンまでにかかる時間
+	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 19	; 1つ目の武器（散らかしの祈り）
+	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = 20	; 退場時に自動的に使うの武器（スイーツパラダイス）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 0	; パッシブスキル1（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
+
+	; 敵キャラ画像ロード
+	buffer bufid	; ウインドウバッファを作成する
+	picload "image/女_僧侶.png" ; 画像ファイルを読み込む
+	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,defchar_sp(id,DEFCHAR_SP_BUFID) ; 停止用
+
+
+	; やる気の術師のデータ設定（キャラクタ定義ID:11）
+	id = 11
+	bufid = BUFID_DEFCHAR_BEGIN + id
+	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
+	defchar_desc(id,0) = "やる気の術師"
+	defchar_desc(id,1) = "どうやらお姉さんがいるらしい"
+	defchar_desc(id,2) = "退場時に爆発を引き起こす"
+	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 24	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 180	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 250	; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 10		; 防御力
+	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 4	; 何回リスポーンできるか
+	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 50	; リスポーンまでにかかる時間
+	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 21	; 1つ目の武器（散らかしファイア）
+	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = 22	; 退場時に自動的に使うの武器（散らかしボンバー）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 0	; パッシブスキル1（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
+
+	; 敵キャラ画像ロード
+	buffer bufid	; ウインドウバッファを作成する
+	picload "image/男_魔法使い.png" ; 画像ファイルを読み込む
+	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,defchar_sp(id,DEFCHAR_SP_BUFID) ; 停止用
+
+
+	; 散らかし勇者のデータ設定（キャラクタ定義ID:12）
+	id = 12
+	bufid = BUFID_DEFCHAR_BEGIN + id
+	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
+	defchar_desc(id,0) = "散らかし勇者"
+	defchar_desc(id,1) = "平和なので暇、必殺技の試し打ちがしたい"
+	defchar_desc(id,2) = "HPが減ると本気を出す"
+	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 14	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 1500	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 200	; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 20		; 防御力
+	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 0	; 何回リスポーンできるか
+	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 50	; リスポーンまでにかかる時間
+	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 24	; 1つ目の武器（散らしカリバー）
+	defchar_info(id,DEFCHAR_INFO_WEAPON2) = 25	; 2つ目の武器（光よ！散らかせ！）
+	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = 18	; 退場時に自動的に使うの武器（肉食の誘惑）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 2	; パッシブスキル1（本気を出すぜ！）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
+
+	; 敵キャラ画像ロード
+	buffer bufid	; ウインドウバッファを作成する
+	picload "image/男_勇者.png" ; 画像ファイルを読み込む
+	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,defchar_sp(id,DEFCHAR_SP_BUFID) ; 停止用
+
+
+	; 時空術師アネキのデータ設定（キャラクタ定義ID:13）
+	id = 13
+	bufid = BUFID_DEFCHAR_BEGIN + id
+	defchar_sp(id,DEFCHAR_SP_BUFID) = bufid
+	defchar_sp(id,DEFCHAR_SP_STATIC)      = id*20+1
+	defchar_sp(id,DEFCHAR_SP_ANIME_DOWN)  = id*20+2
+	defchar_sp(id,DEFCHAR_SP_ANIME_LEFT)  = id*20+6
+	defchar_sp(id,DEFCHAR_SP_ANIME_UP)    = id*20+10
+	defchar_sp(id,DEFCHAR_SP_ANIME_RIGHT) = id*20+14
+	defchar_desc(id,0) = "時空術師アネキ"
+	defchar_desc(id,1) = "弟が研究した魔法をさらに強化"
+	defchar_desc(id,2) = "みんなの慌てふためく姿が見たい"
+	defchar_info(id,DEFCHAR_INFO_MOVEFREQ) = 18	; 移動可能な頻度（x TIMEに1度）
+	defchar_info(id,DEFCHAR_INFO_MAXHP) = 245	; 最大HP
+	defchar_info(id,DEFCHAR_INFO_MAXWP) = 360	; 最大WP
+	defchar_info(id,DEFCHAR_INFO_DEF) = 15		; 防御力
+	defchar_info(id,DEFCHAR_INFO_RESPAWN) = 6	; 何回リスポーンできるか
+	defchar_info(id,DEFCHAR_INFO_DOWNTIME) = 35	; リスポーンまでにかかる時間
+	defchar_info(id,DEFCHAR_INFO_WEAPON1) = 21	; 1つ目の武器（散らかしファイア）
+	defchar_info(id,DEFCHAR_INFO_WEAPON2) = -1	; 2つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPON3) = -1	; 3つ目の武器（なし）
+	defchar_info(id,DEFCHAR_INFO_WEAPONFA) = 23	; 退場時に自動的に使うの武器（浪費ボンバー）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE1) = 0	; パッシブスキル1（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE2) = 0	; パッシブスキル2（）
+	defchar_info(id,DEFCHAR_INFO_PASSIVE3) = 0	; パッシブスキル3（）
+
+	; 敵キャラ画像ロード
+	buffer bufid	; ウインドウバッファを作成する
+	picload "image/女_魔法使い1.png" ; 画像ファイルを読み込む
+	es_pat defchar_sp(id,DEFCHAR_SP_STATIC),0,0,0,defchar_sp(id,DEFCHAR_SP_BUFID) ; 停止用
 
 	
 	gsel 0
