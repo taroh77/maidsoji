@@ -5,7 +5,10 @@
 
 メイドさんのお掃除し隊のページです。  
 
-![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m2s](https://user-images.githubusercontent.com/19423263/210504197-816457aa-ad4c-44b7-95a1-981386795708.jpg)
+ゲームの紹介動画もあります。
+https://www.youtube.com/@user-py5kq2iz6z/featured
+
+![メイドさんのお掃除し隊 2023-02-13 23-13-03 - frame at 0m4s](https://user-images.githubusercontent.com/19423263/218773273-3a9819d3-8b4b-4217-9d18-42d6ceab14eb.jpg)
 
 # 動作環境
 
@@ -26,7 +29,6 @@ https://github.com/taroh77/maidsoji/releases
 メイドさんを操作してマップを白色に染めます  
 残り時間がなくなった時にお邪魔キャラより  
 多く色を塗っている状態にすれば勝利です  
-全部で5ステージあります
 
 キー操作  
 　矢印キー：キャラの移動  
@@ -45,11 +47,16 @@ https://github.com/taroh77/maidsoji/releases
 「キャラ選択」を押して確認することができます。  
 「キャラ変更」を押せば操作するキャラクターを変更できます。  
 
+遊ぶステージは「部屋選択」を押して確認・変更ができます。  
+左下の「部屋変更」を押して遊ぶステージを選択します。  
+
 難易度を自分好みで変更して遊ぶことができます。  
-「難易度選択」を押して調整する項目の「変更」を押して好みの難易度にします。  
+「難易度選択」を押して左の難易度セットを押すか  
+右の調整する項目の「変更」を押して好みの難易度にします。  
+
 一番上に表示されるレベルが全体的な難しさを示します。  
 数字が大きければ大きい程難しくなり、マイナスであれば簡単になります。  
-ただし、組み合わせによっては...  
+難易度を上げれば上げるだけスコアを多く得られます。  
 
 # 質問、不具合などの受付
 
@@ -79,19 +86,22 @@ https://github.com/taroh77/maidsoji/blob/main/LICENSE
 
 ## ゲームシーン
 
-![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m53s](https://user-images.githubusercontent.com/19423263/210504412-e840adcc-f023-47d4-80f1-54bc46377a14.jpg)
-![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 3m48s](https://user-images.githubusercontent.com/19423263/210504419-76dd3dc3-9d58-4ec1-9763-fedb5a2230d8.jpg)
-![メイドさんのお掃除し隊 2023-01-04 15-31-40 - frame at 1m40s](https://user-images.githubusercontent.com/19423263/210504427-36569b99-feaf-41c5-a4ea-79f661740023.jpg)
-![メイドさんのお掃除し隊 2023-01-04 15-56-09 - frame at 2m27s](https://user-images.githubusercontent.com/19423263/210504435-6c67fdb5-fd2e-45d1-b70e-cfe97a6e767f.jpg)
-![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 5m47s](https://user-images.githubusercontent.com/19423263/210504462-554c89f5-4d0b-4185-b9d3-db5797053eff.jpg)
-![メイドさんのお掃除し隊 2023-01-04 15-31-40 - frame at 5m15s](https://user-images.githubusercontent.com/19423263/210504470-231d53ff-b038-4c5e-a0c6-ac15bbcd33cd.jpg)
+![メイドさんのお掃除し隊 2023-02-13 23-13-03 - frame at 1m45s](https://user-images.githubusercontent.com/19423263/218773472-461ac174-2255-4923-809b-ede8d80ae677.jpg)
+
+![メイドさんのお掃除し隊 2023-02-13 23-29-18 - frame at 1m24s](https://user-images.githubusercontent.com/19423263/218773504-920068b0-3cde-4b46-b996-f389f0aba16f.jpg)
+
+![メイドさんのお掃除し隊 2023-02-13 23-34-26 - frame at 2m53s](https://user-images.githubusercontent.com/19423263/218773541-23565b96-58fb-4721-b52f-0212a5015d0d.jpg)
 
 ## それぞれのキャラクターの紹介
 
-![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m14s](https://user-images.githubusercontent.com/19423263/210504306-3b3662cb-c882-46eb-bced-a32717cb436b.jpg)
-![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m17s](https://user-images.githubusercontent.com/19423263/210504322-9537bf0d-b92f-48c4-a5bf-959820afa8b4.jpg)
-![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m28s](https://user-images.githubusercontent.com/19423263/210504338-bec01b58-f5c0-4014-846c-92d4c14361e4.jpg)
+![メイドさんのお掃除し隊 2023-02-13 23-19-05 - frame at 1m54s](https://user-images.githubusercontent.com/19423263/218773366-a54cb054-88fb-4b4d-b4ea-3da338cd651d.jpg)
 
-## 難易度調整
+![メイドさんのお掃除し隊 2023-02-13 23-19-05 - frame at 2m37s](https://user-images.githubusercontent.com/19423263/218773402-38d5d93e-f051-462a-8956-c9c3dc8d19b9.jpg)
 
-![メイドさんのお掃除し隊 2023-01-04 15-25-28 - frame at 0m42s](https://user-images.githubusercontent.com/19423263/210504402-72521aeb-ccc2-45ce-a663-388c78075f43.jpg)
+![メイドさんのお掃除し隊 2023-02-13 23-19-05 - frame at 3m31s](https://user-images.githubusercontent.com/19423263/218773439-112fda3d-9634-43ff-a437-841136e93c23.jpg)
+
+## ステージの紹介
+
+![メイドさんのお掃除し隊 2023-02-13 23-19-05 - frame at 0m54s](https://user-images.githubusercontent.com/19423263/218773298-71c3d549-6ed2-4fd4-a762-4d718ff6b037.jpg)
+
+![メイドさんのお掃除し隊 2023-02-13 23-19-05 - frame at 0m36s](https://user-images.githubusercontent.com/19423263/218773325-47afa914-d1fa-4d7e-b12c-8e9682a7248e.jpg)
